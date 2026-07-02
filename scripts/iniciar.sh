@@ -17,6 +17,18 @@ DIR="${SDR_DIR:-$HOME/sdr-vendas}"
 log()  { printf '\n\033[1;34m==>\033[0m %s\n' "$*"; }
 fail() { printf '\n\033[1;31mERRO:\033[0m %s\n' "$*" >&2; exit 1; }
 
+# Instalações anteriores rodadas com sudo (por engano) podem deixar arquivos de dono "root"
+# nessas pastas, travando qualquer execução seguinte com erros de permissão (git "dubious
+# ownership", EACCES ao baixar o Chrome, etc). Corrige o dono sempre que detectar isso.
+fix_ownership() {
+  local path="$1"
+  [ -e "$path" ] || return 0
+  if [ -n "$(find "$path" -maxdepth 1 ! -user "$(id -un)" -print -quit 2>/dev/null)" ]; then
+    log "Corrigindo permissões de $path (vai pedir sua senha de administrador)..."
+    sudo chown -R "$(id -un):$(id -gn)" "$path" || fail "não consegui corrigir as permissões. Rode: sudo chown -R \$USER:\$USER $path"
+  fi
+}
+
 # --- 1. git ---------------------------------------------------------------
 if ! command -v git >/dev/null 2>&1; then
   log "git não encontrado. Instalando (vai pedir sua senha de administrador)..."
@@ -40,12 +52,7 @@ log "Node.js $(node -v) OK."
 # --- 3. Baixar ou atualizar o projeto --------------------------------------
 if [ -d "$DIR/.git" ]; then
   log "Projeto já existe em $DIR — atualizando..."
-  # Instalações anteriores podem ter deixado arquivos de outro dono (ex.: rodadas com sudo),
-  # o que faz o git recusar a pasta ("dubious ownership"). Corrige antes de atualizar.
-  if [ -n "$(find "$DIR" -maxdepth 1 ! -user "$(id -un)" -print -quit 2>/dev/null)" ]; then
-    log "Corrigindo permissões da pasta (vai pedir sua senha de administrador)..."
-    sudo chown -R "$(id -un):$(id -gn)" "$DIR" || fail "não consegui corrigir as permissões. Rode: sudo chown -R \$USER:\$USER $DIR"
-  fi
+  fix_ownership "$DIR"
   git config --global --add safe.directory "$DIR" 2>/dev/null || true
   git -C "$DIR" fetch origin "$BRANCH"
   git -C "$DIR" checkout "$BRANCH"
@@ -57,6 +64,8 @@ fi
 cd "$DIR"
 
 # --- 4. Dependências e configuração ----------------------------------------
+fix_ownership "$HOME/.cache/puppeteer"
+fix_ownership "$HOME/.npm"
 if [ ! -d node_modules ]; then
   log "Instalando dependências (a primeira vez baixa o navegador interno, ~200MB — pode demorar alguns minutos)..."
   npm install --no-fund --no-audit
