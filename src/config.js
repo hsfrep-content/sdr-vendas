@@ -31,4 +31,8 @@ module.exports = {
   dashboardHost: process.env.DASHBOARD_HOST || '127.0.0.1',
   dashboardPort: int('DASHBOARD_PORT', 3000),
   dashboardToken: process.env.DASHBOARD_TOKEN || null,
+
+  // Abre o painel no navegador automaticamente ao iniciar (defina como "false" em servidores
+  // sem interface gráfica; a abertura também falha em silêncio quando não há navegador).
+  autoOpenBrowser: process.env.AUTO_OPEN_BROWSER !== 'false',
 };

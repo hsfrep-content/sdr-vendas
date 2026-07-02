@@ -12,6 +12,11 @@ const STATE_LABELS = {
   ready: { label: 'Conectado', color: '#15803d', bg: '#dcfce7' },
   auth_failure: { label: 'Falha na autenticação — reinicie o processo', color: '#b91c1c', bg: '#fee2e2' },
   disconnected: { label: 'Desconectado — reinicie o processo', color: '#b91c1c', bg: '#fee2e2' },
+  connection_error: {
+    label: 'Sem conexão com o WhatsApp — verifique a internet; tentando de novo automaticamente',
+    color: '#b91c1c',
+    bg: '#fee2e2',
+  },
 };
 
 function readHandoffQueue(filePath) {

@@ -10,6 +10,7 @@ User=sdr
 Group=sdr
 # Ajuste para o caminho real onde o projeto foi copiado no computador do escritório.
 WorkingDirectory=/opt/sdr-vendas
+Environment=AUTO_OPEN_BROWSER=false
 ExecStart=/usr/bin/node src/index.js
 Restart=on-failure
 RestartSec=10

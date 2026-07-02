@@ -6,6 +6,31 @@ alugar ou adquirir** um imóvel. Quando o cliente responde demonstrando interess
 o fluxo automático é **interrompido imediatamente** e o lead é encaminhado para
 um atendente humano continuar a conversa.
 
+## Início rápido — 1 comando (Linux)
+
+Cole esta linha num terminal e pressione Enter:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hsfrep-content/sdr-vendas/claude/whatsapp-sdr-real-estate-2ro8ry/scripts/iniciar.sh | bash
+```
+
+O script instala o que faltar (git e Node.js — pode pedir sua senha de
+administrador), baixa o projeto para `~/sdr-vendas`, inicia o agente e **abre
+sozinho no navegador** a tela onde você:
+
+1. Escaneia o QR code com o WhatsApp do número que vai enviar as mensagens;
+2. Envia a planilha `.csv` de contatos;
+3. Clica em "Enviar mensagens para os contatos novos agora".
+
+Rodar o mesmo comando de novo depois só atualiza e inicia (não reinstala).
+Para encerrar, volte ao terminal e pressione `Ctrl+C`. Os detalhes de cada
+passo estão nas seções abaixo.
+
+> **Por que não é só um arquivo .html?** O motor que mantém a sessão do
+> WhatsApp conectada precisa ser um programa rodando na máquina — uma página
+> HTML sozinha não tem permissão do navegador para isso. A tela que abre é
+> justamente esse painel HTML, servido pelo programa local.
+
 ## Como funciona
 
 1. **Contatos autorizados.** A lista de contatos (`data/contacts.csv`) tem uma

@@ -92,7 +92,12 @@ class WhatsAppWebClient {
   }
 
   async initialize() {
-    await this.client.initialize();
+    try {
+      await this.client.initialize();
+    } catch (err) {
+      this._setState('connection_error');
+      throw err;
+    }
   }
 
   async _simulateTyping(whatsappId) {
