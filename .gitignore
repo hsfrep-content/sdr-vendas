@@ -1,0 +1,8 @@
+node_modules/
+.env
+.wwebjs_auth/
+.wwebjs_cache/
+data/contacts.csv
+data/state.json
+data/handoff-queue.json
+*.log

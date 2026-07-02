@@ -1,0 +1,19 @@
+{
+  "name": "sdr-vendas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agente de SDR para WhatsApp Web - reaproximacao de clientes de imoveis",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "csv-parse": "^7.0.0",
+    "dotenv": "^17.4.2",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}
