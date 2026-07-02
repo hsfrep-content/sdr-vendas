@@ -13,7 +13,7 @@ const STATE_LABELS = {
   auth_failure: { label: 'Falha na autenticação — reinicie o processo', color: '#b91c1c', bg: '#fee2e2' },
   disconnected: { label: 'Desconectado — reinicie o processo', color: '#b91c1c', bg: '#fee2e2' },
   connection_error: {
-    label: 'Sem conexão com o WhatsApp — verifique a internet; tentando de novo automaticamente',
+    label: 'Não consegui conectar ao WhatsApp — veja a mensagem de erro no terminal; tentando de novo automaticamente',
     color: '#b91c1c',
     bg: '#fee2e2',
   },

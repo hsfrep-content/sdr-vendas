@@ -1,7 +1,44 @@
+const fs = require('fs');
+const path = require('path');
 const { Client, LocalAuth, List } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const CHROME_LOCK_FILES = new Set(['SingletonLock', 'SingletonSocket', 'SingletonCookie']);
+
+// Se o processo for encerrado de forma abrupta (terminal fechado, computador suspenso),
+// o Chrome interno pode deixar para trás arquivos de "cadeado" na pasta de sessão. Na
+// próxima vez, o puppeteer recusa iniciar com "The browser is already running" mesmo
+// sem nenhum processo de verdade rodando. Como isto roda antes de qualquer Chrome deste
+// processo ser aberto, qualquer cadeado encontrado aqui é necessariamente obsoleto.
+function removeStaleBrowserLocks(sessionPath) {
+  const root = path.resolve(sessionPath);
+  if (!fs.existsSync(root)) return;
+
+  const pending = [root];
+  while (pending.length) {
+    const dir = pending.pop();
+    let entries;
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch (err) {
+      continue;
+    }
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        pending.push(fullPath);
+      } else if (CHROME_LOCK_FILES.has(entry.name)) {
+        try {
+          fs.unlinkSync(fullPath);
+        } catch (err) {
+          // Se não conseguir remover, deixa o puppeteer reportar o erro normalmente.
+        }
+      }
+    }
+  }
+}
 
 // Fina camada sobre whatsapp-web.js: autenticação por QR code (mesmo número usado no
 // WhatsApp Web), envio de mensagens com uma pequena simulação de "digitando..." para soar
@@ -12,6 +49,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // código como imagem em vez de depender só do terminal.
 class WhatsAppWebClient {
   constructor({ sessionPath = '.wwebjs_auth', puppeteerOptions = {} } = {}) {
+    this.sessionPath = sessionPath;
     this.client = new Client({
       authStrategy: new LocalAuth({ dataPath: sessionPath }),
       puppeteer: {
@@ -93,6 +131,7 @@ class WhatsAppWebClient {
 
   async initialize() {
     try {
+      removeStaleBrowserLocks(this.sessionPath);
       await this.client.initialize();
     } catch (err) {
       this._setState('connection_error');
@@ -133,4 +172,4 @@ class WhatsAppWebClient {
   }
 }
 
-module.exports = { WhatsAppWebClient };
+module.exports = { WhatsAppWebClient, removeStaleBrowserLocks };
