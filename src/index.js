@@ -4,6 +4,17 @@ const { WhatsAppWebClient } = require('./whatsapp/whatsappClient');
 const { SdrAgent } = require('./sdrAgent');
 const { createDashboardApp } = require('./web/server');
 
+// Um erro não tratado em algum callback interno do puppeteer/whatsapp-web.js (ex.: o Chrome
+// travando no meio da sincronização inicial) derrubaria o processo Node inteiro por padrão —
+// e junto dele o painel, mesmo sem relação nenhuma com a conexão do WhatsApp. Só registra o
+// erro e mantém o processo de pé; o estado "connection_error" já cobre o usuário no painel.
+process.on('unhandledRejection', (reason) => {
+  console.error('Erro não tratado (unhandledRejection):', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('Erro não tratado (uncaughtException):', err);
+});
+
 async function main() {
   const store = new ConversationStore(config.stateFile);
   const whatsappClient = new WhatsAppWebClient({ sessionPath: config.sessionPath });
@@ -37,19 +48,39 @@ async function main() {
     if (config.autoOpenBrowser) openInBrowser(url);
   });
 
-  // Falha ao conectar no WhatsApp (internet fora do ar, bloqueio momentâneo etc.) não pode
-  // derrubar o painel: mantém a página no ar mostrando o erro e tenta de novo sozinho.
+  // Falha ao conectar no WhatsApp (internet fora do ar, o Chrome travando durante a
+  // sincronização inicial, bloqueio momentâneo etc.) não pode derrubar o painel: mantém a
+  // página no ar mostrando o erro e tenta de novo sozinho, tanto na primeira conexão quanto
+  // se a sessão cair mais tarde (ex.: o celular ficou sem internet, o Chrome interno travou).
   const RETRY_DELAY_MS = 30000;
-  for (;;) {
+  let connecting = false;
+  async function connectWithRetry() {
+    if (connecting) return;
+    connecting = true;
     try {
-      await whatsappClient.initialize();
-      break;
-    } catch (err) {
-      console.error(`Não consegui conectar ao WhatsApp: ${err.message}`);
-      console.error(`Tentando de novo em ${RETRY_DELAY_MS / 1000}s... (verifique a conexão com a internet)`);
-      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+      for (;;) {
+        try {
+          await whatsappClient.initialize();
+          return;
+        } catch (err) {
+          console.error(`Não consegui conectar ao WhatsApp: ${err.message}`);
+          console.error(`Tentando de novo em ${RETRY_DELAY_MS / 1000}s...`);
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+        }
+      }
+    } finally {
+      connecting = false;
     }
   }
+
+  whatsappClient.onStateChange((state) => {
+    if (state === 'disconnected') {
+      console.warn('Conexão com o WhatsApp caiu. Tentando reconectar automaticamente...');
+      connectWithRetry();
+    }
+  });
+
+  await connectWithRetry();
 }
 
 // Tenta abrir o painel no navegador padrão da máquina. É só uma conveniência: se não houver

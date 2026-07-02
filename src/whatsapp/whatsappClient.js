@@ -54,7 +54,16 @@ class WhatsAppWebClient {
       authStrategy: new LocalAuth({ dataPath: sessionPath }),
       puppeteer: {
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          // Evita que o Chrome use /dev/shm (costuma ser pequeno demais em muitas máquinas
+          // Linux) para memória compartilhada entre processos. Sem isso, a fase de
+          // sincronização inicial do WhatsApp Web — que carrega bastante histórico de uma
+          // vez — pode esgotar esse espaço e derrubar a aba com "Page crashed!", levando o
+          // processo inteiro (painel incluso) junto.
+          '--disable-dev-shm-usage',
+        ],
         ...puppeteerOptions,
       },
     });
