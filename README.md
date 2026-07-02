@@ -116,6 +116,81 @@ de novo a cada execução.
 Depois de conectado, o agente envia a mensagem inicial para os contatos
 autorizados ainda não contatados e passa a escutar as respostas.
 
+## Deploy em produção (computador do escritório, Linux, sempre ligado)
+
+Esses passos deixam o agente rodando permanentemente na máquina do
+escritório, reiniciando sozinho se cair ou se o computador reiniciar.
+
+**1. Instalar o Node.js 18+ (se ainda não tiver):**
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+node -v   # confirme que é 18 ou superior
+```
+
+**2. Copiar o projeto para a máquina e instalar as dependências:**
+
+```bash
+sudo mkdir -p /opt/sdr-vendas
+sudo chown $USER:$USER /opt/sdr-vendas
+git clone <url-do-repositorio> /opt/sdr-vendas
+cd /opt/sdr-vendas
+npm ci --omit=dev
+```
+
+**3. Configurar:**
+
+```bash
+cp .env.example .env              # ajuste HANDOFF_NOTIFY_NUMBER e demais variáveis
+cp data/contacts.example.csv data/contacts.csv   # substitua pelos contatos reais autorizados
+```
+
+**4. Rodar uma vez manualmente para escanear o QR code:**
+
+```bash
+npm start
+```
+
+Escaneie o QR code que aparece no terminal com o WhatsApp do número que vai
+atuar como agente (Configurações → Aparelhos conectados → Conectar um
+aparelho). Depois que aparecer "WhatsApp conectado...", pare o processo
+(`Ctrl+C`) — a sessão já ficou salva em `.wwebjs_auth/` e não vai pedir o QR
+code de novo.
+
+**5. Instalar como serviço do sistema (systemd), para rodar sempre e
+reiniciar sozinho:**
+
+```bash
+sudo useradd -r -m -d /opt/sdr-vendas sdr        # usuário dedicado (não usar root)
+sudo chown -R sdr:sdr /opt/sdr-vendas
+sudo cp deploy/sdr-vendas.service /etc/systemd/system/sdr-vendas.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now sdr-vendas
+```
+
+Edite `/etc/systemd/system/sdr-vendas.service` antes de ativar se o caminho
+do projeto (`WorkingDirectory`) ou o usuário (`User`/`Group`) forem
+diferentes de `/opt/sdr-vendas` e `sdr`.
+
+**Comandos úteis depois de instalado:**
+
+```bash
+sudo systemctl status sdr-vendas     # ver se está rodando
+journalctl -u sdr-vendas -f          # acompanhar os logs em tempo real
+sudo systemctl restart sdr-vendas    # reiniciar manualmente
+sudo systemctl stop sdr-vendas       # parar
+```
+
+Se o Chromium do puppeteer falhar ao abrir por falta de bibliotecas do
+sistema (comum em instalações Linux bem enxutas), instale as dependências
+comuns do Chrome headless:
+
+```bash
+sudo apt-get install -y libnss3 libatk-bridge2.0-0 libx11-xcb1 libxcomposite1 \
+  libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libasound2
+```
+
 ## Testes
 
 ```bash

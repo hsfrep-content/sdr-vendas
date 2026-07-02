@@ -5,6 +5,9 @@
   "description": "Agente de SDR para WhatsApp Web - reaproximacao de clientes de imoveis",
   "type": "commonjs",
   "main": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node src/index.js",
     "test": "node --test test/*.test.js"

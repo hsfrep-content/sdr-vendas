@@ -1,0 +1,23 @@
+[Unit]
+Description=Agente de SDR - WhatsApp Web (A&L Negocios Imobiliarios)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Ajuste o usuário/grupo que vai rodar o processo (não use root).
+User=sdr
+Group=sdr
+# Ajuste para o caminho real onde o projeto foi copiado no computador do escritório.
+WorkingDirectory=/opt/sdr-vendas
+ExecStart=/usr/bin/node src/index.js
+Restart=on-failure
+RestartSec=10
+# Evita que o processo fique com estado zumbi se o Chromium do puppeteer travar.
+TimeoutStopSec=15
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sdr-vendas
+
+[Install]
+WantedBy=multi-user.target
