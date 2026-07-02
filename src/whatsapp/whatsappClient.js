@@ -1,4 +1,4 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, List } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -34,6 +34,7 @@ class WhatsAppWebClient {
         from: msg.from,
         body: msg.body,
         name: contact?.pushname || contact?.name || null,
+        selectedRowId: msg.selectedRowId || null,
         raw: msg,
       };
       for (const handler of this._messageHandlers) {
@@ -54,7 +55,7 @@ class WhatsAppWebClient {
     await this.client.initialize();
   }
 
-  async sendMessage(whatsappId, text) {
+  async _simulateTyping(whatsappId) {
     try {
       const chat = await this.client.getChatById(whatsappId);
       await chat.sendStateTyping();
@@ -62,7 +63,28 @@ class WhatsAppWebClient {
     } catch (err) {
       // Simulação de digitação é apenas cosmética; segue com o envio mesmo se falhar.
     }
+  }
+
+  async sendMessage(whatsappId, text) {
+    await this._simulateTyping(whatsappId);
     return this.client.sendMessage(whatsappId, text);
+  }
+
+  // Envia a "caixa de seleção" como uma lista interativa nativa do WhatsApp. Esse recurso
+  // depende de suporte do WhatsApp para contas fora da API oficial de empresas e pode falhar
+  // silenciosamente ou ser rejeitado; nesse caso, cai automaticamente para um menu em texto
+  // simples com as mesmas opções, para o cliente nunca ficar sem receber a pergunta.
+  async sendSelectionMenu(whatsappId, { body, buttonText, footer, options }) {
+    await this._simulateTyping(whatsappId);
+    try {
+      const list = new List(body, buttonText, [{ rows: options.map((o) => ({ id: o.id, title: o.title })) }], undefined, footer);
+      return await this.client.sendMessage(whatsappId, list);
+    } catch (err) {
+      const fallbackText = [body, options.map((o, i) => `${i + 1}. ${o.title}`).join('\n'), footer]
+        .filter(Boolean)
+        .join('\n\n');
+      return this.client.sendMessage(whatsappId, fallbackText);
+    }
   }
 }
 

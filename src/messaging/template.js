@@ -6,16 +6,19 @@ function firstName(fullName) {
 }
 
 // Mensagem de reaproximação leve: tom amigável, sem pressão, pergunta aberta sobre
-// vender/alugar/comprar. Assinatura da empresa/consultor é configurável.
-function buildInitialMessage(name, { companyName = 'nossa imobiliária', agentName = '' } = {}) {
+// vender/alugar/adquirir. Nome do consultor vem em *negrito* (formatação nativa do WhatsApp).
+function buildInitialMessage(
+  name,
+  { companyName = 'A&L Negócios Imobiliários', agentName = 'Linhares', agentRole = 'corretor de imóveis e gestor de negócios' } = {}
+) {
   const first = firstName(name);
-  const greeting = first ? `Oi, ${first}! Tudo bem?` : 'Oi! Tudo bem?';
-  const signature = agentName ? `${agentName}, da ${companyName}` : `da ${companyName}`;
+  const greeting = first ? `Oi, ${first}! Tudo bem? 😊` : 'Oi! Tudo bem? 😊';
 
   return [
-    `${greeting} 😊`,
-    `Aqui é ${signature}. Faz um tempo que a gente não conversa, e eu queria só dar um alô rapidinho, sem compromisso nenhum.`,
-    'Você tem pensado em vender, alugar ou comprar algum imóvel ultimamente? Se fizer sentido pra você, me conta que eu te ajudo com todo gosto!',
+    greeting,
+    `Aqui é o *${agentName}*, ${agentRole} da ${companyName}. Faz um tempo desde a última vez que tivemos contato e eu estou retomando esse para te perguntar:`,
+    'Você tem pensado em vender, alugar ou adquirir algum imóvel ultimamente?',
+    'Se sim, me conta o que você busca nesse momento, vai ser um prazer te ajudar!',
   ].join('\n\n');
 }
 

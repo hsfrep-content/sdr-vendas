@@ -5,12 +5,14 @@ const path = require('node:path');
 const os = require('node:os');
 const { SdrAgent } = require('../src/sdrAgent');
 const { ConversationStore } = require('../src/state/conversationStore');
+const { SELECTION_OPTIONS } = require('../src/messaging/selectionMenu');
 
 const CONTACTS_FILE = path.join(__dirname, 'fixtures', 'sdrAgentContacts.csv');
 
 class FakeWhatsAppClient {
   constructor() {
     this.sent = [];
+    this.menusSent = [];
     this.handlers = [];
   }
 
@@ -20,6 +22,10 @@ class FakeWhatsAppClient {
 
   async sendMessage(to, text) {
     this.sent.push({ to, text });
+  }
+
+  async sendSelectionMenu(to, menu) {
+    this.menusSent.push({ to, menu });
   }
 
   async emitIncoming(payload) {
@@ -33,7 +39,8 @@ function setup() {
     contactsFile: CONTACTS_FILE,
     defaultCountryCode: '55',
     companyName: 'Imob X',
-    agentName: '',
+    agentName: 'Bruno',
+    agentRole: 'corretor',
     minDelayMs: 0,
     maxDelayMs: 1,
     handoffQueueFile: path.join(dir, 'handoff-queue.json'),
@@ -63,41 +70,56 @@ test('runCampaign não reenvia mensagem inicial a quem já foi contatado', async
   assert.deepEqual(recipients, ['5511966665555@c.us']);
 });
 
-test('resposta com interesse interrompe o fluxo automático e aciona atendimento humano', async () => {
-  const { agent, whatsappClient, store, config } = setup();
+test('primeira resposta do cliente abre a caixa de seleção, sem classificar o texto livre', async () => {
+  const { agent, whatsappClient, store } = setup();
   const whatsappId = '5511999990000@c.us';
   store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_reply' });
+
+  const result = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: 'Oi, tudo bem?' });
+
+  assert.equal(result.action, 'menu_sent');
+  assert.equal(store.get(whatsappId).status, 'awaiting_selection');
+  assert.equal(whatsappClient.menusSent.length, 1);
+  assert.equal(whatsappClient.menusSent[0].to, whatsappId);
+  assert.equal(whatsappClient.menusSent[0].menu.options.length, SELECTION_OPTIONS.length);
+});
+
+test('selecionar "tenho interesse em vender" interrompe o fluxo e aciona atendimento humano', async () => {
+  const { agent, whatsappClient, store, config } = setup();
+  const whatsappId = '5511999990000@c.us';
+  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_selection' });
 
   const result = await agent.handleIncomingMessage({
     from: whatsappId,
     name: 'Maria Silva',
-    body: 'Tenho interesse sim, quero vender meu apê',
+    selectedRowId: 'opt_interesse_vender',
+    body: 'Sim, tenho interesse em vender',
   });
 
   assert.equal(result.action, 'handoff');
   assert.equal(store.get(whatsappId).status, 'awaiting_human');
+  assert.match(whatsappClient.sent.at(-1).text, /Perfeito, Maria Silva! Vou te conectar agora com o meu time de atendimento/);
 
   const queue = JSON.parse(fs.readFileSync(config.handoffQueueFile, 'utf8'));
   assert.equal(queue.length, 1);
   assert.equal(queue[0].reason, 'interesse_detectado');
-  assert.equal(queue[0].whatsappId, whatsappId);
 
-  // Depois do handoff, novas mensagens do mesmo contato não disparam mais respostas automáticas.
   whatsappClient.sent = [];
   const second = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: 'oi de novo' });
   assert.equal(second, null);
   assert.equal(whatsappClient.sent.length, 0);
 });
 
-test('pedido de descadastro encerra o contato e é respeitado em campanhas futuras', async () => {
+test('selecionar a opção de descadastro encerra o contato e é respeitado em campanhas futuras', async () => {
   const { agent, whatsappClient, store } = setup();
   const whatsappId = '5511999990000@c.us';
-  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_reply' });
+  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_selection' });
 
   const result = await agent.handleIncomingMessage({
     from: whatsappId,
     name: 'Maria Silva',
-    body: 'Pode parar de mandar mensagem, por favor',
+    selectedRowId: 'opt_parar_mensagens',
+    body: 'Favor parar de enviar mensagens.',
   });
 
   assert.equal(result.action, 'opt_out');
@@ -109,19 +131,46 @@ test('pedido de descadastro encerra o contato e é respeitado em campanhas futur
   assert.ok(!recipients.includes(whatsappId), 'contato que se descadastrou não pode ser recontatado');
 });
 
-test('resposta ambígua gera uma pergunta de esclarecimento antes de acionar um humano', async () => {
+test('selecionar "sem interesse" encerra a conversa educadamente', async () => {
   const { agent, whatsappClient, store } = setup();
   const whatsappId = '5511999990000@c.us';
-  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_reply' });
+  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_selection' });
 
-  const first = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: 'oi' });
-  assert.equal(first.action, 'clarify');
-  assert.equal(store.get(whatsappId).status, 'awaiting_reply');
-  assert.equal(store.get(whatsappId).clarificationAttempts, 1);
+  const result = await agent.handleIncomingMessage({
+    from: whatsappId,
+    name: 'Maria Silva',
+    selectedRowId: 'opt_sem_interesse',
+    body: 'Não tenho interesse, obrigado',
+  });
 
-  const second = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: 'sei lá' });
-  assert.equal(second.action, 'handoff');
+  assert.equal(result.action, 'closed');
+  assert.equal(store.get(whatsappId).status, 'closed_not_interested');
+});
+
+test('resposta digitada (sem tocar na lista) também é reconhecida pelo número ou pelo texto', async () => {
+  const { agent, store } = setup();
+  const whatsappId = '5511999990000@c.us';
+
+  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_selection' });
+  const byNumber = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: '1' });
+  assert.equal(byNumber.action, 'handoff');
+
+  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_selection' });
+  const byText = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: 'quero vender meu apê' });
+  assert.equal(byText.action, 'handoff');
+});
+
+test('resposta fora das opções do menu aciona direto o atendimento humano, sem insistir', async () => {
+  const { agent, whatsappClient, store } = setup();
+  const whatsappId = '5511999990000@c.us';
+  store.set(whatsappId, { name: 'Maria Silva', status: 'awaiting_selection' });
+
+  const result = await agent.handleIncomingMessage({ from: whatsappId, name: 'Maria Silva', body: 'Oi, tudo bem?' });
+
+  assert.equal(result.action, 'handoff');
+  assert.equal(result.entry.reason, 'resposta_fora_do_menu');
   assert.equal(store.get(whatsappId).status, 'awaiting_human');
+  assert.match(whatsappClient.sent.at(-1).text, /time de atendimento/);
 });
 
 test('mensagem de contato que a campanha nunca iniciou é ignorada', async () => {

@@ -2,7 +2,7 @@
 
 Agente de SDR que envia, a partir de uma lista de contatos, uma mensagem inicial
 personalizada e amistosa perguntando se o cliente tem interesse em **vender,
-alugar ou comprar** um imóvel. Quando o cliente responde demonstrando interesse,
+alugar ou adquirir** um imóvel. Quando o cliente responde demonstrando interesse,
 o fluxo automático é **interrompido imediatamente** e o lead é encaminhado para
 um atendente humano continuar a conversa.
 
@@ -14,24 +14,45 @@ um atendente humano continuar a conversa.
 2. **Mensagem inicial.** Para cada contato autorizado, é enviada uma única
    mensagem de reaproximação com o nome do cliente, tom leve e sem pressão
    (`src/messaging/template.js`), com um intervalo aleatório entre os envios
-   para não parecer disparo em massa.
+   para não parecer disparo em massa. Texto padrão:
+
+   > Oi, Maria! Tudo bem? 😊
+   >
+   > Aqui é o *Linhares*, corretor de imóveis e gestor de negócios da A&L
+   > Negócios Imobiliários. Faz um tempo desde a última vez que tivemos
+   > contato e eu estou retomando esse para te perguntar:
+   >
+   > Você tem pensado em vender, alugar ou adquirir algum imóvel ultimamente?
+   >
+   > Se sim, me conta o que você busca nesse momento, vai ser um prazer te ajudar!
+
 3. **Aguarda a resposta.** Depois de enviar, o agente não manda mais nada para
    aquele contato até ele responder — o estado fica `awaiting_reply`
    (`src/state/conversationStore.js`).
-4. **Classifica a resposta.** Quando a resposta chega, um classificador
-   baseado em palavras-chave em pt-BR (`src/nlp/interestClassifier.js`)
-   identifica a intenção:
-   - **Interesse** → o fluxo automático é interrompido e o lead vai para a
-     fila de atendimento humano (`src/handoff/humanHandoff.js`), com uma
-     mensagem de transição tranquila avisando o cliente.
-   - **Descadastro** (ex.: "pare de mandar mensagem") → o contato é marcado
-     como `opted_out` e nunca mais é contatado, mesmo em campanhas futuras.
-   - **Sem interesse** → o agente agradece e encerra a conversa com respeito,
-     sem insistir.
-   - **Ambíguo** → o agente faz **uma única** pergunta de esclarecimento; se a
-     segunda resposta continuar pouco clara, aciona um humano em vez de ficar
-     insistindo com o cliente.
-5. **Atendimento humano.** Todo handoff é registrado em
+4. **Caixa de seleção.** Assim que o cliente responde qualquer coisa (ex.:
+   "oi", "tenho sim"), o agente envia uma lista de seleção com três opções
+   fixas (`src/messaging/selectionMenu.js`), para deixar a resposta do
+   cliente estruturada e fácil de interpretar:
+   1. *Sim, tenho interesse em vender*
+   2. *Não tenho interesse, obrigado*
+   3. *Favor parar de enviar mensagens.*
+5. **A escolha decide o próximo passo:**
+   - **Opção 1 (interesse)** → o fluxo automático é interrompido e o lead vai
+     para a fila de atendimento humano (`src/handoff/humanHandoff.js`), com a
+     mensagem: *"Perfeito, [nome]! Vou te conectar agora com o meu time de
+     atendimento para avançarmos com o teu atendimento."*
+   - **Opção 3 (descadastro)** → o contato é marcado como `opted_out` e nunca
+     mais é contatado, mesmo em campanhas futuras.
+   - **Opção 2 (sem interesse)** → o agente agradece e encerra a conversa com
+     respeito, sem insistir.
+   - **Qualquer outra resposta** (cliente não usa o menu, ex.: "Oi, tudo
+     bem?") → tratado como fora do roteiro: o agente não insiste nem repete o
+     menu, aciona direto o atendimento humano para não deixar o cliente sem
+     resposta.
+   - O cliente também pode responder digitando o número (`1`, `2` ou `3`) ou
+     escrevendo com as próprias palavras (ex.: "quero vender meu apê") em vez
+     de tocar na lista — o agente reconhece os dois formatos.
+6. **Atendimento humano.** Todo handoff é registrado em
    `data/handoff-queue.json` e, opcionalmente, notificado em tempo real para
    um número/grupo interno via `HANDOFF_NOTIFY_NUMBER`.
 
@@ -60,7 +81,8 @@ Principais variáveis de ambiente (ver `.env.example` para a lista completa):
 | Variável | Descrição |
 |---|---|
 | `AGENT_COMPANY_NAME` | Nome da imobiliária exibido na mensagem |
-| `AGENT_SIGNATURE_NAME` | Nome do consultor/SDR que assina a mensagem |
+| `AGENT_SIGNATURE_NAME` | Nome do consultor/SDR que assina a mensagem (em negrito) |
+| `AGENT_ROLE` | Cargo exibido junto ao nome do consultor |
 | `CONTACTS_FILE` | Caminho do CSV de contatos |
 | `MESSAGE_MIN_DELAY_MS` / `MESSAGE_MAX_DELAY_MS` | Intervalo entre envios |
 | `HANDOFF_NOTIFY_NUMBER` | Número interno avisado quando um lead esquenta |
@@ -103,8 +125,9 @@ npm test
 Os testes (`node:test`, sem dependências externas) cobrem o template de
 mensagem, o classificador de intenção, o carregamento/filtragem de contatos,
 a persistência de estado e o fluxo completo do agente (envio → resposta →
-handoff/opt-out/encerramento), usando um cliente de WhatsApp falso — não é
-necessário estar conectado ao WhatsApp para rodar a suíte.
+caixa de seleção → handoff/opt-out/encerramento), usando um cliente de
+WhatsApp falso — não é necessário estar conectado ao WhatsApp para rodar a
+suíte.
 
 ## Limitações e avisos importantes
 
@@ -114,10 +137,19 @@ necessário estar conectado ao WhatsApp para rodar a suíte.
   Serviço do WhatsApp; números podem ser banidos por uso automatizado em
   volume. Para operação em produção/escala, avalie migrar para a
   [WhatsApp Business Platform (Cloud API)](https://developers.facebook.com/docs/whatsapp).
-- O classificador de intenção é baseado em regras/palavras-chave simples em
-  português. Ele cobre os casos mais comuns de resposta, mas respostas muito
-  fora do padrão caem em "ambíguo" e são escaladas para um humano — por
-  design, na dúvida o agente prefere pedir ajuda a insistir sozinho.
+- **A caixa de seleção usa mensagens de lista interativa do WhatsApp**
+  (o mesmo recurso usado por contas comerciais para mostrar um botão "Ver
+  opções" que abre uma lista). O WhatsApp restringiu esse tipo de mensagem
+  fora da API oficial de empresas nos últimos anos, então ela pode não
+  aparecer para alguns clientes dependendo da versão do WhatsApp deles. Por
+  segurança, se o envio da lista falhar, o agente cai automaticamente para um
+  menu em **texto simples** com as mesmas três opções numeradas — o cliente
+  nunca fica sem receber a pergunta, só pode variar a aparência.
+- O reconhecimento de texto livre (quando o cliente digita em vez de
+  selecionar) é baseado em regras/palavras-chave em português. Ele cobre os
+  casos mais comuns, mas qualquer resposta fora do esperado é tratada como
+  "quero falar com alguém" e escalada direto para um humano — por design, na
+  dúvida o agente prefere pedir ajuda a insistir sozinho.
 - Este agente **não fecha negócio nem qualifica profundamente o lead**: seu
   papel é só a reaproximação inicial e o encaminhamento educado para quem
   demonstrar interesse.

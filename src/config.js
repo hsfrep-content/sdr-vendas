@@ -8,8 +8,9 @@ function int(name, fallback) {
 }
 
 module.exports = {
-  companyName: process.env.AGENT_COMPANY_NAME || 'nossa imobiliária',
-  agentName: process.env.AGENT_SIGNATURE_NAME || '',
+  companyName: process.env.AGENT_COMPANY_NAME || 'A&L Negócios Imobiliários',
+  agentName: process.env.AGENT_SIGNATURE_NAME || 'Linhares',
+  agentRole: process.env.AGENT_ROLE || 'corretor de imóveis e gestor de negócios',
   defaultCountryCode: process.env.DEFAULT_COUNTRY_CODE || '55',
 
   contactsFile: process.env.CONTACTS_FILE || 'data/contacts.csv',
