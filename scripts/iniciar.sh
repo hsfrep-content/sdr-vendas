@@ -57,6 +57,12 @@ else
   log "Dependências já instaladas."
 fi
 
+# O WhatsApp Web roda dentro de um Chrome interno baixado pelo puppeteer. Uma instalação
+# interrompida pode deixar as dependências sem esse navegador, então garante aqui — o
+# comando é rápido e não baixa nada quando o Chrome já está presente.
+log "Verificando o navegador interno (Chrome)..."
+npx puppeteer browsers install chrome || fail "não consegui baixar o navegador interno. Verifique a conexão e rode este script de novo."
+
 [ -f .env ] || { cp .env.example .env; log "Arquivo de configuração .env criado (edite depois se quiser mudar textos/números)."; }
 
 # --- 5. Iniciar -------------------------------------------------------------
