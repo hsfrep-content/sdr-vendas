@@ -38,6 +38,11 @@ class ConversationStore {
     this._persist();
     return updated;
   }
+
+  // Usado só pelo painel web para montar um resumo (quantos contatos em cada etapa).
+  values() {
+    return Object.values(this.data);
+  }
 }
 
 module.exports = { ConversationStore };

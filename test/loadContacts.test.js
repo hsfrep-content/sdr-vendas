@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
-const { loadContacts, loadAuthorizedContacts } = require('../src/contacts/loadContacts');
+const { loadContacts, loadAuthorizedContacts, parseContactsCsv } = require('../src/contacts/loadContacts');
 
 const FIXTURE = path.join(__dirname, 'fixtures', 'contacts.csv');
 
@@ -26,4 +26,15 @@ test('loadAuthorizedContacts só retorna quem deu consentimento explícito', () 
   const names = authorized.map((c) => c.name);
   assert.deepEqual(names, ['Maria Silva', 'João Pereira', 'Pedro Rocha']);
   assert.ok(!names.includes('Ana Souza'));
+});
+
+test('parseContactsCsv interpreta um CSV em memória (usado pelo upload do painel)', () => {
+  const contacts = parseContactsCsv('name,phone,consent\nCarlos,11966665555,sim\n');
+  assert.equal(contacts.length, 1);
+  assert.equal(contacts[0].whatsappId, '5511966665555@c.us');
+});
+
+test('parseContactsCsv retorna lista vazia quando o CSV não tem colunas reconhecidas', () => {
+  const contacts = parseContactsCsv('coluna_errada\nx\n');
+  assert.deepEqual(contacts, []);
 });

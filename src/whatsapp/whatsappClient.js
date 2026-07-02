@@ -6,6 +6,10 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Fina camada sobre whatsapp-web.js: autenticação por QR code (mesmo número usado no
 // WhatsApp Web), envio de mensagens com uma pequena simulação de "digitando..." para soar
 // mais natural, e repasse de mensagens recebidas para quem se inscrever via onMessage().
+//
+// Também mantém o estado da conexão (waiting_qr/authenticating/ready/disconnected) e o
+// último QR code recebido, para que o painel web (src/web/server.js) consiga exibir o
+// código como imagem em vez de depender só do terminal.
 class WhatsAppWebClient {
   constructor({ sessionPath = '.wwebjs_auth', puppeteerOptions = {} } = {}) {
     this.client = new Client({
@@ -18,14 +22,33 @@ class WhatsAppWebClient {
     });
 
     this._messageHandlers = [];
+    this._stateChangeHandlers = [];
+    this.state = 'waiting_qr';
+    this.lastQr = null;
 
     this.client.on('qr', (qr) => {
+      this.lastQr = qr;
+      this._setState('waiting_qr');
       console.log('Escaneie o QR code abaixo com o WhatsApp do número do agente:');
       qrcode.generate(qr, { small: true });
     });
 
-    this.client.on('auth_failure', (msg) => console.error('Falha de autenticação no WhatsApp Web:', msg));
-    this.client.on('disconnected', (reason) => console.warn('WhatsApp desconectado:', reason));
+    this.client.on('authenticated', () => {
+      this.lastQr = null;
+      this._setState('authenticating');
+    });
+
+    this.client.on('ready', () => this._setState('ready'));
+
+    this.client.on('auth_failure', (msg) => {
+      this._setState('auth_failure');
+      console.error('Falha de autenticação no WhatsApp Web:', msg);
+    });
+
+    this.client.on('disconnected', (reason) => {
+      this._setState('disconnected');
+      console.warn('WhatsApp desconectado:', reason);
+    });
 
     this.client.on('message', async (msg) => {
       if (msg.fromMe) return;
@@ -41,6 +64,23 @@ class WhatsAppWebClient {
         await handler(payload);
       }
     });
+  }
+
+  _setState(state) {
+    this.state = state;
+    for (const handler of this._stateChangeHandlers) handler(state);
+  }
+
+  getState() {
+    return this.state;
+  }
+
+  getLastQr() {
+    return this.lastQr;
+  }
+
+  onStateChange(handler) {
+    this._stateChangeHandlers.push(handler);
   }
 
   onMessage(handler) {

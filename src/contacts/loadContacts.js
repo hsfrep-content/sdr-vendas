@@ -9,10 +9,10 @@ function isConsentGiven(value) {
   return TRUE_VALUES.has(String(value || '').trim().toLowerCase());
 }
 
-// Carrega todos os contatos do CSV (colunas aceitas em pt-BR ou en-US), sem filtrar consentimento.
-function loadContacts(filePath, { defaultCountryCode = '55' } = {}) {
-  const absolutePath = path.resolve(filePath);
-  const raw = fs.readFileSync(absolutePath, 'utf8');
+// Interpreta o texto de um CSV de contatos (colunas aceitas em pt-BR ou en-US), sem filtrar
+// consentimento. Separado de loadContacts para poder validar um upload em memória antes de
+// gravar em disco (ver src/web/server.js).
+function parseContactsCsv(raw, { defaultCountryCode = '55' } = {}) {
   const records = parse(raw, { columns: true, skip_empty_lines: true, trim: true });
 
   return records
@@ -26,9 +26,14 @@ function loadContacts(filePath, { defaultCountryCode = '55' } = {}) {
     .filter((contact) => contact.whatsappId);
 }
 
+function loadContacts(filePath, options) {
+  const raw = fs.readFileSync(path.resolve(filePath), 'utf8');
+  return parseContactsCsv(raw, options);
+}
+
 // Somente os contatos que autorizaram previamente o contato (opt-in explícito na planilha).
 function loadAuthorizedContacts(filePath, options) {
   return loadContacts(filePath, options).filter((contact) => contact.consent);
 }
 
-module.exports = { loadContacts, loadAuthorizedContacts, isConsentGiven };
+module.exports = { loadContacts, loadAuthorizedContacts, parseContactsCsv, isConsentGiven };

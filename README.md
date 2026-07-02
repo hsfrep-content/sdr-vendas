@@ -100,6 +100,10 @@ Ana Souza,11977776666,nao
   `55`) é adicionado automaticamente.
 - `consent` aceita `sim`/`true`/`1`/`yes`; qualquer outro valor é tratado como
   "não autorizado" e o contato é ignorado.
+- Esse arquivo pode ser trocado tanto copiando manualmente para
+  `data/contacts.csv` quanto pelo formulário de upload no painel web (ver
+  seção "Painel de visualização" abaixo) — os dois caminhos passam pela
+  mesma validação.
 
 ## Executando
 
@@ -107,14 +111,63 @@ Ana Souza,11977776666,nao
 npm start
 ```
 
-Na primeira execução, um QR code aparece no terminal — escaneie com o
-WhatsApp do número que vai atuar como agente (Configurações → Aparelhos
-conectados → Conectar um aparelho). A sessão fica salva em
-`WHATSAPP_SESSION_PATH` (`.wwebjs_auth` por padrão) para não pedir o QR code
-de novo a cada execução.
+Isso sobe duas coisas ao mesmo tempo: a conexão com o WhatsApp Web e um
+**painel visual** em `http://127.0.0.1:3000` (ver seção abaixo) — é lá que
+você escaneia o QR code e envia a planilha de contatos, sem precisar mexer
+em terminal ou editar arquivo à mão.
 
-Depois de conectado, o agente envia a mensagem inicial para os contatos
-autorizados ainda não contatados e passa a escutar as respostas.
+A sessão autenticada fica salva em `WHATSAPP_SESSION_PATH` (`.wwebjs_auth`
+por padrão), então não pede o QR code de novo a cada reinício. Depois de
+conectado, o agente envia a mensagem inicial para os contatos autorizados
+ainda não contatados e passa a escutar as respostas.
+
+## Painel de visualização (escanear o QR code e enviar a planilha pelo navegador)
+
+Com o `npm start` (ou o serviço systemd) rodando, abra no navegador **do
+mesmo computador** onde o processo está rodando:
+
+```
+http://localhost:3000
+```
+
+Nessa página você encontra, nessa ordem:
+
+1. **QR code para escanear** — aparece automaticamente como imagem enquanto
+   o WhatsApp não estiver conectado. A página se atualiza sozinha a cada
+   15s, então o QR code (que o WhatsApp troca a cada ~20s) sempre aparece
+   atualizado. Depois de escanear, o status muda para "Conectado".
+2. **Envio da planilha de contatos** — um botão "Escolher arquivo" para
+   selecionar o CSV (colunas `name,phone,consent`) direto do computador, e
+   um botão "Enviar planilha". O painel valida o arquivo antes de salvar
+   (se as colunas estiverem erradas, mostra um aviso e não sobrescreve a
+   planilha anterior) e mostra quantos contatos foram lidos e quantos estão
+   autorizados.
+3. **Botão para disparar o envio** — depois de subir uma planilha nova
+   (inclusive para adicionar contatos a qualquer momento, sem reiniciar o
+   processo), clique em "Enviar mensagens para os contatos novos agora".
+   Contatos que já foram contatados antes nunca recebem a mensagem de novo.
+4. **Andamento das conversas e fila de atendimento humano** — quantos
+   contatos estão em cada etapa, e a lista de leads que demonstraram
+   interesse (ou saíram do roteiro) e estão esperando um humano assumir.
+
+### Acessando de outro computador da rede (opcional)
+
+Por padrão o painel só aceita conexões da própria máquina
+(`DASHBOARD_HOST=127.0.0.1`), de propósito: a página mostra o QR code de
+autenticação e recebe upload de dados de clientes, então não deve ficar
+aberta para qualquer um. Se precisar acessar de outro computador do
+escritório:
+
+1. Defina `DASHBOARD_HOST=0.0.0.0` no `.env`.
+2. Defina também `DASHBOARD_TOKEN=<algo-secreto>` no `.env` — com isso o
+   painel passa a exigir `http://<ip-da-máquina>:3000/?token=<algo-secreto>`
+   para carregar.
+3. Reinicie o processo (`sudo systemctl restart sdr-vendas` se estiver
+   usando o serviço).
+
+Evite expor essa porta na internet; se precisar de acesso remoto, prefira um
+túnel SSH (`ssh -L 3000:localhost:3000 usuario@ip-da-maquina`) em vez de
+abrir a porta publicamente.
 
 ## Deploy em produção (computador do escritório, Linux, sempre ligado)
 
@@ -152,9 +205,10 @@ cp data/contacts.example.csv data/contacts.csv   # substitua pelos contatos reai
 npm start
 ```
 
-Escaneie o QR code que aparece no terminal com o WhatsApp do número que vai
-atuar como agente (Configurações → Aparelhos conectados → Conectar um
-aparelho). Depois que aparecer "WhatsApp conectado...", pare o processo
+Abra `http://localhost:3000` num navegador **nessa mesma máquina** (se for
+acesso remoto por SSH, veja "Acessando de outro computador da rede" acima) e
+escaneie o QR code exibido na página com o WhatsApp do número que vai atuar
+como agente. Depois que o status mudar para "Conectado", pare o processo
 (`Ctrl+C`) — a sessão já ficou salva em `.wwebjs_auth/` e não vai pedir o QR
 code de novo.
 

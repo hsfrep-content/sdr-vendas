@@ -2,6 +2,7 @@ const config = require('./config');
 const { ConversationStore } = require('./state/conversationStore');
 const { WhatsAppWebClient } = require('./whatsapp/whatsappClient');
 const { SdrAgent } = require('./sdrAgent');
+const { createDashboardApp } = require('./web/server');
 
 async function main() {
   const store = new ConversationStore(config.stateFile);
@@ -27,6 +28,11 @@ async function main() {
     console.log('WhatsApp conectado. Iniciando campanha de reaproximação...');
     await agent.runCampaign();
     console.log('Envio de mensagens iniciais concluído. Aguardando respostas dos clientes...');
+  });
+
+  const dashboardApp = createDashboardApp({ config, whatsappClient, store, agent });
+  dashboardApp.listen(config.dashboardPort, config.dashboardHost, () => {
+    console.log(`Painel disponível em http://${config.dashboardHost}:${config.dashboardPort}`);
   });
 
   await whatsappClient.initialize();

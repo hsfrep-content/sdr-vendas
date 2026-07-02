@@ -24,4 +24,11 @@ module.exports = {
 
   // Número/grupo interno (formato E.164 sem símbolos, ex: 5511999998888) que recebe o aviso de handoff.
   handoffNotifyNumber: process.env.HANDOFF_NOTIFY_NUMBER || null,
+
+  // Painel web local para escanear o QR code e enviar a planilha de contatos pelo navegador.
+  // Por padrão só aceita conexões da própria máquina (127.0.0.1) — o QR code e os contatos
+  // são dados sensíveis, então evite expor DASHBOARD_HOST para fora da rede local sem proteção.
+  dashboardHost: process.env.DASHBOARD_HOST || '127.0.0.1',
+  dashboardPort: int('DASHBOARD_PORT', 3000),
+  dashboardToken: process.env.DASHBOARD_TOKEN || null,
 };
