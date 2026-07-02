@@ -40,6 +40,13 @@ log "Node.js $(node -v) OK."
 # --- 3. Baixar ou atualizar o projeto --------------------------------------
 if [ -d "$DIR/.git" ]; then
   log "Projeto já existe em $DIR — atualizando..."
+  # Instalações anteriores podem ter deixado arquivos de outro dono (ex.: rodadas com sudo),
+  # o que faz o git recusar a pasta ("dubious ownership"). Corrige antes de atualizar.
+  if [ -n "$(find "$DIR" -maxdepth 1 ! -user "$(id -un)" -print -quit 2>/dev/null)" ]; then
+    log "Corrigindo permissões da pasta (vai pedir sua senha de administrador)..."
+    sudo chown -R "$(id -un):$(id -gn)" "$DIR" || fail "não consegui corrigir as permissões. Rode: sudo chown -R \$USER:\$USER $DIR"
+  fi
+  git config --global --add safe.directory "$DIR" 2>/dev/null || true
   git -C "$DIR" fetch origin "$BRANCH"
   git -C "$DIR" checkout "$BRANCH"
   git -C "$DIR" pull --ff-only origin "$BRANCH" || log "Aviso: não consegui atualizar (mudanças locais?). Seguindo com a versão atual."
