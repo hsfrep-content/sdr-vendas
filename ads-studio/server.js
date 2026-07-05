@@ -328,7 +328,11 @@ app.use((err, req, res, next) => {
   res.status(400).json({ error: err.message });
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Ads Studio no ar: http://${HOST}:${PORT}`);
-  console.log(`IA ${claude.isConfigured() ? `configurada (modelo ${claude.MODEL})` : 'NÃO configurada — defina ANTHROPIC_API_KEY no .env para ativar os agentes'}`);
-});
+if (require.main === module) {
+  app.listen(PORT, HOST, () => {
+    console.log(`Ads Studio no ar: http://${HOST}:${PORT}`);
+    console.log(`IA ${claude.isConfigured() ? `configurada (modelo ${claude.MODEL})` : 'NÃO configurada — defina ANTHROPIC_API_KEY no .env para ativar os agentes'}`);
+  });
+}
+
+module.exports = app;
