@@ -5,4 +5,5 @@ node_modules/
 data/contacts.csv
 data/state.json
 data/handoff-queue.json
+data/ads-studio/
 *.log

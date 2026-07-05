@@ -1,5 +1,10 @@
 # SDR Vendas — Agente de reaproximação via WhatsApp Web
 
+> **Novo:** o repositório agora inclui o **[Ads Studio](ads-studio/README.md)** —
+> painel de tráfego pago imobiliário com 5 agentes de IA (Meta Ads, Google Ads,
+> criativos e otimização), repositório de imagens e playbooks completos.
+> Suba com `npm run ads` e abra `http://localhost:3010`.
+
 Agente de SDR que envia, a partir de uma lista de contatos, uma mensagem inicial
 personalizada e amistosa perguntando se o cliente tem interesse em **vender,
 alugar ou adquirir** um imóvel. Quando o cliente responde demonstrando interesse,
