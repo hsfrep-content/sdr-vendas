@@ -1,0 +1,30 @@
+{
+  "data": "2026-07-07",
+  "rodada": "manha",
+  "fontes_consultadas": [
+    "Banco Central do Brasil",
+    "Agência IBGE Notícias",
+    "InfoMoney",
+    "Valor Econômico",
+    "Money Times",
+    "Brazil Journal",
+    "Metro Quadrado (Brazil Journal)",
+    "FipeZAP",
+    "CBIC / ABRAINC / Secovi",
+    "Agência Brasil — Economia",
+    "Caixa / MCMV / crédito habitacional",
+    "Mercado imobiliário Recife / Nordeste"
+  ],
+  "noticias_coletadas": [],
+  "noticias_relevantes": [],
+  "temas_publicaveis": [],
+  "parecer": {
+    "observacoesGerais": "Nenhuma notícia relevante no período; apenas registro interno.",
+    "temas": [],
+    "modo": "vazio"
+  },
+  "posts_gerados": [],
+  "noticias_descartadas": [],
+  "alertas": [],
+  "status_final": "registro_interno"
+}

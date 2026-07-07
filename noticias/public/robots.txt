@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://noticias.aelimoveis.com.br/sitemap.xml

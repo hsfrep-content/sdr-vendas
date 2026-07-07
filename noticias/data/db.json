@@ -1,0 +1,18 @@
+{
+  "posts": [],
+  "arquivadas": [],
+  "indicadores": {
+    "atualizadoEm": "2026-07-07T09:57:16.706Z",
+    "itens": [],
+    "focus": []
+  },
+  "rodadas": [
+    {
+      "data": "2026-07-07",
+      "rodada": "manha",
+      "status": "registro_interno",
+      "postsGerados": [],
+      "alertas": []
+    }
+  ]
+}

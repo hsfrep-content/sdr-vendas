@@ -1,0 +1,88 @@
+# Rodadas automáticas do boletim A&L (noticias.aelimoveis.com.br)
+#
+# Horários fixos em Brasília (UTC-3):
+#   08h00 BRT = 11:00 UTC  -> rodada da manhã
+#   22h00 BRT = 01:00 UTC (dia seguinte) -> rodada da noite
+#
+# Cada rodada: coleta -> análise -> edição -> atualiza data/db.json,
+# relatorios/ e logs/ -> reconstrói o site -> commita no branch e publica
+# em GitHub Pages (aponte o CNAME noticias.aelimoveis.com.br para o Pages).
+
+name: Boletim A&L — rodadas 08h e 22h
+
+on:
+  schedule:
+    - cron: '0 11 * * *' # 08h00 Brasília — rodada da manhã
+    - cron: '0 1 * * *'  # 22h00 Brasília (dia anterior) — rodada da noite
+  workflow_dispatch:
+    inputs:
+      rodada:
+        description: 'Rodada (manha ou noite); vazio = inferir pelo horário'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: boletim-ael
+  cancel-in-progress: false
+
+jobs:
+  rodada:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        working-directory: noticias
+        run: npm ci || npm install
+
+      - name: Definir rodada pelo horário (UTC)
+        id: rodada
+        run: |
+          ENTRADA="${{ github.event.inputs.rodada }}"
+          if [ -n "$ENTRADA" ]; then
+            echo "valor=$ENTRADA" >> "$GITHUB_OUTPUT"
+          elif [ "$(date -u +%H)" -lt 6 ]; then
+            echo "valor=noite" >> "$GITHUB_OUTPUT"
+          else
+            echo "valor=manha" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Executar rodada (Agentes 1, 2 e 3)
+        working-directory: noticias
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AEL_AUTO_PUBLISH: 'true'
+        run: node src/run.js "${{ steps.rodada.outputs.valor }}"
+
+      - name: Commitar banco, relatórios e logs
+        run: |
+          git config user.name "Boletim A&L (bot)"
+          git config user.email "boletim@aelimoveis.com.br"
+          git add noticias/data noticias/relatorios noticias/logs noticias/public
+          git diff --cached --quiet || git commit -m "Rodada ${{ steps.rodada.outputs.valor }} $(date -u +%F)"
+          git push
+
+      - name: Upload do site para o Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: noticias/public
+
+  deploy:
+    needs: rodada
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar em GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

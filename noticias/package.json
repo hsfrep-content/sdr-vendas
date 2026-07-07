@@ -1,0 +1,21 @@
+{
+  "name": "ael-noticias",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de agentes de IA para o boletim de inteligência imobiliária da A&L | Negócios Imobiliários (noticias.aelimoveis.com.br)",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "rodada:manha": "node src/run.js manha",
+    "rodada:noite": "node src/run.js noite",
+    "rodada": "node src/run.js",
+    "build:site": "node src/site/build.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
+    "dotenv": "^17.4.2"
+  }
+}
