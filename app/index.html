@@ -1,0 +1,1967 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>A&amp;L — Central de Documentos</title>
+</head>
+<body>
+<style>
+  :root{
+    --navy:#101c33;
+    --navy-soft:#1c2f4f;
+    --paper:#eef1f5;
+    --surface:#ffffff;
+    --ink:#16202e;
+    --muted:#5b6b80;
+    --red:#9c3b2e;
+    --red-soft:#c8574433;
+    --line:rgba(16,28,51,.13);
+    --line-strong:rgba(16,28,51,.22);
+    --code-bg:#f1eee6;
+    --shadow:0 1px 2px rgba(16,28,51,.06), 0 8px 24px -12px rgba(16,28,51,.18);
+    --accent-link:#26436f;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --navy:#0d1420;
+      --navy-soft:#18233a;
+      --paper:#0b0f16;
+      --surface:#121a26;
+      --ink:#e6ebf2;
+      --muted:#94a3b8;
+      --red:#d5695a;
+      --red-soft:#d5695a2e;
+      --line:rgba(255,255,255,.11);
+      --line-strong:rgba(255,255,255,.2);
+      --code-bg:#1a2230;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+      --accent-link:#8fb3e8;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --navy:#0d1420; --navy-soft:#18233a; --paper:#0b0f16; --surface:#121a26;
+    --ink:#e6ebf2; --muted:#94a3b8; --red:#d5695a; --red-soft:#d5695a2e;
+    --line:rgba(255,255,255,.11); --line-strong:rgba(255,255,255,.2);
+    --code-bg:#1a2230; --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+    --accent-link:#8fb3e8; color-scheme: dark;
+  }
+  :root[data-theme="light"]{
+    --navy:#101c33; --navy-soft:#1c2f4f; --paper:#eef1f5; --surface:#ffffff;
+    --ink:#16202e; --muted:#5b6b80; --red:#9c3b2e; --red-soft:#c8574433;
+    --line:rgba(16,28,51,.13); --line-strong:rgba(16,28,51,.22);
+    --code-bg:#f1eee6; --shadow:0 1px 2px rgba(16,28,51,.06), 0 8px 24px -12px rgba(16,28,51,.18);
+    --accent-link:#26436f; color-scheme: light;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .serif{
+    font-family: "Iowan Old Style","Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  }
+  .mono{
+    font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  a{color:var(--accent-link);}
+
+  /* ---------- shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns: 272px minmax(0,1fr) 300px;
+    grid-template-rows: 60px 1fr;
+    grid-template-areas:
+      "top top top"
+      "side main notes";
+    min-height:100vh;
+  }
+  @media (max-width: 1080px){
+    .shell{ grid-template-columns: 240px minmax(0,1fr); grid-template-areas:
+      "top top"
+      "side main"; }
+    .notes-rail{ display:none; }
+  }
+  @media (max-width: 720px){
+    .shell{ grid-template-columns: 1fr; grid-template-areas: "top" "main"; }
+    .side-rail{ display:none; }
+  }
+
+  .top-rail{
+    grid-area: top;
+    background:var(--navy);
+    color:#eef1f5;
+    display:flex; align-items:center; gap:16px;
+    padding:0 20px;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    font-size:19px; letter-spacing:.01em; white-space:nowrap;
+  }
+  .brand .mark{
+    width:30px;height:30px;border-radius:7px;
+    background:linear-gradient(160deg,var(--navy-soft),var(--navy));
+    border:1px solid rgba(255,255,255,.18);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600; font-size:14px; position:relative;
+  }
+  .brand .mark::after{
+    content:"";position:absolute; left:50%; top:16%; width:1.5px; height:68%;
+    background:var(--red); transform:translateX(-1px) rotate(8deg);
+  }
+  .brand small{
+    display:block; font-family:-apple-system,Segoe UI,sans-serif;
+    font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:#aab8cc;
+    margin-top:1px;
+  }
+  .top-search{
+    flex:1; max-width:460px; margin-left:8px;
+    position:relative;
+  }
+  .top-search input{
+    width:100%; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16);
+    border-radius:8px; color:#eef1f5; padding:9px 12px 9px 34px; font-size:13.5px;
+    outline:none;
+  }
+  .top-search input::placeholder{color:#93a2ba;}
+  .top-search input:focus{border-color:var(--red); background:rgba(255,255,255,.12);}
+  .top-search svg{position:absolute; left:10px; top:50%; transform:translateY(-50%); opacity:.65;}
+  .top-meta{
+    margin-left:auto; display:flex; align-items:center; gap:10px;
+    font-size:12px; color:#aab8cc; white-space:nowrap;
+  }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 10px; border-radius:999px; font-size:11.5px; font-weight:600;
+    letter-spacing:.02em; border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.06);
+  }
+  .status-pill .dot{width:6px;height:6px;border-radius:50%;background:#e0a63a;}
+
+  /* ---------- side rail ---------- */
+  .side-rail{
+    grid-area: side;
+    background:var(--surface);
+    border-right:1px solid var(--line);
+    overflow-y:auto;
+    padding:18px 0 24px;
+  }
+  .side-group-label{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted);
+    padding:14px 18px 6px;
+  }
+  .side-group-label:first-child{padding-top:2px;}
+  .nav-item{
+    display:flex; align-items:flex-start; gap:10px;
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:9px 18px; color:var(--ink); font-size:13.5px; line-height:1.35;
+    border-left:2.5px solid transparent;
+  }
+  .nav-item:hover{background:var(--red-soft);}
+  .nav-item.active{
+    background:var(--red-soft);
+    border-left-color:var(--red);
+    font-weight:600;
+  }
+  .nav-badge{
+    flex:none; width:24px;height:24px;border-radius:6px;
+    background:var(--navy); color:#e9edf3;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10.5px; font-weight:700; margin-top:1px;
+    font-family: ui-monospace, monospace;
+  }
+  .nav-item.active .nav-badge{background:var(--red);}
+  .nav-title small{display:block; color:var(--muted); font-size:11px; font-weight:400; margin-top:1px;}
+
+  .side-foot{
+    margin-top:10px; padding:14px 18px 0; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--muted); line-height:1.5;
+  }
+
+  /* ---------- main ---------- */
+  .main-rail{ grid-area:main; overflow-y:auto; }
+  .doc-shell{
+    max-width:760px; margin:0 auto; padding:38px 40px 90px;
+  }
+  .doc-head{
+    border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:26px;
+  }
+  .doc-kicker{
+    font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--red);
+    font-weight:700; margin-bottom:8px;
+  }
+  .doc-head h1{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    font-size:30px; margin:0 0 8px; text-wrap:balance; line-height:1.18;
+  }
+  .doc-sub{color:var(--muted); font-size:13.5px;}
+
+  article.doc-body{ font-size:15.5px; line-height:1.68; }
+  article.doc-body h2{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    font-size:21px; margin:34px 0 12px; padding-top:6px; text-wrap:balance;
+    border-top:1px solid var(--line); padding-top:20px;
+  }
+  article.doc-body h2:first-child{border-top:none; margin-top:0;}
+  article.doc-body h3{ font-size:16px; margin:24px 0 8px; font-weight:700; }
+  article.doc-body p{ margin:0 0 14px; max-width:66ch; }
+  article.doc-body ul,article.doc-body ol{ margin:0 0 16px; padding-left:22px; }
+  article.doc-body li{ margin-bottom:5px; max-width:64ch; }
+  article.doc-body li.task{ list-style:none; margin-left:-22px; display:flex; gap:8px; align-items:flex-start; }
+  article.doc-body li.task input{ margin-top:4px; accent-color:var(--red); flex:none; }
+  article.doc-body strong{ color:var(--ink); }
+  article.doc-body code{
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    background:var(--code-bg); padding:.12em .38em; border-radius:4px; font-size:.87em;
+  }
+  article.doc-body pre{
+    background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+    padding:14px 16px; overflow-x:auto; margin:0 0 18px;
+  }
+  article.doc-body pre code{ background:none; padding:0; font-size:12.6px; line-height:1.55; }
+  article.doc-body blockquote{
+    margin:0 0 16px; padding:10px 16px; border-left:3px solid var(--red);
+    background:var(--red-soft); border-radius:0 6px 6px 0; color:var(--ink);
+    font-size:14px;
+  }
+  article.doc-body hr{ border:none; border-top:1px solid var(--line); margin:26px 0; }
+  .table-wrap{ overflow-x:auto; margin:0 0 18px; border:1px solid var(--line); border-radius:8px; }
+  table{ border-collapse:collapse; width:100%; font-size:13.6px; }
+  th,td{ padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ background:var(--navy); color:#e9edf3; font-weight:600; font-size:12px; letter-spacing:.02em; }
+  tbody tr:nth-child(even){ background:rgba(16,28,51,.03); }
+  :root[data-theme="dark"] tbody tr:nth-child(even){ background:rgba(255,255,255,.03); }
+  @media (prefers-color-scheme:dark){ tbody tr:nth-child(even){ background:rgba(255,255,255,.03); } }
+
+  .doc-footer-nav{
+    display:flex; justify-content:space-between; gap:12px; margin-top:40px; padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .doc-footer-nav button{
+    background:var(--surface); border:1px solid var(--line-strong); color:var(--ink);
+    padding:10px 14px; border-radius:8px; font-size:13px; cursor:pointer; max-width:46%;
+    text-align:left; line-height:1.35;
+  }
+  .doc-footer-nav button:hover{ border-color:var(--red); }
+  .doc-footer-nav span{ display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:3px; }
+
+  /* ---------- notes rail ---------- */
+  .notes-rail{
+    grid-area:notes; background:var(--surface); border-left:1px solid var(--line);
+    overflow-y:auto; padding:18px 18px 30px; display:flex; flex-direction:column; gap:14px;
+  }
+  .notes-title{ font-size:13px; font-weight:700; display:flex; align-items:center; gap:7px; }
+  .notes-title .sw{width:7px;height:7px;border-radius:50%;background:var(--red);}
+  .notes-hint{ font-size:12px; color:var(--muted); line-height:1.5; margin-top:-8px; }
+  textarea#note-input{
+    width:100%; min-height:74px; resize:vertical; border:1px solid var(--line-strong);
+    border-radius:8px; padding:9px 10px; font-size:13px; font-family:inherit; background:var(--paper);
+    color:var(--ink); outline:none;
+  }
+  textarea#note-input:focus{ border-color:var(--red); }
+  .notes-actions{ display:flex; gap:8px; }
+  .btn{
+    border:none; border-radius:7px; padding:8px 12px; font-size:12.5px; cursor:pointer; font-weight:600;
+  }
+  .btn-primary{ background:var(--red); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-ghost{ background:transparent; border:1px solid var(--line-strong); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--red); }
+  .note-list{ display:flex; flex-direction:column; gap:10px; }
+  .note-card{
+    border:1px solid var(--line); border-radius:8px; padding:10px 11px; background:var(--paper);
+    font-size:12.8px; line-height:1.5;
+  }
+  .note-card .meta{ display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+  .note-card time{ color:var(--muted); font-size:10.8px; }
+  .note-card button{ background:none; border:none; color:var(--muted); cursor:pointer; font-size:11px; }
+  .note-card button:hover{ color:var(--red); }
+  .note-empty{ font-size:12.5px; color:var(--muted); border:1px dashed var(--line-strong); border-radius:8px; padding:16px; text-align:center; }
+
+  /* ---------- search overlay ---------- */
+  .search-overlay{
+    position:fixed; inset:0; background:rgba(8,12,20,.55); display:none;
+    align-items:flex-start; justify-content:center; padding-top:9vh; z-index:50;
+  }
+  .search-overlay.open{ display:flex; }
+  .search-panel{
+    width:min(640px,92vw); max-height:70vh; overflow-y:auto; background:var(--surface);
+    border-radius:12px; box-shadow:var(--shadow); border:1px solid var(--line-strong);
+  }
+  .search-panel .sp-head{ padding:8px 10px; border-bottom:1px solid var(--line); }
+  .search-panel input{
+    width:100%; border:none; outline:none; font-size:15px; padding:10px 8px; background:transparent; color:var(--ink);
+  }
+  .sp-results{ padding:6px; }
+  .sp-result{
+    padding:10px 12px; border-radius:8px; cursor:pointer;
+  }
+  .sp-result:hover, .sp-result.sel{ background:var(--red-soft); }
+  .sp-result .doc-name{ font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--red); font-weight:700; margin-bottom:2px; }
+  .sp-result .snippet{ font-size:13px; color:var(--ink); line-height:1.4; }
+  .sp-result mark{ background:var(--red-soft); color:var(--ink); border-radius:2px; }
+  .sp-empty{ padding:24px; text-align:center; color:var(--muted); font-size:13px; }
+
+  ::selection{ background:var(--red-soft); }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible{
+    outline:2px solid var(--red); outline-offset:2px;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .nav-item, .btn, .doc-footer-nav button{ transition: background .12s ease, border-color .12s ease, filter .12s ease; }
+  }
+</style>
+
+<div class="shell">
+  <div class="top-rail">
+    <div class="brand"><span class="mark">A&amp;L</span><span>A&amp;L<small>Central de Documentos</small></span></div>
+    <div class="top-search" id="search-trigger">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Buscar em todos os documentos… (/)" readonly>
+    </div>
+    <div class="top-meta">
+      <span class="status-pill"><span class="dot"></span>Rascunho de trabalho — condicionado</span>
+    </div>
+  </div>
+
+  <nav class="side-rail" id="side-rail"></nav>
+
+  <main class="main-rail" id="main-rail">
+    <div class="doc-shell" id="doc-shell"></div>
+  </main>
+
+  <aside class="notes-rail" id="notes-rail">
+    <div class="notes-title"><span class="sw"></span>Notas e sugestões</div>
+    <div class="notes-hint">Anote ajustes, dúvidas ou pontos para levar ao advogado/contador. Fica salvo neste navegador, por documento.</div>
+    <textarea id="note-input" placeholder="Ex.: revisar % de comissão da cláusula 4.2 antes de assinar…"></textarea>
+    <div class="notes-actions">
+      <button class="btn btn-primary" id="note-add">Adicionar nota</button>
+      <button class="btn btn-ghost" id="note-export">Exportar .md</button>
+    </div>
+    <div class="note-list" id="note-list"></div>
+  </aside>
+</div>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="sp-head">
+      <input type="text" id="search-input" placeholder="Buscar cláusulas, riscos, checklists…" autocomplete="off">
+    </div>
+    <div class="sp-results" id="sp-results"><div class="sp-empty">Digite ao menos 2 letras.</div></div>
+  </div>
+</div>
+
+<!-- ============== CONTEÚDO-FONTE DOS DOCUMENTOS (markdown) ============== -->
+<script type="text/markdown" id="src-readme">
+Pacote de documentos preparatórios para a estruturação da parceria comercial
+entre dois corretores de imóveis pessoas físicas (CRECI/PE), companheiros em
+união estável, atuando sob a identificação comercial "A&L Negócios
+Imobiliários", sem constituição de pessoa jurídica nesta fase.
+
+**Nenhum documento aqui substitui validação por advogado, contador, CRECI/PE,
+cartório ou prefeitura.** Ver avisos específicos em cada documento do menu ao lado.
+
+## Como usar esta central
+
+- **Painel** — visão geral do andamento: progresso dos checklists, etapas do plano de implantação, validações externas pendentes e situação dos riscos.
+- **Documentos** — leitura e consulta dos quatro documentos, com busca global (tecla "/") e checklists clicáveis; o painel à direita registra sugestões de ajuste por documento.
+- **Riscos** — gestão da matriz de riscos: cada risco tem gravidade e um status de tratamento que você atualiza conforme avança.
+- **Revisão** — fluxo de revisão: status de cada documento (rascunho → em revisão → validado), triagem das sugestões registradas e exportação de um relatório completo em `.md`.
+- Todo o progresso (checklists, riscos, status, sugestões) fica salvo neste navegador e pode ser exportado a qualquer momento.
+
+## Documentos
+
+- **Diagnóstico consolidado** — panorama jurídico, civil, penal, COFECI/CRECI, união estável, fiscal, municipal, LGPD, operacional e de marca; matriz de riscos e plano de implantação.
+- **Minutas contratuais** — modelos de instrumento de parceria, autorizações, propostas, recibos e termos de parceria.
+- **Checklists e políticas** — checklists operacionais e políticas internas de comissão, despesas, arquivamento, privacidade e comunicação.
+- **Parecer do revisor crítico** — revisão final, riscos por gravidade e nível de segurança da entrega.
+</script>
+
+<script type="text/markdown" id="src-00">
+> **Aviso geral:** este material é um estudo preparatório de estruturação, produzido a partir de premissas informadas pelos parceiros. **Não substitui** parecer de advogado, contador e demais profissionais habilitados, nem consulta formal ao CRECI/PE, cartórios e prefeituras. Onde indicado, "Este ponto exige validação final por profissional habilitado ou órgão competente antes de aplicação prática."
+
+## 0. Premissa central (vale para todo o material)
+
+A "A&L Negócios Imobiliários" é, nesta fase, uma **marca de atuação conjunta entre dois corretores de imóveis autônomos**, pessoas físicas, regularmente inscritos no CRECI/PE, que também são companheiros em união estável. **Não há pessoa jurídica constituída.** Nenhum documento, anúncio, contrato ou comunicação produzido a partir deste material deve dar a entender o contrário. Sempre que a estrutura evoluir para pessoa jurídica (registro de imobiliária, CNPJ, CRECI-J, enquadramento tributário), este diagnóstico deve ser revisado por completo.
+
+Área de atuação inicial: Recife, Jaboatão dos Guararapes, Cabo de Santo Agostinho, Ipojuca/Porto de Galinhas e Tamandaré/Praia dos Carneiros — PE.
+
+## 1. Diagnóstico jurídico-imobiliário
+
+**Base normativa de referência:** Lei nº 6.530/1978 e Decreto nº 81.871/1978 (profissão de corretor de imóveis), Código Civil (arts. 722 a 729 — corretagem), Lei nº 8.245/1991 (locações), Lei nº 6.015/1973 (registros públicos), Código de Defesa do Consumidor quando aplicável à relação com o cliente final.
+
+Pontos centrais:
+- A intermediação (venda, locação, temporada) só deve ocorrer com **autorização escrita** do proprietário/locador, com prazo, condições e comissão definidos previamente.
+- Anúncio de imóvel sem autorização expressa do titular é risco jurídico e ético (ver Seção 4).
+- O direito à comissão nasce do resultado útil da intermediação (art. 725, CC) — recomenda-se documentar todo o histórico de tratativas para comprovar o nexo causal em caso de disputa.
+- Cada corretor responde individualmente pelos atos que pratica; a atuação conjunta sob a marca A&L não cria, por si só, responsabilidade solidária — mas a ausência de identificação clara de "quem fez o quê" pode gerar essa interpretação em juízo ou perante o CRECI. Documentos devem sempre identificar o corretor responsável pelo atendimento.
+- Pendências documentais do imóvel (ônus, dívidas, inventário, litígio) devem ser objeto de checklist prévio; a omissão de informação relevante conhecida pelo corretor gera responsabilidade civil e ética.
+
+**Documentos necessários:** minutas de autorização de venda, autorização de locação, autorização de anúncio, proposta de compra, proposta de locação, termo de visita, recibo de comissão, declaração de ciência documental — ver documento "Minutas contratuais".
+
+*Validação obrigatória: advogado especializado em direito imobiliário para revisão final das minutas antes do primeiro uso.*
+
+## 2. Diagnóstico de responsabilidade civil
+
+Riscos identificados e tratamento recomendado:
+
+| Risco | Tratamento |
+|---|---|
+| Erro de informação repassada por proprietário/locador | Declaração assinada do proprietário atestando veracidade das informações; corretor não garante o conteúdo, apenas repassa com ressalva |
+| Publicidade do imóvel | Autorização de anúncio assinada previamente; sem promessas de valorização/rentabilidade |
+| Guarda de documentos e chaves | Termo de recebimento/devolução com data, hora e assinatura |
+| Visitas | Termo de visita assinado por todos os presentes, com identificação |
+| Intermediação de valores (sinal, caução) | Como regra, **não custodiar valores de terceiros**; direcionar para conta do proprietário, imobiliária depositária ou instrumento formal (ver seção Penal/Fiscal) |
+| Desistência de proposta aceita | Cláusula de arras e comissão devida por resultado útil, conforme minuta |
+| Vício oculto do imóvel | Corretor não responde por vício técnico da construção; declarar isso expressamente e recomendar vistoria/laudo técnico próprio do interessado |
+| Conflito comprador x vendedor / locador x locatário | Corretor atua como intermediário, não como parte; toda comunicação relevante deve ser registrada por escrito (e-mail/WhatsApp com histórico preservado) |
+| Responsabilidade solidária indevida entre os dois parceiros | Cada atendimento deve identificar o corretor responsável; o Instrumento de Parceria deve prever expressamente que a responsabilidade por erro técnico/ético é individual, ressalvada a comissão compartilhada |
+
+Recomenda-se política de arquivamento: todo atendimento gera uma pasta (física/digital) com documentos, prints de conversas relevantes e assinaturas — retenção mínima sugerida de 5 anos (prazo geral de prescrição civil, art. 206, CC), **a confirmar com advogado conforme o tipo de obrigação**.
+
+## 3. Diagnóstico penal e antifraude
+
+Riscos relevantes: estelionato (art. 171, CP), falsidade ideológica/documental (arts. 297–299, CP), apropriação indébita (art. 168, CP), lavagem de dinheiro (Lei nº 9.613/1998).
+
+Diretrizes preventivas:
+1. **Nunca receber valores de terceiros (sinal, caução, comissão de terceiros) em conta pessoal dos corretores**, salvo estrutura formalizada com orientação jurídica específica — risco de caracterização de apropriação indébita ou intermediação irregular de recursos.
+2. Validar identidade e titularidade do imóvel antes de qualquer captação: certidão de matrícula atualizada, comparação de dados do "proprietário" com o registro, documento de identidade.
+3. Redobrar cautela em: procurações (verificar validade, poderes e se não há revogação), inventários/espólios (verificar alvará judicial ou anuência de todos os herdeiros), imóveis em litígio, vendas por terceiro alegando urgência ou pressa incomum, pagamento fora do circuito bancário, uso de criptoativos.
+4. Registrar e preservar toda a documentação recebida (data, origem, meio de recebimento).
+5. Qualquer indício de irregularidade documental deve suspender a negociação até orientação de advogado.
+
+*Este ponto exige validação final por profissional habilitado antes de aplicação prática, especialmente quanto a operações de valor elevado ou origem não identificada.*
+
+## 4. Diagnóstico COFECI/CRECI/PE e ética profissional
+
+- Toda peça publicitária deve trazer nome e número de CRECI de cada corretor responsável — a marca "A&L" pode aparecer como identificação comercial conjunta, mas **nunca isoladamente sem a identificação dos corretores e respectivos CRECI**, para não sugerir existência de imobiliária constituída.
+- Uso da marca A&L deve vir acompanhado de texto do tipo: *"A&L Negócios Imobiliários é a marca de atuação conjunta de [Nome 1], corretor de imóveis CRECI/PE nº ____, e [Nome 2], corretor de imóveis CRECI/PE nº ____."*
+- Captação com exclusividade deve ser expressa e por escrito; parceria/divisão de comissão com outros corretores ou imobiliárias deve ser formalizada previamente (co-corretagem), respeitando a vedação a aliciamento de clientela alheia.
+- Deveres éticos: informação, lealdade, sigilo, boa concorrência (Código de Ética do COFECI — Resolução vigente, **a confirmar a versão atualizada junto ao CRECI/PE**).
+- Quando a operação crescer (contratação de terceiros, ponto comercial fixo, volume relevante, necessidade de CNPJ para nota fiscal/parcerias com construtoras), avaliar constituição de pessoa jurídica com CRECI-J — ponto de decisão futura, não presente.
+
+*Validação obrigatória junto ao CRECI/PE quanto às normas vigentes de publicidade e uso de marca comercial por corretores autônomos em parceria.*
+
+## 5. Diagnóstico de direito de família / união estável / sociedade de fato
+
+Pontos de atenção:
+- União estável e parceria profissional são relações jurídicas distintas; a ausência de separação documental entre elas é a maior fonte de risco patrimonial do projeto.
+- Sem instrumento próprio, a atuação conjunta e continuada, com divisão de lucros, pode ser interpretada como **sociedade de fato**, sujeitando os parceiros a regras de sociedade (inclusive responsabilidade patrimonial) mesmo sem registro — é justamente o que se busca evitar ou, alternativamente, disciplinar de forma controlada.
+- Recomenda-se instrumento particular específico ("Instrumento Particular de Parceria Operacional entre Corretores Pessoas Físicas") tratando: divisão de comissões (por atendimento próprio x conjunto), rateio de despesas, titularidade da marca A&L, tratamento da carteira de clientes/captações em caso de dissolução da parceria profissional e/ou da união estável, e regra de não confusão entre patrimônio comum do casal e receitas/despesas da atividade profissional.
+- Regime de bens da união estável (comunhão parcial, salvo contrato de convivência diverso) incide sobre o patrimônio pessoal do casal, mas **não deve ser confundido** com a divisão operacional de comissões entre corretores — recomenda-se que o instrumento de parceria seja tratado como acordo de natureza profissional, com cláusula de independência em relação ao regime de bens da união estável.
+- Em caso de dissolução de qualquer uma das duas relações (profissional e/ou afetiva), recomenda-se cláusula de encerramento amigável com prazo, forma de partilha de comissões pendentes e destino da marca A&L.
+
+*Este ponto exige validação final por advogado de família/patrimonial, especialmente quanto à interação entre o regime de bens e o instrumento de parceria.*
+
+## 6. Diagnóstico fiscal e contábil (pessoa física)
+
+- Comissão de corretagem recebida por pessoa física é rendimento tributável pelo IRPF via **carnê-leão** mensal (recebimento de pessoa física ou de pessoa jurídica sem retenção) e declarado anualmente; se a fonte pagadora for pessoa jurídica, pode haver retenção na fonte, a apurar caso a caso.
+- Cada corretor deve emitir **recibo próprio** de sua comissão (identificando CPF e CRECI); comissões divididas entre os dois devem ser documentadas por recibos individuais correspondentes à parte de cada um, evitando que um receba pelo outro sem lastro documental.
+- Recomenda-se livro-caixa (dedução de despesas necessárias à atividade: marketing, deslocamento, ferramentas) e contribuição ao INSS como contribuinte individual/autônomo, conforme opção de cada corretor.
+- Contas bancárias e controles financeiros da atividade devem ser **segregados** das contas pessoais/familiares do casal, com rateio documentado de despesas comuns da operação.
+- Ponto de decisão futura: a partir de determinado volume de receita/operações, avaliar migração para pessoa jurídica (ex.: Simples Nacional, CRECI-J), o que pode reduzir carga tributária e formalizar a relação comercial — decisão a ser tomada com contador, considerando faturamento projetado.
+
+*Este ponto exige validação final por contador antes de aplicação prática (apuração de carnê-leão, dedutibilidade de despesas, enquadramento previdenciário).*
+
+## 7. Diagnóstico municipal (ITBI, cartórios, registros) — por praça
+
+**Aviso crítico:** alíquotas de ITBI, prazos, taxas, exigências documentais e valores de referência mudam por lei municipal e por atualização periódica de cada prefeitura. **Nenhum percentual ou valor deve ser informado ao cliente sem confirmação prévia, na data da operação, junto à prefeitura/cartório competente.** Abaixo, apenas o roteiro de verificação por município — não os valores.
+
+| Município | O que confirmar antes de orientar o cliente |
+|---|---|
+| Recife/PE | Alíquota vigente de ITBI e base de cálculo (valor de transação x valor venal de referência), portal de emissão de guia, certidões municipais exigidas, situação de IPTU |
+| Jaboatão dos Guararapes/PE | Idem acima junto à Secretaria de Finanças municipal |
+| Cabo de Santo Agostinho/PE | Idem acima; atenção a áreas de expansão urbana/industrial com regras específicas de parcelamento do solo |
+| Ipojuca/PE (Porto de Galinhas) | Idem acima; **atenção a terrenos de marinha e áreas de faixa de praia (União/SPU)** — possível incidência de laudêmio e foro, regularização junto à Secretaria de Patrimônio da União |
+| Tamandaré/PE (Praia dos Carneiros) | Idem acima; mesma atenção a terrenos de marinha, unidades de conservação e restrições ambientais/costeiras aplicáveis à região |
+
+Checklist genérico de escritura/registro (válido para todos os municípios, a confirmar exigências locais):
+- [ ] Certidão de matrícula atualizada (30 dias)
+- [ ] Certidões negativas do vendedor (cíveis, trabalhistas, fiscais, protesto)
+- [ ] Guia de ITBI paga/quitada antes da lavratura da escritura
+- [ ] Certidão de quitação de IPTU e taxas municipais
+- [ ] Escritura pública em tabelionato de notas (salvo hipóteses de instrumento particular com força de escritura, ex. SFH)
+- [ ] Registro da escritura no Cartório de Registro de Imóveis da circunscrição do imóvel
+- [ ] Em áreas de marinha/União: consulta prévia à SPU sobre laudêmio, foro e situação de aforamento/ocupação
+
+*Este ponto exige validação final junto à prefeitura, cartório de notas, cartório de registro de imóveis e, quando aplicável, à SPU, antes de qualquer orientação vinculante ao cliente.*
+
+## 8. Diagnóstico LGPD e proteção de dados
+
+- Dados tratados: nome, CPF, RG, contato, comprovante de residência, matrícula do imóvel, contratos, imagens do imóvel — alguns com potencial sensibilidade (ex. dados financeiros para qualificação de comprador/locatário).
+- Base legal predominante: execução de procedimentos preliminares e de contrato a pedido do titular (art. 7º, V, LGPD) e legítimo interesse limitado à finalidade de intermediação — **evitar coleta de dados além do necessário**.
+- Canais usados (WhatsApp, e-mail, planilhas, Drive/CRM) devem ter controle de acesso, e os documentos de clientes não devem ficar em dispositivos pessoais sem proteção mínima (senha, criptografia de disco, backup controlado).
+- Prazo de retenção: manter apenas pelo tempo necessário à finalidade e ao cumprimento de obrigação legal/prescricional; descarte seguro após esse prazo.
+- Compartilhamento com terceiros (cartórios, bancos, outros corretores, imobiliárias parceiras) deve ser o mínimo necessário e informado ao titular.
+- Recomenda-se política de privacidade simples publicada nos canais de atendimento e cláusula LGPD padrão em todos os contratos/fichas.
+
+## 9. Diagnóstico operacional
+
+Fluxo-base recomendado: **Captação → Validação documental → Precificação → Autorização (venda/locação/anúncio) → Divulgação → Atendimento/Qualificação de lead → Visita → Proposta → Negociação → Fechamento → Documentação/Registro → Comissão → Pós-venda/pós-locação → Arquivamento.**
+
+Cada etapa deve gerar um documento mínimo (ficha, termo ou registro), detalhado no documento "Checklists e políticas", garantindo rastreabilidade em caso de disputa futura.
+
+## 10. Diagnóstico de marketing, comunicação e marca
+
+- Comunicação deve sempre identificar os corretores individualmente (nome + CRECI), com a marca A&L como identificação conjunta — nunca sugerindo "imobiliária" ou "empresa" formal enquanto não houver PJ.
+- Proibido/alto risco: "investimento garantido", "valorização certa", "rentabilidade garantida", "melhor oportunidade da região", prazos de retorno prometidos, comparação depreciativa com concorrentes.
+- Permitido, com cautela: descrição objetiva do imóvel, localização, características, preço (se autorizado pelo proprietário), fotos/vídeos com autorização de uso de imagem do imóvel e, se houver pessoas, das pessoas retratadas.
+- Identidade visual (logomarca "A&L", variações Principal/Demandas/Parceiros) pode ser usada normalmente como marca comercial conjunta, desde que sempre acompanhada da identificação dos corretores responsáveis nos materiais que gerem obrigação (contratos, propostas, autorizações) — nos materiais puramente institucionais (ex. post de rede social) recomenda-se ao menos o CRECI de ambos em rodapé/bio.
+
+## 11. Matriz geral de riscos (síntese)
+
+| Risco | Gravidade | Tratamento primário |
+|---|---|---|
+| Confusão entre marca A&L e "imobiliária constituída" | Alto | Identificação obrigatória dos corretores e CRECI em toda peça |
+| Sociedade de fato não desejada | Alto | Instrumento de Parceria Operacional formalizado |
+| Confusão patrimonial entre união estável e atividade profissional | Alto | Segregação de contas e cláusulas específicas no instrumento de parceria |
+| Recebimento de valores de terceiros em conta pessoal | Crítico | Política de não custódia de valores de terceiros |
+| Anúncio/captação sem autorização escrita | Alto | Autorizações padronizadas antes de qualquer divulgação |
+| Fraude documental/imóvel litigioso | Crítico | Checklist antifraude e validação documental prévia |
+| Informalidade fiscal | Médio | Carnê-leão, recibos individuais, contador |
+| Erro sobre custos municipais (ITBI, laudêmio) informado ao cliente | Alto | Nunca informar valor sem confirmação no órgão competente na data da operação |
+| LGPD — vazamento/uso indevido de dados | Médio | Controles de acesso, retenção mínima, política de privacidade |
+| Publicidade enganosa | Alto | Guia de comunicação permitida/proibida |
+
+## 12. Plano de implantação em etapas
+
+1. Validar minutas e políticas com advogado e contador (obrigatório antes do uso).
+2. Assinar o Instrumento Particular de Parceria Operacional entre os dois corretores.
+3. Regularizar identificação da marca A&L em todos os canais (bio, assinatura, materiais).
+4. Implantar checklists de captação, autorização e antifraude antes do primeiro atendimento.
+5. Estruturar controle financeiro segregado (conta/planilha da operação, separada da conta pessoal do casal).
+6. Definir fluxo de arquivamento documental (Drive/CRM) com política de retenção e backup.
+7. Publicar política de privacidade básica e cláusula LGPD nos contratos.
+8. Revisar periodicamente (sugestão: a cada 6 meses ou a cada mudança relevante de volume) a necessidade de constituição de pessoa jurídica.
+</script>
+
+<script type="text/markdown" id="src-01">
+> **Aviso:** estas são minutas-base para revisão jurídica. Não devem ser usadas em operações reais sem validação de advogado. Campos entre colchetes `[ ]` devem ser preenchidos; cláusulas de foro, LGPD e assinatura eletrônica estão padronizadas ao final do documento.
+
+## 1. Instrumento Particular de Parceria Operacional entre Corretores Pessoas Físicas
+
+```
+INSTRUMENTO PARTICULAR DE PARCERIA OPERACIONAL ENTRE CORRETORES DE IMÓVEIS
+PESSOAS FÍSICAS — "A&L NEGÓCIOS IMOBILIÁRIOS"
+
+PARCEIRO 1: [nome completo], CPF [•], CRECI/PE nº [•], residente em [•].
+PARCEIRO 2: [nome completo], CPF [•], CRECI/PE nº [•], residente em [•].
+
+Considerando que os Parceiros são companheiros em união estável e, de forma
+independente dessa relação afetiva, exercem em conjunto a atividade de
+corretagem de imóveis sob a identificação comercial "A&L Negócios
+Imobiliários", resolvem firmar o presente instrumento, que se rege pelas
+cláusulas seguintes:
+
+CLÁUSULA 1ª — OBJETO
+Disciplinar a parceria profissional entre os Parceiros para atuação conjunta
+em intermediação imobiliária (venda, locação, temporada), definindo divisão
+de receitas, rateio de despesas, uso da marca "A&L Negócios Imobiliários" e
+regras de encerramento da parceria.
+
+CLÁUSULA 2ª — NATUREZA DA PARCERIA
+2.1. Esta parceria não constitui sociedade empresária, sociedade simples ou
+qualquer outra pessoa jurídica. Cada Parceiro atua como corretor de imóveis
+autônomo, pessoa física, CRECI/PE individual, respondendo pessoalmente por
+seus atos profissionais.
+2.2. A marca "A&L Negócios Imobiliários" é utilizada exclusivamente como
+identificação comercial conjunta dos Parceiros, devendo toda peça, contrato
+ou anúncio identificar nominalmente os corretores responsáveis e seus
+respectivos números de CRECI/PE.
+2.3. Este instrumento é independente do regime de bens da união estável
+entre os Parceiros e não deve ser interpretado como alteração, novação ou
+substituição de eventual contrato de convivência.
+
+CLÁUSULA 3ª — RESPONSABILIDADE PROFISSIONAL
+3.1. Cada Parceiro responde individualmente por erro técnico, ético,
+administrativo ou legal praticado em atendimento sob sua responsabilidade
+direta.
+3.2. A responsabilidade será conjunta apenas quando ambos os Parceiros
+tiverem atuado diretamente no mesmo atendimento/negociação, hipótese que
+deve estar identificada na ficha de atendimento correspondente.
+
+CLÁUSULA 4ª — DIVISÃO DE RECEITAS
+4.1. Comissão de atendimento realizado exclusivamente por um Parceiro:
+[•]% para o Parceiro responsável e [•]% para o fundo/caixa comum da
+operação (ou conforme percentual acordado).
+4.2. Comissão de atendimento conjunto: divisão de [•]% / [•]% entre os
+Parceiros, ou conforme acordado por escrito no início do atendimento.
+4.3. Cada Parceiro emitirá recibo próprio pela parcela de comissão que lhe
+couber, identificando CPF e CRECI/PE.
+
+CLÁUSULA 5ª — RATEIO DE DESPESAS
+5.1. Despesas comuns da operação (marketing, ferramentas, CRM, deslocamento
+para atendimentos conjuntos, contabilidade) serão rateadas na proporção de
+[•]% / [•]%, mediante prestação de contas mensal.
+5.2. Despesas de atendimento individual são de responsabilidade exclusiva do
+Parceiro que as realizou, salvo acordo em contrário.
+
+CLÁUSULA 6ª — SEGREGAÇÃO PATRIMONIAL
+6.1. Os Parceiros comprometem-se a manter conta e/ou controle financeiro
+próprio da atividade, segregado das finanças pessoais e familiares comuns.
+6.2. Receitas e despesas da atividade profissional não se comunicam
+automaticamente com o patrimônio comum do casal decorrente da união
+estável, ressalvado o que vier a ser efetivamente partilhado por decisão
+conjunta e documentada dos Parceiros.
+
+CLÁUSULA 7ª — USO DA MARCA "A&L NEGÓCIOS IMOBILIÁRIOS"
+7.1. A marca é de titularidade conjunta dos Parceiros enquanto durar esta
+parceria, nos termos do Termo de Uso da Marca A&L (Anexo).
+7.2. Em caso de encerramento da parceria, aplica-se a Cláusula 9ª.
+
+CLÁUSULA 8ª — CARTEIRA DE CLIENTES E CAPTAÇÕES
+8.1. Captações e atendimentos realizados durante a vigência da parceria
+serão identificados, na ficha de captação/atendimento, com o(s) nome(s)
+do(s) Parceiro(s) responsável(is).
+8.2. Em caso de encerramento da parceria, os atendimentos em andamento serão
+concluídos por quem os originou, salvo acordo diverso, com a comissão
+correspondente devida a quem efetivamente concluir o atendimento, ressalvado
+o percentual de origem quando cabível.
+
+CLÁUSULA 9ª — ENCERRAMENTO DA PARCERIA
+9.1. Qualquer Parceiro pode encerrar esta parceria mediante aviso por
+escrito com [•] dias de antecedência.
+9.2. O encerramento desta parceria profissional não pressupõe, por si só, o
+fim da união estável, e vice-versa; os efeitos de cada relação serão
+tratados de forma independente.
+9.3. Comissões pendentes na data do encerramento serão pagas a quem as
+gerou, conforme identificação nas fichas de atendimento.
+9.4. A marca "A&L Negócios Imobiliários" terá sua titularidade e uso futuro
+definidos por acordo escrito entre os Parceiros; na ausência de acordo, seu
+uso fica suspenso até solução amigável ou judicial.
+
+CLÁUSULA 10ª — LGPD
+Os Parceiros comprometem-se a tratar dados pessoais de clientes, proprietários
+e demais envolvidos em conformidade com a Lei nº 13.709/2018 (LGPD),
+conforme Política de Privacidade da operação.
+
+CLÁUSULA 11ª — FORO
+Fica eleito o foro da comarca de [•]/PE para dirimir dúvidas oriundas deste
+instrumento.
+
+[Local], [data].
+
+_____________________________          _____________________________
+PARCEIRO 1 — CRECI/PE nº [•]            PARCEIRO 2 — CRECI/PE nº [•]
+
+Testemunhas (recomendável):
+1. ____________________  CPF: __________
+2. ____________________  CPF: __________
+```
+
+*Este ponto exige validação final por advogado (direito civil/família/contratual) e por contador antes de assinatura.*
+
+## 2. Termo de Uso da Marca "A&L Negócios Imobiliários"
+
+```
+TERMO DE USO DA MARCA COMERCIAL CONJUNTA "A&L NEGÓCIOS IMOBILIÁRIOS"
+
+Os corretores [Parceiro 1], CRECI/PE nº [•], e [Parceiro 2], CRECI/PE nº [•],
+acordam que:
+
+1. A expressão "A&L Negócios Imobiliários" e a identidade visual associada
+   constituem identificação comercial conjunta de atuação profissional dos
+   dois corretores, não configurando pessoa jurídica constituída.
+2. Toda peça publicitária, contrato, proposta ou documento que utilize a
+   marca deverá identificar nominalmente o(s) corretor(es) responsável(is)
+   e respectivo(s) número(s) de CRECI/PE.
+3. Nenhum dos Parceiros poderá ceder, licenciar ou registrar a marca perante
+   terceiros (INPI ou outro) sem consentimento expresso e escrito do outro.
+4. Em caso de encerramento da parceria (Cláusula 9ª do Instrumento de
+   Parceria Operacional), o uso futuro da marca observará o que ali foi
+   pactuado.
+
+[Local], [data]. Assinaturas dos dois Parceiros.
+```
+
+*Validação recomendada: consulta a advogado especializado em marcas caso se pretenda, no futuro, registro no INPI.*
+
+## 3. Termo de Autorização de Venda
+
+```
+TERMO DE AUTORIZAÇÃO PARA INTERMEDIAÇÃO DE VENDA DE IMÓVEL
+
+PROPRIETÁRIO(S): [nome, CPF, RG, endereço, estado civil]
+CORRETOR(ES) RESPONSÁVEL(IS): [nome, CRECI/PE], atuando sob a identificação
+comercial "A&L Negócios Imobiliários"
+
+IMÓVEL: [endereço completo, matrícula nº, cartório de registro]
+
+1. OBJETO: o(s) Proprietário(s) autoriza(m) o(s) Corretor(es) acima a
+   intermediar a venda do imóvel descrito, em caráter [exclusivo /
+   não exclusivo], pelo prazo de [•] dias, contados de [•].
+2. PREÇO: o valor pretendido para a venda é de R$ [•], podendo o Proprietário
+   avaliar contrapropostas.
+3. COMISSÃO: pela intermediação, será devida comissão de [•]% sobre o valor
+   efetivo da venda, a ser paga na forma [à vista no fechamento / conforme
+   negociado], nos termos do art. 725 do Código Civil.
+4. DECLARAÇÕES DO PROPRIETÁRIO: declara que é o legítimo proprietário/possui
+   poderes para vender o imóvel, que este está livre de ônus não informados
+   nesta autorização, e que fornecerá a documentação necessária para
+   regularização de venda (matrícula atualizada, certidões, IPTU).
+5. O(S) CORRETOR(ES) não garantem prazo ou valor de venda, nem se
+   responsabilizam por informações de terceiros (construtora, condomínio)
+   que estejam fora de seu conhecimento direto.
+6. AUTORIZAÇÃO DE ANÚNCIO: em anexo/conforme Termo de Autorização de
+   Anúncio específico.
+7. LGPD: dados pessoais tratados exclusivamente para fins desta
+   intermediação, conforme Política de Privacidade da operação.
+8. FORO: comarca de [•]/PE.
+
+[Local], [data].
+___________________________          ___________________________
+PROPRIETÁRIO(S)                       CORRETOR(ES) — CRECI/PE nº [•]
+```
+
+## 4. Termo de Autorização de Locação
+
+```
+TERMO DE AUTORIZAÇÃO PARA INTERMEDIAÇÃO DE LOCAÇÃO DE IMÓVEL
+
+LOCADOR: [nome, CPF, RG, endereço]
+CORRETOR(ES) RESPONSÁVEL(IS): [nome, CRECI/PE] — "A&L Negócios Imobiliários"
+IMÓVEL: [endereço, matrícula]
+
+1. Autorização em caráter [exclusivo/não exclusivo] pelo prazo de [•] dias.
+2. Modalidade: [locação residencial / comercial / temporada], nos termos da
+   Lei nº 8.245/1991 (quando aplicável).
+3. Valor pretendido do aluguel: R$ [•]; garantias aceitas: [caução / fiador /
+   seguro-fiança / título de capitalização], conforme opção do Locador.
+4. Comissão: [•] (percentual ou equivalente a 1 aluguel, conforme praxe
+   local), devida no fechamento do contrato de locação.
+5. O(s) Corretor(es) não custodiarão valores de caução ou aluguel em conta
+   pessoal; tais valores seguirão diretamente para o Locador ou para
+   estrutura formal de garantia (ex. seguradora), salvo orientação jurídica
+   específica em contrário.
+6. Declarações do Locador quanto à regularidade do imóvel e documentação.
+7. LGPD e foro conforme cláusulas padrão.
+
+[Local], [data]. Assinaturas.
+```
+
+## 5. Termo de Autorização de Anúncio
+
+```
+TERMO DE AUTORIZAÇÃO PARA DIVULGAÇÃO/ANÚNCIO DE IMÓVEL
+
+O(A) Sr(a). [proprietário/locador], CPF [•], autoriza [Parceiro(s)],
+CRECI/PE [•], atuando sob a identificação "A&L Negócios Imobiliários", a
+divulgar o imóvel situado em [endereço], mediante:
+
+1. Uso de fotos e/ou vídeos do imóvel em portais, redes sociais, materiais
+   impressos e campanhas de tráfego pago;
+2. Divulgação do preço pretendido: [sim/não — se não, "sob consulta"];
+3. Divulgação do endereço: [endereço completo / apenas bairro e região];
+4. Vedação a promessas de valorização ou rentabilidade garantida, ou
+   qualquer conteúdo que induza o público a erro;
+5. Prazo de vigência desta autorização: [•] dias, revogável a qualquer
+   tempo mediante aviso por escrito.
+
+[Local], [data]. Assinaturas.
+```
+
+## 6. Termo de Visita
+
+```
+TERMO DE VISITA A IMÓVEL
+
+Imóvel: [endereço]     Data/hora: [•]
+Corretor acompanhante: [nome, CRECI/PE]
+Visitante(s): [nome(s), CPF, telefone]
+
+Declaro(amos) ter visitado o imóvel acima na data e horário indicados,
+acompanhado(s) do corretor identificado, sob a identificação comercial
+"A&L Negócios Imobiliários", estando ciente(s) de que:
+(i) esta visita não gera, por si só, direito de preferência ou vínculo
+contratual sobre o imóvel;
+(ii) qualquer interesse em proposta deve ser formalizado por escrito.
+
+_____________________          _____________________
+Visitante                        Corretor — CRECI/PE nº [•]
+```
+
+## 7. Proposta de Compra
+
+```
+PROPOSTA DE COMPRA DE IMÓVEL
+
+Proponente: [nome, CPF, contato]
+Imóvel: [endereço, matrícula]
+Valor proposto: R$ [•]      Forma de pagamento: [•]
+Condições: [financiamento sujeito à aprovação bancária / recursos próprios /
+FGTS, etc.]
+Sinal (arras): R$ [•] — [confirmatórias/penitenciais, conforme art. 417 e
+seguintes do CC — a definir com orientação jurídica]
+Prazo de validade desta proposta: [•] dias.
+
+Ciência: esta proposta não vincula o proprietário até aceite formal por
+escrito; o sinal, se pago, seguirá diretamente ao proprietário ou a
+instrumento formal de garantia, não a conta pessoal do(s) corretor(es).
+
+[Local], [data]. Assinatura do proponente. Ciente: corretor CRECI/PE [•].
+```
+
+## 8. Proposta de Locação
+
+```
+PROPOSTA DE LOCAÇÃO DE IMÓVEL
+
+Proponente (pretendente a locatário): [nome, CPF, contato]
+Imóvel: [endereço]
+Valor de aluguel proposto: R$ [•]      Prazo pretendido: [•] meses
+Garantia oferecida: [caução/fiador/seguro-fiança/título de capitalização]
+Prazo de validade desta proposta: [•] dias.
+
+Ciência: proposta sujeita à análise de qualificação cadastral do
+pretendente e aceite formal do Locador.
+
+[Local], [data]. Assinatura. Ciente: corretor CRECI/PE [•].
+```
+
+## 9. Recibo de Comissão
+
+```
+RECIBO DE COMISSÃO DE CORRETAGEM
+
+Recebi de [pagador], a importância de R$ [•] ([valor por extenso]),
+referente à comissão de corretagem pela intermediação de [venda/locação]
+do imóvel situado em [endereço], nos termos da Autorização de [Venda/
+Locação] de [data] e do art. 725 do Código Civil.
+
+Corretor: [nome], CPF [•], CRECI/PE nº [•]
+Identificação comercial: A&L Negócios Imobiliários
+
+[Local], [data]. Assinatura do corretor.
+```
+
+*Cada corretor emite recibo individual pela parcela que lhe cabe — não emitir recibo em nome da "A&L" como se fosse pessoa jurídica.*
+
+## 10. Declaração de Ciência Documental / de Intermediação
+
+```
+DECLARAÇÃO DE CIÊNCIA DOCUMENTAL
+
+O(A) Sr(a). [nome], CPF [•], declara estar ciente de que:
+1. A intermediação foi realizada por corretor(es) de imóveis pessoa física,
+   CRECI/PE [•], sob a identificação comercial "A&L Negócios Imobiliários",
+   sem existência de pessoa jurídica imobiliária constituída até a presente
+   data;
+2. As informações sobre o imóvel foram fornecidas por [proprietário/
+   locador/fonte], cabendo ao interessado realizar a verificação documental
+   e, se desejar, vistoria técnica própria antes da formalização do negócio;
+3. O(s) corretor(es) não garantem a exatidão de informações de origem
+   exclusivamente do proprietário/locador ou de terceiros (síndico,
+   construtora, cartório).
+
+[Local], [data]. Assinatura.
+```
+
+## 11. Termo de Parceria com Outros Corretores (co-corretagem)
+
+```
+TERMO DE PARCERIA E CO-CORRETAGEM ENTRE CORRETORES
+
+Corretor A: [nome, CRECI/PE] — A&L Negócios Imobiliários
+Corretor B (parceiro externo): [nome, CRECI/PE, imobiliária/empresa se
+houver]
+
+1. Objeto: parceria para intermediação conjunta do imóvel/cliente [•],
+   com divisão de comissão de [•]% / [•]%.
+2. Proteção de carteira: cada parte declara que o cliente/imóvel objeto
+   desta parceria não está em atendimento prévio e ativo pela outra parte;
+   em caso de dúvida, cada parte deve apresentar registro de origem
+   (ficha de captação/atendimento) com data.
+3. Vedado o aliciamento de cliente ou imóvel de carteira alheia sem
+   anuência expressa.
+4. Pagamento da comissão dividida ocorrerá diretamente a cada corretor,
+   proporcionalmente, mediante recibo individual.
+5. Foro e LGPD conforme cláusulas padrão.
+
+[Local], [data]. Assinaturas.
+```
+
+## 12. Termo de Parceria com Imobiliárias
+
+```
+TERMO DE PARCERIA COMERCIAL COM IMOBILIÁRIA/CONSTRUTORA
+
+Corretor(es): [nome(s), CRECI/PE] — A&L Negócios Imobiliários
+Imobiliária/Construtora: [razão social, CNPJ, CRECI-J]
+
+1. Objeto: autorização para apresentação/divulgação de empreendimento(s) ou
+   estoque de imóveis da Imobiliária/Construtora pelos Corretores, mediante
+   comissão de [•]% sobre o valor da venda/locação intermediada.
+2. Proteção de lead: leads apresentados por qualquer das partes devem ser
+   registrados com data/hora, prevalecendo a regra de "primeiro registro" em
+   caso de conflito de atendimento ao mesmo cliente.
+3. Regras de repasse de comissão, prazos de pagamento e forma de emissão de
+   documento fiscal (quando a Imobiliária/Construtora for pessoa jurídica) a
+   definir em anexo específico.
+4. Vedada qualquer conduta que infrinja normas do CRECI/COFECI quanto a
+   captação, publicidade e concorrência.
+
+[Local], [data]. Assinaturas.
+```
+
+## Cláusulas padrão (aplicáveis a todas as minutas acima, quando pertinente)
+
+**LGPD:** *"Os dados pessoais coletados neste instrumento serão tratados exclusivamente para as finalidades aqui descritas, em conformidade com a Lei nº 13.709/2018, podendo ser compartilhados com cartórios, instituições financeiras e órgãos públicos estritamente quando necessário à execução do negócio."*
+
+**Assinatura eletrônica:** *"As partes reconhecem como válida a assinatura eletrônica deste instrumento, nos termos da legislação aplicável (MP nº 2.200-2/2001 e alterações), dispensando reconhecimento de firma, salvo exigência legal expressa em sentido contrário para o ato específico (ex. escritura pública)."*
+
+**Foro:** eleger comarca do município onde está o imóvel ou domicílio das partes, conforme o caso.
+
+*Este conjunto de minutas exige validação final por advogado antes do primeiro uso em operação real — não constitui aconselhamento jurídico definitivo.*
+</script>
+
+<script type="text/markdown" id="src-02">
+## Checklist de captação
+
+- [ ] Confirmar identidade do proprietário (documento com foto) e comparar com certidão de matrícula
+- [ ] Solicitar certidão de matrícula atualizada (≤ 30 dias)
+- [ ] Verificar existência de ônus, penhora, hipoteca, usufruto, inventário em aberto
+- [ ] Confirmar situação de IPTU e taxas/condomínio
+- [ ] Se procurador: validar procuração (poderes, prazo, revogação)
+- [ ] Se espólio/herança: verificar alvará judicial ou anuência de todos os herdeiros
+- [ ] Preencher Ficha de Captação e Ficha do Proprietário
+- [ ] Assinar Termo de Autorização de Venda/Locação (exclusivo ou não)
+- [ ] Assinar Termo de Autorização de Anúncio antes de qualquer divulgação
+- [ ] Identificar, na ficha, qual(is) corretor(es) responde(m) pela captação
+
+## Checklist de venda
+
+- [ ] Autorização de venda vigente e assinada
+- [ ] Anúncio conforme Guia de Comunicação Comercial (sem promessas vedadas)
+- [ ] Termo de visita assinado a cada visita
+- [ ] Proposta de compra formalizada por escrito
+- [ ] Registro de contraproposta(s), se houver
+- [ ] Aceite formal do proprietário
+- [ ] Sinal/arras direcionado ao proprietário ou instrumento formal (nunca conta pessoal do corretor)
+- [ ] Checklist municipal do imóvel (ITBI, certidões, escritura, registro)
+- [ ] Recibo de comissão emitido individualmente por cada corretor
+- [ ] Arquivamento da pasta completa do negócio
+
+## Checklist de locação
+
+- [ ] Autorização de locação vigente
+- [ ] Qualificação do pretendente a locatário (documentos, renda, referências)
+- [ ] Garantia locatícia definida e formalizada (fiador/caução/seguro-fiança/capitalização)
+- [ ] Vistoria de entrada com laudo/fotos
+- [ ] Contrato de locação (elaborado ou revisado por advogado) assinado
+- [ ] Caução, se houver, direcionada conforme política (não em conta pessoal do corretor)
+- [ ] Recibo de comissão emitido
+- [ ] Arquivamento da pasta
+
+## Checklist de locação por temporada (adicional)
+
+- [ ] Confirmar regularidade do imóvel para locação por temporada (regras de condomínio, restrições locais em Ipojuca/Tamandaré quando aplicável)
+- [ ] Contrato específico de temporada com regras de check-in/check-out, cancelamento e caução
+- [ ] Registro fotográfico do estado do imóvel antes/depois
+
+## Checklist de fechamento
+
+- [ ] Toda documentação exigida reunida (checklist municipal)
+- [ ] ITBI pago antes da escritura
+- [ ] Escritura pública lavrada (ou instrumento particular com força de escritura, quando cabível)
+- [ ] Registro da escritura na matrícula do imóvel
+- [ ] Comissão(ões) quitada(s) e recibo(s) emitido(s)
+- [ ] Encerramento formal do atendimento (Termo de Encerramento de Atendimento)
+
+## Checklist antifraude
+
+- [ ] Documento de identidade do proprietário/vendedor conferido fisicamente (não apenas foto/print)
+- [ ] Dados do documento conferem com a matrícula e com certidões
+- [ ] Sem sinais de urgência/pressão atípica para fechar rapidamente sem documentação
+- [ ] Sem solicitação de pagamento fora do circuito bancário rastreável
+- [ ] Procuração validada (cartório emissor, poderes, vigência)
+- [ ] Nenhum valor de terceiro recebido em conta pessoal do(s) corretor(es)
+- [ ] Em caso de dúvida sobre autenticidade documental: suspender negociação e consultar advogado
+
+## Checklist fiscal (pessoa física)
+
+- [ ] Recibo de comissão emitido individualmente, com CPF e CRECI
+- [ ] Lançamento no carnê-leão do mês de recebimento
+- [ ] Registro em livro-caixa de despesas dedutíveis da atividade
+- [ ] Conta/controle financeiro da atividade segregado das finanças pessoais do casal
+- [ ] Prestação de contas mensal entre os dois parceiros conforme rateio acordado
+- [ ] Revisão anual com contador antes da Declaração de Imposto de Renda
+
+*Este checklist não substitui orientação de contador; alíquotas, deduções e obrigações acessórias devem ser confirmadas anualmente.*
+
+## Checklist municipal por cidade (roteiro de confirmação, sem valores)
+
+Para cada operação, confirmar na prefeitura/cartório competente, na data da operação:
+
+- [ ] Alíquota e base de cálculo do ITBI vigente
+- [ ] Procedimento e prazo de emissão de guia de ITBI
+- [ ] Certidões municipais exigidas (negativa de débitos, habite-se, etc.)
+- [ ] Situação de IPTU e taxas municipais
+- [ ] (Ipojuca/Porto de Galinhas e Tamandaré/Praia dos Carneiros) situação do imóvel quanto a terreno de marinha/faixa de praia junto à SPU — laudêmio/foro aplicável
+- [ ] Cartório de registro de imóveis competente pela circunscrição do bem
+
+## Política de comissionamento (síntese operacional)
+
+1. Toda comissão decorre de autorização escrita prévia (venda/locação).
+2. Divisão entre os parceiros segue o Instrumento de Parceria Operacional (atendimento individual vs. conjunto).
+3. Comissão com terceiros (co-corretagem, imobiliárias parceiras) exige termo de parceria específico antes do início da negociação conjunta.
+4. Pagamento sempre mediante recibo individual, nunca em nome da "A&L" como se pessoa jurídica fosse.
+5. Nenhuma comissão deve ser descontada diretamente de valores de terceiros (sinal, caução) custodiados pelo(s) corretor(es).
+
+## Política de despesas e rateio
+
+1. Despesas comuns da operação (tráfego pago, ferramentas/CRM, fotografia, contabilidade, deslocamento a atendimentos conjuntos) são rateadas conforme percentual do Instrumento de Parceria.
+2. Despesas de atendimento individual correm por conta de quem as gerou, salvo acordo diverso registrado por escrito.
+3. Reembolsos exigem comprovante e lançamento no controle financeiro mensal.
+4. Prestação de contas mensal entre os parceiros, com fechamento e registro simples (planilha/DRE simplificado).
+
+## Política de arquivamento documental
+
+1. Cada atendimento gera uma pasta digital nomeada `AAAA-MM_[Endereço-resumido]_[Tipo]` (ex.: `2026-07_RuaX-Boa-Viagem_Venda`).
+2. Conteúdo mínimo: autorização assinada, ficha de captação, documentos do imóvel, propostas, termo(s) de visita, contrato final, recibo de comissão, prints/registros de comunicações relevantes.
+3. Retenção sugerida: mínimo 5 anos após o encerramento do atendimento (prazo geral de prescrição civil — *confirmar com advogado prazo aplicável ao caso concreto*).
+4. Backup em nuvem com controle de acesso; descarte seguro ao final do prazo de retenção.
+
+## Política de privacidade / LGPD (síntese)
+
+1. Coleta de dados limitada ao necessário para a intermediação em curso.
+2. Base legal: execução de procedimentos preliminares/contratuais e, residualmente, legítimo interesse restrito à finalidade comercial.
+3. Compartilhamento apenas com quem participa diretamente do negócio (cartórios, bancos, outro corretor/imobiliária parceira formalizada).
+4. Armazenamento em ferramentas com controle de acesso (Drive/CRM com senha, sem compartilhamento público de pastas).
+5. Retenção conforme política de arquivamento; descarte seguro após o prazo.
+6. Direitos do titular (acesso, correção, exclusão) atendidos mediante solicitação, ressalvada retenção obrigatória por prazo legal/prescricional.
+
+## Guia de comunicação comercial (permitido x proibido)
+
+**Permitido, com cautela:**
+- Descrição objetiva do imóvel (metragem, quartos, localização, características)
+- Preço, se autorizado pelo proprietário
+- Fotos/vídeos com autorização de uso de imagem
+- Identificação da marca A&L acompanhada do nome e CRECI dos corretores
+
+**Proibido / alto risco:**
+- "Investimento garantido", "rentabilidade garantida", "valorização certa"
+- Prazos de retorno financeiro prometidos
+- Comparações depreciativas com concorrentes
+- Uso da marca A&L isoladamente sem identificação dos corretores/CRECI, de forma a sugerir imobiliária constituída
+- Divulgação de endereço/preço sem autorização expressa do proprietário/locador
+
+## Checklist de implantação tecnológica mínima
+
+- [ ] CRM ou planilha estruturada com campos: contato, imóvel, etapa do funil, corretor responsável, datas
+- [ ] Estrutura de pastas no Drive seguindo padrão de nomenclatura da política de arquivamento
+- [ ] E-mail profissional separado do e-mail pessoal
+- [ ] WhatsApp Business separado do WhatsApp pessoal, com catálogo/etiquetas por etapa
+- [ ] Ferramenta de assinatura eletrônica para autorizações e contratos
+- [ ] Backup automático (Drive/nuvem) com controle de acesso por senha/2FA
+- [ ] Revisão trimestral de segurança digital (senhas, acessos compartilhados)
+
+## Termo de Encerramento de Atendimento (modelo simples)
+
+```
+TERMO DE ENCERRAMENTO DE ATENDIMENTO
+
+Cliente: [nome]     Imóvel/negócio: [•]     Corretor responsável: [•]
+
+Registra-se o encerramento do atendimento acima em [data], pelo motivo:
+[fechamento de negócio / desistência do cliente / prazo de autorização
+expirado / outro: •].
+
+Documentos arquivados conforme Política de Arquivamento Documental.
+
+[Local], [data]. Assinatura do corretor responsável.
+```
+</script>
+
+<script type="text/markdown" id="src-03">
+**Objeto revisado:** Diagnóstico consolidado, Minutas contratuais, Checklists e políticas.
+
+## Resumo do que foi revisado
+
+Diagnóstico jurídico, civil, penal/antifraude, COFECI/CRECI, família/união estável, fiscal, municipal, LGPD, operacional e de marketing; onze minutas contratuais; checklists de captação, venda, locação, fechamento, antifraude, fiscal e municipal; políticas de comissionamento, despesas, arquivamento, privacidade e comunicação.
+
+## Principais riscos encontrados
+
+1. **Crítico — recebimento de valores de terceiros.** Reforçado em múltiplos documentos que sinal, caução e comissão nunca devem transitar por conta pessoal dos corretores sem lastro formal. Ponto tratado corretamente nas minutas; risco residual permanece caso a prática real diverja do documento — depende de disciplina operacional, não apenas de cláusula.
+2. **Alto — confusão entre marca A&L e pessoa jurídica.** Todas as minutas e o guia de comunicação exigem identificação nominal dos corretores e CRECI. Ponto adequadamente coberto, mas exige fiscalização contínua sobre o material publicitário efetivamente publicado (redes sociais, portais) — o documento não tem como garantir a execução prática.
+3. **Alto — confusão patrimonial entre união estável e parceria profissional.** O Instrumento de Parceria trata o tema, mas a cláusula de "independência em relação ao regime de bens" é uma diretriz contratual entre as partes; **não tem o condão de afastar, por si só, efeitos do regime de bens legalmente aplicável perante terceiros ou em eventual litígio**. Isso deve ficar claro aos parceiros.
+4. **Médio-alto — dados municipais (ITBI, laudêmio) não numéricos.** Decisão correta de não informar alíquotas/valores no material, mas isso significa que **nenhuma orientação de custo ao cliente pode ser dada com base neste documento** — deve ser destacado como limitação prática relevante do material, não apenas nota de rodapé.
+5. **Médio — prazo de retenção documental (5 anos) é estimativa genérica**, baseada em prazo geral de prescrição civil; prazos específicos variam conforme o tipo de obrigação (ex. questões fiscais, trabalhistas se houver contratação futura de terceiros) e não foram individualizados.
+6. **Médio — Código de Ética do COFECI citado sem número de resolução vigente.** O material evita citar resolução desatualizada, mas isso deixa a validação normativa integralmente pendente de consulta ao CRECI/PE.
+7. **Baixo — minutas usam linguagem-modelo com campos em colchetes.** Adequado para uso como rascunho, mas nenhuma deve ser assinada sem preenchimento revisado por advogado, sob risco de cláusula inconsistente com o caso concreto (ex. tipo de arras, se confirmatórias ou penitenciais).
+
+## Pontos aprovados
+
+- Premissa central (pessoa física/parceria, não PJ) mantida de forma consistente em todos os documentos.
+- Separação clara, em cada seção, entre o que é regra atual (PF/parceria) e o que é gatilho para migração futura a PJ.
+- Política de não custódia de valores de terceiros presente de forma reiterada (diagnóstico, minutas e checklists).
+- Identificação individual do corretor responsável exigida em fichas, autorizações e recibos, mitigando risco de responsabilidade solidária indevida.
+- Nenhuma promessa de rentabilidade/valorização nas minutas ou no guia de comunicação.
+- Avisos de validação profissional presentes nos pontos fiscal, municipal, penal e de família/patrimonial.
+
+## Pontos que precisam de ajuste
+
+- Incluir, no Instrumento de Parceria, cláusula explícita informando às partes que a segregação patrimonial contratual **não é oponível automaticamente a credores ou ao cônjuge/companheiro perante o regime de bens legal**, cabendo orientação de advogado sobre eventual necessidade de contrato de convivência complementar.
+- Destacar, em local visível do diagnóstico municipal, que o documento **não deve ser usado para informar custos ao cliente final** sem confirmação prévia e atualizada.
+- Especificar, antes do primeiro uso real, o tipo de arras (confirmatórias/penitenciais) na Proposta de Compra, hoje deixado em aberto — decisão que depende de orientação jurídica e de política comercial dos parceiros.
+
+## Pontos que exigem validação profissional externa (reforço)
+
+- **Advogado:** todas as minutas antes do primeiro uso; regime de bens e efeitos patrimoniais da união estável frente à parceria; prazo de retenção documental por tipo de obrigação.
+- **Contador:** apuração de carnê-leão, dedutibilidade de despesas, enquadramento previdenciário, momento de eventual migração para pessoa jurídica.
+- **CRECI/PE:** normas atualizadas de publicidade, uso de marca comercial conjunta por autônomos e código de ética vigente.
+- **Cartório/prefeitura/SPU:** toda alíquota, prazo, certidão e eventual laudêmio/foro, caso a caso, na data da operação.
+
+## Recomendações finais
+
+1. Tratar este material como **rascunho de trabalho**, não como conjunto de documentos prontos para uso.
+2. Submeter o Instrumento de Parceria e o conjunto de minutas a advogado antes de qualquer assinatura.
+3. Submeter a rotina fiscal a contador antes do primeiro recebimento de comissão.
+4. Confirmar, a cada operação, dados municipais atualizados diretamente com o órgão competente.
+5. Revisar este pacote documental sempre que houver mudança relevante de volume de operações, entrada de terceiros na parceria, ou decisão de constituir pessoa jurídica.
+
+## Nível de segurança da entrega
+
+**Condicionado.** O material está estruturalmente coerente com a premissa central e cobre as frentes solicitadas, mas sua aplicação prática depende integralmente da validação pelos profissionais e órgãos indicados nas seções de cada documento. Nenhuma peça deve ser usada em operação real sem essa validação.
+</script>
+
+<style>
+  /* ---------- app shell v2: tabs + views ---------- */
+  .top-tabs{ display:flex; gap:2px; margin-left:14px; }
+  .top-tabs button{
+    background:none; border:none; color:#aab8cc; font-size:13px; font-weight:600;
+    padding:8px 13px; border-radius:7px; cursor:pointer; letter-spacing:.01em;
+  }
+  .top-tabs button:hover{ color:#eef1f5; background:rgba(255,255,255,.07); }
+  .top-tabs button.active{ color:#fff; background:rgba(255,255,255,.12); box-shadow: inset 0 -2px 0 var(--red); }
+  @media (max-width: 860px){ .top-meta .status-pill{ display:none; } .top-search{ display:none; } }
+
+  .shell.full{ grid-template-columns: minmax(0,1fr) !important; grid-template-areas: "top" "main" !important; }
+  .shell.full .side-rail, .shell.full .notes-rail{ display:none; }
+
+  .app-shell{ max-width:980px; margin:0 auto; padding:34px 40px 90px; }
+  .app-shell h1{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    font-size:27px; margin:0 0 6px; text-wrap:balance;
+  }
+  .app-sub{ color:var(--muted); font-size:13.5px; margin-bottom:26px; max-width:70ch; line-height:1.55; }
+
+  .kpi-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:26px; }
+  .kpi{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding:14px 16px; box-shadow:var(--shadow); cursor:pointer;
+  }
+  .kpi:hover{ border-color:var(--line-strong); }
+  .kpi .k-label{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:6px; }
+  .kpi .k-value{ font-size:24px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; }
+  .kpi .k-value small{ font-size:13px; color:var(--muted); font-weight:500; }
+  .kpi .k-bar{ height:4px; background:var(--line); border-radius:2px; margin-top:10px; overflow:hidden; }
+  .kpi .k-bar i{ display:block; height:100%; background:var(--red); border-radius:2px; }
+  .kpi.k-good .k-bar i{ background:#3f7d54; }
+
+  .panel-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width: 900px){ .panel-grid{ grid-template-columns:1fr; } }
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    box-shadow:var(--shadow); padding:16px 18px; margin-bottom:16px;
+  }
+  .card h2{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    font-size:17px; margin:0 0 4px;
+  }
+  .card .c-sub{ font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.45; }
+  .step-list{ display:flex; flex-direction:column; }
+  .step{
+    display:flex; align-items:flex-start; gap:10px; padding:8px 4px;
+    border-bottom:1px solid var(--line); font-size:13.5px; line-height:1.45; cursor:pointer;
+  }
+  .step:last-child{ border-bottom:none; }
+  .step input{ margin-top:3px; accent-color:var(--red); flex:none; }
+  .step.done span{ color:var(--muted); text-decoration:line-through; text-decoration-color:var(--line-strong); }
+  .step .who{
+    flex:none; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    padding:2px 7px; border-radius:999px; background:var(--navy); color:#e9edf3; margin-top:2px;
+  }
+
+  .sev{ display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .sev-critico{ background:#8c2f22; color:#fff; }
+  .sev-alto{ background:var(--red-soft); color:var(--red); border:1px solid var(--red); }
+  .sev-medio{ background:rgba(224,166,58,.16); color:#8a6414; border:1px solid rgba(224,166,58,.55); }
+  :root[data-theme="dark"] .sev-medio{ color:#e0b45e; }
+  @media (prefers-color-scheme:dark){ .sev-medio{ color:#e0b45e; } }
+  .sev-baixo{ background:rgba(63,125,84,.13); color:#3f7d54; border:1px solid rgba(63,125,84,.5); }
+
+  .st-select{
+    border:1px solid var(--line-strong); border-radius:7px; background:var(--paper); color:var(--ink);
+    font-size:12px; padding:5px 8px; cursor:pointer; font-family:inherit;
+  }
+  .st-select:focus{ outline:2px solid var(--red); outline-offset:1px; }
+  .st-select.s-aberto{ border-color:var(--red); color:var(--red); font-weight:600; }
+  .st-select.s-tratamento{ border-color:#b8860b; color:#8a6414; font-weight:600; }
+  :root[data-theme="dark"] .st-select.s-tratamento{ color:#e0b45e; }
+  .st-select.s-mitigado, .st-select.s-validado{ border-color:#3f7d54; color:#3f7d54; font-weight:600; }
+
+  .risk-filters{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .chip{
+    border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);
+    border-radius:999px; padding:6px 13px; font-size:12.5px; cursor:pointer; font-weight:600;
+  }
+  .chip:hover{ border-color:var(--red); }
+  .chip.on{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  .risk-row{
+    display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start;
+    padding:13px 4px; border-bottom:1px solid var(--line);
+  }
+  .risk-row:last-child{ border-bottom:none; }
+  .risk-row .r-title{ font-size:14px; font-weight:600; margin-bottom:3px; line-height:1.4; }
+  .risk-row .r-treat{ font-size:12.5px; color:var(--muted); line-height:1.5; max-width:62ch; }
+  .risk-row .r-doc{ font-size:11px; color:var(--accent-link); margin-top:4px; cursor:pointer; text-decoration:underline; }
+
+  .rev-doc-row{
+    display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
+    padding:11px 4px; border-bottom:1px solid var(--line);
+  }
+  .rev-doc-row:last-child{ border-bottom:none; }
+  .rev-doc-row .d-name{ font-size:14px; font-weight:600; }
+  .rev-doc-row .d-meta{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+
+  .sug-card{
+    border:1px solid var(--line); border-radius:9px; padding:11px 13px; background:var(--paper);
+    margin-bottom:10px; font-size:13px; line-height:1.5;
+  }
+  .sug-card .s-head{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+  .sug-card .s-doc{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--red); }
+  .sug-card time{ font-size:10.5px; color:var(--muted); }
+  .sug-card .s-actions{ display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .sug-card .s-actions button{
+    font-size:11px; padding:4px 9px; border-radius:6px; cursor:pointer;
+    border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);
+  }
+  .sug-card .s-actions button:hover{ border-color:var(--red); }
+  .tag{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    padding:2px 8px; border-radius:999px; }
+  .tag-aberta{ background:rgba(224,166,58,.16); color:#8a6414; border:1px solid rgba(224,166,58,.55); }
+  :root[data-theme="dark"] .tag-aberta{ color:#e0b45e; }
+  .tag-aceita{ background:rgba(38,67,111,.12); color:var(--accent-link); border:1px solid var(--accent-link); }
+  .tag-aplicada{ background:rgba(63,125,84,.13); color:#3f7d54; border:1px solid rgba(63,125,84,.5); }
+  .tag-descartada{ background:var(--line); color:var(--muted); }
+  .tag-ajuste{ background:var(--red-soft); color:var(--red); }
+  .tag-duvida{ background:rgba(38,67,111,.1); color:var(--accent-link); }
+  .tag-validacao{ background:var(--navy); color:#e9edf3; }
+
+  .note-type{ display:flex; gap:6px; margin-bottom:8px; }
+  .note-type button{
+    flex:1; font-size:11px; padding:5px 4px; border-radius:6px; cursor:pointer;
+    border:1px solid var(--line-strong); background:var(--surface); color:var(--muted); font-weight:600;
+  }
+  .note-type button.on{ border-color:var(--red); color:var(--red); background:var(--red-soft); }
+
+  .empty-hint{ font-size:12.5px; color:var(--muted); border:1px dashed var(--line-strong);
+    border-radius:8px; padding:18px; text-align:center; }
+  .progress-line{ display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--muted); margin-bottom:8px; }
+  .progress-line .k-bar{ flex:1; height:5px; background:var(--line); border-radius:3px; overflow:hidden; }
+  .progress-line .k-bar i{ display:block; height:100%; background:var(--red); }
+</style>
+<script>
+(function(){
+  "use strict";
+
+  var DOCS = [
+    { id:"readme", badge:"·", group:"Início", title:"Visão geral", sub:"Como usar este app", src:"src-readme" },
+    { id:"00", badge:"00", group:"Diagnóstico", title:"Diagnóstico consolidado", sub:"Jurídico · civil · penal · COFECI/CRECI · família · fiscal · municipal · LGPD", src:"src-00" },
+    { id:"01", badge:"01", group:"Contratos", title:"Minutas contratuais", sub:"Instrumento de parceria, autorizações, propostas e recibos", src:"src-01" },
+    { id:"02", badge:"02", group:"Operação", title:"Checklists e políticas", sub:"Captação, venda, locação, fechamento, antifraude, fiscal e comunicação", src:"src-02" },
+    { id:"03", badge:"03", group:"Revisão", title:"Parecer do revisor crítico", sub:"Riscos por gravidade e nível de segurança da entrega", src:"src-03" }
+  ];
+  var REVIEW_DOCS = DOCS.filter(function(d){ return d.id !== "readme"; });
+
+  var RISKS = [
+    { id:"r1", sev:"critico", title:"Recebimento de valores de terceiros em conta pessoal", treat:"Política de não custódia de valores de terceiros (sinal, caução, comissão alheia); direcionamento direto ao proprietário ou instrumento formal.", doc:"00" },
+    { id:"r2", sev:"critico", title:"Fraude documental / imóvel litigioso", treat:"Checklist antifraude e validação documental prévia (matrícula, identidade, procurações, espólios); suspensão da negociação em caso de dúvida.", doc:"02" },
+    { id:"r3", sev:"alto", title:"Confusão entre marca A&L e \"imobiliária constituída\"", treat:"Identificação obrigatória dos corretores e CRECI em toda peça publicitária, contrato e proposta.", doc:"00" },
+    { id:"r4", sev:"alto", title:"Sociedade de fato não desejada", treat:"Instrumento de Parceria Operacional formalizado, com natureza da parceria e responsabilidades individuais expressas.", doc:"01" },
+    { id:"r5", sev:"alto", title:"Confusão patrimonial entre união estável e atividade profissional", treat:"Segregação de contas, prestação de contas mensal e cláusulas específicas no instrumento de parceria; avaliar contrato de convivência com advogado.", doc:"01" },
+    { id:"r6", sev:"alto", title:"Anúncio ou captação sem autorização escrita", treat:"Autorizações padronizadas (venda, locação, anúncio) assinadas antes de qualquer divulgação.", doc:"01" },
+    { id:"r7", sev:"alto", title:"Erro sobre custos municipais (ITBI, laudêmio) informado ao cliente", treat:"Nunca informar valor sem confirmação no órgão competente na data da operação; usar o roteiro municipal como pauta de verificação.", doc:"00" },
+    { id:"r8", sev:"alto", title:"Publicidade enganosa", treat:"Guia de comunicação permitida/proibida; vedação a promessas de rentabilidade e valorização garantida.", doc:"02" },
+    { id:"r9", sev:"medio", title:"Informalidade fiscal", treat:"Carnê-leão mensal, recibos individuais com CPF/CRECI, livro-caixa e acompanhamento de contador.", doc:"00" },
+    { id:"r10", sev:"medio", title:"LGPD — vazamento ou uso indevido de dados", treat:"Controles de acesso, retenção mínima, política de privacidade e cláusula LGPD nos contratos.", doc:"02" }
+  ];
+  var SEV_LABEL = { critico:"Crítico", alto:"Alto", medio:"Médio", baixo:"Baixo" };
+  var RISK_STATUS = { aberto:"Não tratado", tratamento:"Em tratamento", mitigado:"Mitigado" };
+
+  var PLAN = [
+    "Validar minutas e políticas com advogado e contador (obrigatório antes do uso)",
+    "Assinar o Instrumento Particular de Parceria Operacional entre os dois corretores",
+    "Regularizar identificação da marca A&L em todos os canais (bio, assinatura, materiais)",
+    "Implantar checklists de captação, autorização e antifraude antes do primeiro atendimento",
+    "Estruturar controle financeiro segregado da conta pessoal do casal",
+    "Definir fluxo de arquivamento documental (Drive/CRM) com retenção e backup",
+    "Publicar política de privacidade básica e cláusula LGPD nos contratos",
+    "Revisar a cada 6 meses a necessidade de constituição de pessoa jurídica"
+  ];
+
+  var VALIDATIONS = [
+    { who:"Advogado", text:"Revisão de todas as minutas antes do primeiro uso" },
+    { who:"Advogado", text:"Regime de bens da união estável x instrumento de parceria (avaliar contrato de convivência)" },
+    { who:"Advogado", text:"Definir tipo de arras (confirmatórias ou penitenciais) na Proposta de Compra" },
+    { who:"Contador", text:"Carnê-leão, livro-caixa, dedutibilidade de despesas e INSS autônomo" },
+    { who:"Contador", text:"Avaliar momento de migração para pessoa jurídica (projeção de faturamento)" },
+    { who:"CRECI/PE", text:"Normas vigentes de publicidade e uso de marca comercial conjunta por autônomos" },
+    { who:"CRECI/PE", text:"Confirmar versão vigente do Código de Ética do COFECI" },
+    { who:"Cartório/Prefeitura", text:"ITBI, certidões e custos — confirmar por município, a cada operação" },
+    { who:"SPU", text:"Terrenos de marinha e laudêmio em Ipojuca/Porto de Galinhas e Tamandaré (quando aplicável)" }
+  ];
+
+  var DOC_STATUS = { rascunho:"Rascunho", em_revisao:"Em revisão profissional", ajustes:"Ajustes solicitados", validado:"Validado" };
+  var NOTE_STATUS = { aberta:"Aberta", aceita:"Aceita", aplicada:"Aplicada", descartada:"Descartada" };
+  var NOTE_TYPE = { ajuste:"Ajuste", duvida:"Dúvida", validacao:"Validação" };
+
+  var K = { tasks:"al_tasks_v1", notes:"al_notes_v2", notesOld:"al_notes_v1",
+            risks:"al_risks_v1", plan:"al_plan_v1", valid:"al_valid_v1", docst:"al_docstatus_v1" };
+
+  function load(key, fb){ try{ var v = JSON.parse(localStorage.getItem(key)); return v || fb; }catch(e){ return fb; } }
+  function save(key, v){ try{ localStorage.setItem(key, JSON.stringify(v)); }catch(e){} }
+
+  var state = {
+    view:"panel", currentDoc:"readme", noteType:"ajuste", riskFilter:"todos",
+    tasks: load(K.tasks, {}), risks: load(K.risks, {}), plan: load(K.plan, {}),
+    valid: load(K.valid, {}), docst: load(K.docst, {}), notes: load(K.notes, null)
+  };
+  if (!state.notes){
+    var old = load(K.notesOld, {});
+    var flat = [];
+    Object.keys(old).forEach(function(docId){
+      (old[docId] || []).forEach(function(n){
+        flat.push({ id:n.id, doc:docId, text:n.text, at:n.at, status:"aberta", tipo:"ajuste" });
+      });
+    });
+    state.notes = flat; save(K.notes, flat);
+  }
+
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function inline(text){
+    text = esc(text);
+    text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+    text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    text = text.replace(/(^|[^*])\*([^*]+)\*([^*]|$)/g, "$1<em>$2</em>$3");
+    text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return text;
+  }
+
+  function mdToHtml(md, docId){
+    var lines = md.replace(/\r\n/g,"\n").split("\n");
+    var html = []; var i = 0; var taskCounter = 0;
+    while (i < lines.length){
+      var line = lines[i];
+      if (/^\s*$/.test(line)){ i++; continue; }
+      if (/^```/.test(line)){
+        var code = []; i++;
+        while (i < lines.length && !/^```/.test(lines[i])){ code.push(lines[i]); i++; }
+        i++;
+        html.push("<pre><code>" + esc(code.join("\n")) + "</code></pre>");
+        continue;
+      }
+      var h = line.match(/^(#{1,3})\s+(.*)$/);
+      if (h){ var lv = h[1].length + 1; html.push("<h"+lv+">"+inline(h[2])+"</h"+lv+">"); i++; continue; }
+      if (/^---+\s*$/.test(line)){ html.push("<hr>"); i++; continue; }
+      if (/^\s*\|/.test(line)){
+        var rows = [];
+        while (i < lines.length && /^\s*\|/.test(lines[i])){ rows.push(lines[i]); i++; }
+        var parsed = rows.filter(function(r){ return !/^[\s|:-]+$/.test(r); }).map(function(r){
+          return r.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(function(c){ return c.trim(); });
+        });
+        if (parsed.length){
+          var t = '<div class="table-wrap"><table><thead><tr>';
+          parsed[0].forEach(function(c){ t += "<th>"+inline(c)+"</th>"; });
+          t += "</tr></thead><tbody>";
+          parsed.slice(1).forEach(function(r){
+            t += "<tr>"; r.forEach(function(c){ t += "<td>"+inline(c)+"</td>"; }); t += "</tr>";
+          });
+          t += "</tbody></table></div>";
+          html.push(t);
+        }
+        continue;
+      }
+      if (/^\s*>\s?/.test(line)){
+        var q = [];
+        while (i < lines.length && /^\s*>\s?/.test(lines[i])){ q.push(lines[i].replace(/^\s*>\s?/,"")); i++; }
+        html.push("<blockquote>"+inline(q.join(" "))+"</blockquote>");
+        continue;
+      }
+      if (/^\s*-\s\[[ xX]\]\s/.test(line)){
+        var items = [];
+        while (i < lines.length && /^\s*-\s\[[ xX]\]\s/.test(lines[i])){
+          items.push(lines[i].match(/^\s*-\s\[([ xX])\]\s(.*)$/)[2]); i++;
+        }
+        var ul = "<ul>";
+        items.forEach(function(txt){
+          taskCounter++;
+          var key = docId + "-t" + taskCounter;
+          ul += '<li class="task"><input type="checkbox" data-task="'+key+'" '+(state.tasks[key]?"checked":"")+'><span>'+inline(txt)+"</span></li>";
+        });
+        html.push(ul + "</ul>");
+        continue;
+      }
+      if (/^\s*-\s/.test(line)){
+        var ui = [];
+        while (i < lines.length && /^\s*-\s/.test(lines[i]) && !/^\s*-\s\[[ xX]\]\s/.test(lines[i])){
+          ui.push(lines[i].replace(/^\s*-\s/,"")); i++;
+        }
+        html.push("<ul>"+ui.map(function(t){ return "<li>"+inline(t)+"</li>"; }).join("")+"</ul>");
+        continue;
+      }
+      if (/^\s*\d+\.\s/.test(line)){
+        var oi = [];
+        while (i < lines.length && /^\s*\d+\.\s/.test(lines[i])){ oi.push(lines[i].replace(/^\s*\d+\.\s/,"")); i++; }
+        html.push("<ol>"+oi.map(function(t){ return "<li>"+inline(t)+"</li>"; }).join("")+"</ol>");
+        continue;
+      }
+      var para = [line]; i++;
+      while (i < lines.length && !/^\s*$/.test(lines[i]) && !/^(#{1,3}\s)|^```|^\s*\||^\s*>|^\s*-\s|^\s*\d+\.\s|^---+\s*$/.test(lines[i])){
+        para.push(lines[i]); i++;
+      }
+      html.push("<p>"+inline(para.join(" "))+"</p>");
+    }
+    return html.join("\n");
+  }
+
+  function docSrc(id){
+    var d = DOCS.filter(function(x){ return x.id === id; })[0];
+    var el = document.getElementById(d.src);
+    return el ? el.textContent.trim() : "";
+  }
+  function docById(id){ return DOCS.filter(function(x){ return x.id === id; })[0]; }
+
+  // checklist totals per doc
+  var TASK_TOTALS = {};
+  DOCS.forEach(function(d){
+    var m = docSrc(d.id).match(/^\s*-\s\[[ xX]\]\s/gm);
+    TASK_TOTALS[d.id] = m ? m.length : 0;
+  });
+  function taskProgress(){
+    var total = 0, done = 0;
+    DOCS.forEach(function(d){
+      total += TASK_TOTALS[d.id];
+      for (var n = 1; n <= TASK_TOTALS[d.id]; n++){ if (state.tasks[d.id+"-t"+n]) done++; }
+    });
+    return { done:done, total:total };
+  }
+  function planProgress(){
+    var done = 0; PLAN.forEach(function(_, idx){ if (state.plan["p"+idx]) done++; });
+    return { done:done, total:PLAN.length };
+  }
+  function validProgress(){
+    var done = 0; VALIDATIONS.forEach(function(_, idx){ if (state.valid["v"+idx]) done++; });
+    return { done:done, total:VALIDATIONS.length };
+  }
+  function riskCounts(){
+    var open = 0, mitigated = 0, critOpen = 0;
+    RISKS.forEach(function(r){
+      var st = state.risks[r.id] || "aberto";
+      if (st === "mitigado") mitigated++;
+      else { open++; if (r.sev === "critico" || r.sev === "alto") critOpen++; }
+    });
+    return { open:open, mitigated:mitigated, critOpen:critOpen };
+  }
+  function openNotes(){ return state.notes.filter(function(n){ return n.status === "aberta" || n.status === "aceita"; }); }
+
+  // ---------- shell / router ----------
+  var shell = document.querySelector(".shell");
+  var topRail = document.querySelector(".top-rail");
+  var brand = topRail.querySelector(".brand");
+  var tabs = document.createElement("nav");
+  tabs.className = "top-tabs";
+  tabs.innerHTML =
+    '<button data-view="panel">Painel</button>' +
+    '<button data-view="docs">Documentos</button>' +
+    '<button data-view="risks">Riscos</button>' +
+    '<button data-view="review">Revisão</button>';
+  brand.insertAdjacentElement("afterend", tabs);
+  Array.prototype.forEach.call(tabs.querySelectorAll("button"), function(b){
+    b.addEventListener("click", function(){ setView(b.getAttribute("data-view")); });
+  });
+
+  function setView(v){
+    state.view = v;
+    Array.prototype.forEach.call(tabs.querySelectorAll("button"), function(b){
+      b.classList.toggle("active", b.getAttribute("data-view") === v);
+    });
+    shell.classList.toggle("full", v !== "docs");
+    render();
+  }
+
+  function render(){
+    if (state.view === "docs"){ renderSide(); renderDoc(); }
+    else if (state.view === "panel") renderPanel();
+    else if (state.view === "risks") renderRisks();
+    else renderReview();
+    document.getElementById("main-rail").scrollTop = 0;
+  }
+
+  function mainEl(){ return document.getElementById("doc-shell"); }
+
+  // ---------- view: painel ----------
+  function renderPanel(){
+    var tp = taskProgress(), pp = planProgress(), vp = validProgress(), rc = riskCounts();
+    var on = openNotes().length;
+    function pct(a,b){ return b ? Math.round(100*a/b) : 0; }
+
+    var html = '<div class="app-shell">' +
+      '<h1>Painel da operação A&amp;L</h1>' +
+      '<div class="app-sub">Andamento da implantação da parceria. Material de trabalho: nenhuma etapa dispensa a validação por advogado, contador, CRECI/PE ou órgão competente indicada em cada documento.</div>' +
+      '<div class="kpi-row">' +
+        kpi("Plano de implantação", pp.done + '<small> / '+pp.total+' etapas</small>', pct(pp.done,pp.total), false, "panel") +
+        kpi("Checklists operacionais", tp.done + '<small> / '+tp.total+' itens</small>', pct(tp.done,tp.total), false, "docs") +
+        kpi("Validações externas", vp.done + '<small> / '+vp.total+'</small>', pct(vp.done,vp.total), false, "panel") +
+        kpi("Riscos altos/críticos em aberto", rc.critOpen + '<small> de '+RISKS.length+' riscos</small>', 100 - pct(rc.critOpen, RISKS.length), rc.critOpen === 0, "risks") +
+        kpi("Sugestões em aberto", on + '<small> registradas</small>', null, on === 0, "review") +
+      '</div>' +
+      '<div class="panel-grid"><div>' +
+        '<div class="card"><h2>Plano de implantação</h2>' +
+        '<div class="c-sub">Etapas na ordem recomendada pelo diagnóstico. A etapa 1 condiciona todas as demais.</div>' +
+        '<div class="step-list">' + PLAN.map(function(s, idx){
+          var d = !!state.plan["p"+idx];
+          return '<label class="step'+(d?" done":"")+'"><input type="checkbox" data-plan="'+idx+'"'+(d?" checked":"")+'><span>'+(idx+1)+'. '+esc(s)+'</span></label>';
+        }).join("") + '</div></div>' +
+      '</div><div>' +
+        '<div class="card"><h2>Validações externas pendentes</h2>' +
+        '<div class="c-sub">O que precisa de confirmação por profissional habilitado ou órgão competente antes da aplicação prática.</div>' +
+        '<div class="step-list">' + VALIDATIONS.map(function(v, idx){
+          var d = !!state.valid["v"+idx];
+          return '<label class="step'+(d?" done":"")+'"><input type="checkbox" data-valid="'+idx+'"'+(d?" checked":"")+'><span class="who">'+esc(v.who)+'</span><span>'+esc(v.text)+'</span></label>';
+        }).join("") + '</div></div>' +
+        '<div class="card"><h2>Situação dos riscos</h2>' +
+        '<div class="c-sub">Resumo da matriz — gestão completa na aba Riscos.</div>' +
+        riskSummary() +
+        '</div>' +
+      '</div></div></div>';
+
+    mainEl().innerHTML = html;
+
+    Array.prototype.forEach.call(mainEl().querySelectorAll("input[data-plan]"), function(cb){
+      cb.addEventListener("change", function(){
+        state.plan["p"+cb.getAttribute("data-plan")] = cb.checked; save(K.plan, state.plan); renderPanel();
+      });
+    });
+    Array.prototype.forEach.call(mainEl().querySelectorAll("input[data-valid]"), function(cb){
+      cb.addEventListener("change", function(){
+        state.valid["v"+cb.getAttribute("data-valid")] = cb.checked; save(K.valid, state.valid); renderPanel();
+      });
+    });
+    Array.prototype.forEach.call(mainEl().querySelectorAll(".kpi[data-go]"), function(k){
+      k.addEventListener("click", function(){ setView(k.getAttribute("data-go")); });
+    });
+  }
+
+  function kpi(label, valueHtml, pctVal, good, go){
+    var bar = (pctVal === null) ? "" : '<div class="k-bar"><i style="width:'+pctVal+'%"></i></div>';
+    return '<div class="kpi'+(good?" k-good":"")+'" data-go="'+go+'" role="button" tabindex="0">' +
+      '<div class="k-label">'+label+'</div><div class="k-value">'+valueHtml+'</div>'+bar+'</div>';
+  }
+
+  function riskSummary(){
+    var out = '<div class="step-list">';
+    ["critico","alto","medio"].forEach(function(sev){
+      var list = RISKS.filter(function(r){ return r.sev === sev; });
+      if (!list.length) return;
+      var open = list.filter(function(r){ return (state.risks[r.id] || "aberto") !== "mitigado"; }).length;
+      out += '<div class="step" style="cursor:default"><span class="sev sev-'+sev+'">'+SEV_LABEL[sev]+'</span>' +
+        '<span>'+list.length+' risco(s) · '+open+' em aberto · '+(list.length-open)+' mitigado(s)</span></div>';
+    });
+    return out + '</div>';
+  }
+
+  // ---------- view: riscos ----------
+  function renderRisks(){
+    var f = state.riskFilter;
+    var list = RISKS.filter(function(r){
+      if (f === "todos") return true;
+      if (f === "abertos") return (state.risks[r.id] || "aberto") !== "mitigado";
+      return r.sev === f;
+    });
+    var html = '<div class="app-shell">' +
+      '<h1>Matriz de riscos</h1>' +
+      '<div class="app-sub">Os 10 riscos da matriz geral do diagnóstico, com status de tratamento gerenciável. Marcar um risco como "mitigado" registra sua avaliação interna — não substitui a validação profissional indicada no documento de origem.</div>' +
+      '<div class="risk-filters">' +
+        chip("todos","Todos ("+RISKS.length+")") + chip("abertos","Em aberto") +
+        chip("critico","Críticos") + chip("alto","Altos") + chip("medio","Médios") +
+      '</div><div class="card">' +
+      (list.length ? list.map(function(r){
+        var st = state.risks[r.id] || "aberto";
+        var d = docById(r.doc);
+        return '<div class="risk-row">' +
+          '<span class="sev sev-'+r.sev+'">'+SEV_LABEL[r.sev]+'</span>' +
+          '<div><div class="r-title">'+esc(r.title)+'</div><div class="r-treat">'+esc(r.treat)+'</div>' +
+          '<div class="r-doc" data-open-doc="'+r.doc+'">Ver em: '+esc(d.title)+'</div></div>' +
+          '<select class="st-select s-'+st+'" data-risk="'+r.id+'">' +
+            Object.keys(RISK_STATUS).map(function(k){
+              return '<option value="'+k+'"'+(k===st?" selected":"")+'>'+RISK_STATUS[k]+'</option>';
+            }).join("") +
+          '</select></div>';
+      }).join("") : '<div class="empty-hint">Nenhum risco neste filtro.</div>') +
+      '</div></div>';
+    mainEl().innerHTML = html;
+
+    Array.prototype.forEach.call(mainEl().querySelectorAll(".chip"), function(c){
+      c.addEventListener("click", function(){ state.riskFilter = c.getAttribute("data-f"); renderRisks(); });
+    });
+    Array.prototype.forEach.call(mainEl().querySelectorAll("select[data-risk]"), function(sel){
+      sel.addEventListener("change", function(){
+        state.risks[sel.getAttribute("data-risk")] = sel.value; save(K.risks, state.risks); renderRisks();
+      });
+    });
+    Array.prototype.forEach.call(mainEl().querySelectorAll("[data-open-doc]"), function(el){
+      el.addEventListener("click", function(){ state.currentDoc = el.getAttribute("data-open-doc"); setView("docs"); });
+    });
+  }
+  function chip(f, label){
+    return '<button class="chip'+(state.riskFilter===f?" on":"")+'" data-f="'+f+'">'+label+'</button>';
+  }
+
+  // ---------- view: revisão ----------
+  function renderReview(){
+    var html = '<div class="app-shell">' +
+      '<h1>Fluxo de revisão</h1>' +
+      '<div class="app-sub">Acompanhe o status de cada documento no ciclo de validação profissional e faça a triagem das sugestões registradas na aba Documentos. Marque um documento como "Validado" somente após a revisão do profissional responsável.</div>' +
+      '<div class="card"><h2>Status dos documentos</h2><div class="c-sub">Rascunho → Em revisão profissional → Ajustes solicitados → Validado.</div>';
+
+    REVIEW_DOCS.forEach(function(d){
+      var st = state.docst[d.id] || "rascunho";
+      var notesForDoc = state.notes.filter(function(n){ return n.doc === d.id; });
+      var openForDoc = notesForDoc.filter(function(n){ return n.status === "aberta" || n.status === "aceita"; }).length;
+      html += '<div class="rev-doc-row"><div>' +
+        '<div class="d-name">'+esc(d.title)+'</div>' +
+        '<div class="d-meta">'+notesForDoc.length+' sugestão(ões) · '+openForDoc+' em aberto</div></div>' +
+        '<select class="st-select'+(st==="validado"?" s-validado":"")+'" data-docst="'+d.id+'">' +
+          Object.keys(DOC_STATUS).map(function(k){
+            return '<option value="'+k+'"'+(k===st?" selected":"")+'>'+DOC_STATUS[k]+'</option>';
+          }).join("") +
+        '</select></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="card"><h2>Triagem de sugestões</h2>' +
+      '<div class="c-sub">Sugestões registradas em todos os documentos. Aceite, marque como aplicada (quando a edição for feita no repositório) ou descarte com critério.</div>';
+    if (!state.notes.length){
+      html += '<div class="empty-hint">Nenhuma sugestão registrada ainda. Use o painel "Notas e sugestões" na aba Documentos.</div>';
+    } else {
+      state.notes.slice().sort(function(a,b){ return b.at - a.at; }).forEach(function(n){
+        var d = docById(n.doc) || { title:n.doc };
+        html += '<div class="sug-card"><div class="s-head">' +
+          '<span class="s-doc">'+esc(d.title)+'</span>' +
+          '<span class="tag tag-'+(n.tipo||"ajuste")+'">'+(NOTE_TYPE[n.tipo]||"Ajuste")+'</span>' +
+          '<span class="tag tag-'+n.status+'">'+NOTE_STATUS[n.status]+'</span>' +
+          '<time>'+new Date(n.at).toLocaleString("pt-BR")+'</time></div>' +
+          '<div>'+esc(n.text).replace(/\n/g,"<br>")+'</div>' +
+          '<div class="s-actions">' +
+            (n.status!=="aceita" && n.status!=="aplicada" ? '<button data-ns="aceita" data-id="'+n.id+'">Aceitar</button>' : "") +
+            (n.status!=="aplicada" ? '<button data-ns="aplicada" data-id="'+n.id+'">Marcar aplicada</button>' : "") +
+            (n.status!=="descartada" ? '<button data-ns="descartada" data-id="'+n.id+'">Descartar</button>' : "") +
+            (n.status!=="aberta" ? '<button data-ns="aberta" data-id="'+n.id+'">Reabrir</button>' : "") +
+            '<button data-del-note="'+n.id+'">Excluir</button>' +
+          '</div></div>';
+      });
+    }
+    html += '</div>';
+
+    html += '<div class="card"><h2>Relatório</h2>' +
+      '<div class="c-sub">Exporta um relatório completo em Markdown — status dos documentos, plano, validações, riscos e todas as sugestões — para levar ao advogado/contador ou para eu aplicar as edições no repositório.</div>' +
+      '<button class="btn btn-primary" id="export-report">Exportar relatório .md</button></div>';
+
+    html += '<div class="card"><h2>Backup dos dados</h2>' +
+      '<div class="c-sub">Todo o progresso (checklists, riscos, status, sugestões) fica salvo apenas neste navegador. Exporte um backup em <code>.json</code> para guardar ou levar para outro computador, e importe-o lá para restaurar exatamente o mesmo estado.</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button class="btn btn-ghost" id="export-data">Exportar dados .json</button>' +
+      '<button class="btn btn-ghost" id="import-data">Importar dados .json</button>' +
+      '<input type="file" id="import-file" accept=".json,application/json" style="display:none">' +
+      '</div><div class="c-sub" id="import-msg" style="margin:8px 0 0"></div></div>';
+
+    html += '</div>';
+    mainEl().innerHTML = html;
+
+    Array.prototype.forEach.call(mainEl().querySelectorAll("select[data-docst]"), function(sel){
+      sel.addEventListener("change", function(){
+        state.docst[sel.getAttribute("data-docst")] = sel.value; save(K.docst, state.docst); renderReview();
+      });
+    });
+    Array.prototype.forEach.call(mainEl().querySelectorAll("button[data-ns]"), function(b){
+      b.addEventListener("click", function(){
+        var n = state.notes.filter(function(x){ return String(x.id) === b.getAttribute("data-id"); })[0];
+        if (n){ n.status = b.getAttribute("data-ns"); save(K.notes, state.notes); renderReview(); }
+      });
+    });
+    Array.prototype.forEach.call(mainEl().querySelectorAll("button[data-del-note]"), function(b){
+      b.addEventListener("click", function(){
+        state.notes = state.notes.filter(function(x){ return String(x.id) !== b.getAttribute("data-del-note"); });
+        save(K.notes, state.notes); renderReview();
+      });
+    });
+    var ex = document.getElementById("export-report");
+    if (ex) ex.addEventListener("click", exportReport);
+
+    var exd = document.getElementById("export-data");
+    if (exd) exd.addEventListener("click", exportData);
+    var imd = document.getElementById("import-data");
+    var imf = document.getElementById("import-file");
+    if (imd && imf){
+      imd.addEventListener("click", function(){ imf.click(); });
+      imf.addEventListener("change", function(){
+        var f = imf.files && imf.files[0];
+        if (!f) return;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var msg = document.getElementById("import-msg");
+          try{
+            var data = JSON.parse(reader.result);
+            if (!data || data.app !== "al-central") throw new Error("formato");
+            state.tasks = data.tasks || {}; save(K.tasks, state.tasks);
+            state.risks = data.risks || {}; save(K.risks, state.risks);
+            state.plan = data.plan || {}; save(K.plan, state.plan);
+            state.valid = data.valid || {}; save(K.valid, state.valid);
+            state.docst = data.docst || {}; save(K.docst, state.docst);
+            state.notes = data.notes || []; save(K.notes, state.notes);
+            renderReview();
+            var m2 = document.getElementById("import-msg");
+            if (m2) m2.textContent = "Backup importado com sucesso em " + new Date().toLocaleString("pt-BR") + ".";
+          }catch(e){
+            if (msg) msg.textContent = "Arquivo inválido: selecione um backup .json exportado por este app.";
+          }
+          imf.value = "";
+        };
+        reader.readAsText(f);
+      });
+    }
+  }
+
+  function exportData(){
+    var data = {
+      app:"al-central", version:2, exportedAt:new Date().toISOString(),
+      tasks:state.tasks, risks:state.risks, plan:state.plan,
+      valid:state.valid, docst:state.docst, notes:state.notes
+    };
+    var d = new Date();
+    var stamp = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "al-backup-" + stamp + ".json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function exportReport(){
+    var tp = taskProgress(), pp = planProgress(), vp = validProgress();
+    var out = "# Relatório de revisão — A&L Negócios Imobiliários\n\n";
+    out += "Gerado em " + new Date().toLocaleString("pt-BR") + ". Material de trabalho — não substitui validação profissional.\n\n";
+    out += "## Andamento\n\n";
+    out += "- Plano de implantação: " + pp.done + "/" + pp.total + " etapas\n";
+    out += "- Checklists operacionais: " + tp.done + "/" + tp.total + " itens\n";
+    out += "- Validações externas: " + vp.done + "/" + vp.total + "\n\n";
+    out += "## Status dos documentos\n\n";
+    REVIEW_DOCS.forEach(function(d){
+      out += "- " + d.title + ": **" + DOC_STATUS[state.docst[d.id] || "rascunho"] + "**\n";
+    });
+    out += "\n## Plano de implantação\n\n";
+    PLAN.forEach(function(s, idx){ out += "- [" + (state.plan["p"+idx] ? "x" : " ") + "] " + s + "\n"; });
+    out += "\n## Validações externas\n\n";
+    VALIDATIONS.forEach(function(v, idx){ out += "- [" + (state.valid["v"+idx] ? "x" : " ") + "] **" + v.who + "** — " + v.text + "\n"; });
+    out += "\n## Riscos\n\n| Risco | Gravidade | Status |\n|---|---|---|\n";
+    RISKS.forEach(function(r){
+      out += "| " + r.title + " | " + SEV_LABEL[r.sev] + " | " + RISK_STATUS[state.risks[r.id] || "aberto"] + " |\n";
+    });
+    out += "\n## Sugestões\n\n";
+    if (!state.notes.length) out += "_Nenhuma sugestão registrada._\n";
+    REVIEW_DOCS.concat([docById("readme")]).forEach(function(d){
+      var list = state.notes.filter(function(n){ return n.doc === d.id; });
+      if (!list.length) return;
+      out += "### " + d.title + "\n\n";
+      list.forEach(function(n){
+        out += "- [" + NOTE_STATUS[n.status] + " · " + (NOTE_TYPE[n.tipo] || "Ajuste") + "] (" +
+          new Date(n.at).toLocaleString("pt-BR") + ") " + n.text.replace(/\n/g," ") + "\n";
+      });
+      out += "\n";
+    });
+    downloadMd(out, "al-relatorio-revisao.md");
+  }
+  function downloadMd(content, name){
+    var blob = new Blob([content], { type:"text/markdown" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ---------- view: documentos ----------
+  function renderSide(){
+    var el = document.getElementById("side-rail");
+    var groups = [];
+    DOCS.forEach(function(d){ if (groups.indexOf(d.group) === -1) groups.push(d.group); });
+    var out = "";
+    groups.forEach(function(g){
+      out += '<div class="side-group-label">'+g+'</div>';
+      DOCS.filter(function(d){ return d.group === g; }).forEach(function(d){
+        var st = state.docst[d.id];
+        out += '<button class="nav-item'+(d.id===state.currentDoc?" active":"")+'" data-doc="'+d.id+'">' +
+          '<span class="nav-badge">'+d.badge+'</span>' +
+          '<span class="nav-title">'+d.title+
+          (st && d.id !== "readme" ? ' <span class="tag tag-'+(st==="validado"?"aplicada":st==="ajustes"?"aberta":"aceita")+'" style="vertical-align:1px">'+DOC_STATUS[st]+'</span>' : "") +
+          '<small>'+d.sub+'</small></span></button>';
+      });
+    });
+    out += '<div class="side-foot">5 documentos · o texto oficial vive no repositório <code>docs/al-negocios-imobiliarios/</code>. Sugestões feitas aqui podem ser exportadas na aba Revisão.</div>';
+    el.innerHTML = out;
+    Array.prototype.forEach.call(el.querySelectorAll(".nav-item"), function(btn){
+      btn.addEventListener("click", function(){ state.currentDoc = btn.getAttribute("data-doc"); renderSide(); renderDoc(); });
+    });
+  }
+
+  function renderDoc(){
+    var doc = docById(state.currentDoc);
+    var idx = DOCS.indexOf(doc);
+    var prev = DOCS[idx-1], next = DOCS[idx+1];
+    var footNav = '<div class="doc-footer-nav">';
+    footNav += prev ? '<button data-doc="'+prev.id+'"><span>Anterior</span>'+prev.title+'</button>' : '<span></span>';
+    footNav += next ? '<button data-doc="'+next.id+'" style="text-align:right;margin-left:auto"><span>Próximo</span>'+next.title+'</button>' : '<span></span>';
+    footNav += '</div>';
+
+    document.getElementById("doc-shell").innerHTML =
+      '<div class="doc-head"><div class="doc-kicker">'+doc.group+'</div><h1>'+doc.title+'</h1>' +
+      '<div class="doc-sub">'+doc.sub+'</div></div>' +
+      '<article class="doc-body">'+mdToHtml(docSrc(doc.id), doc.id)+'</article>' + footNav;
+
+    document.getElementById("main-rail").scrollTop = 0;
+    Array.prototype.forEach.call(document.querySelectorAll('.doc-footer-nav button[data-doc]'), function(b){
+      b.addEventListener("click", function(){ state.currentDoc = b.getAttribute("data-doc"); renderSide(); renderDoc(); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('input[data-task]'), function(cb){
+      cb.addEventListener("change", function(){
+        state.tasks[cb.getAttribute("data-task")] = cb.checked; save(K.tasks, state.tasks);
+      });
+    });
+    renderNotesRail();
+  }
+
+  // ---------- notes rail (aba documentos) ----------
+  var notesRail = document.getElementById("notes-rail");
+  var typeBar = document.createElement("div");
+  typeBar.className = "note-type";
+  typeBar.innerHTML =
+    '<button data-t="ajuste" class="on">Ajuste</button>' +
+    '<button data-t="duvida">Dúvida</button>' +
+    '<button data-t="validacao">Validação</button>';
+  notesRail.insertBefore(typeBar, document.getElementById("note-input"));
+  Array.prototype.forEach.call(typeBar.querySelectorAll("button"), function(b){
+    b.addEventListener("click", function(){
+      state.noteType = b.getAttribute("data-t");
+      Array.prototype.forEach.call(typeBar.querySelectorAll("button"), function(x){
+        x.classList.toggle("on", x === b);
+      });
+    });
+  });
+
+  function renderNotesRail(){
+    var doc = docById(state.currentDoc);
+    var list = state.notes.filter(function(n){ return n.doc === doc.id; });
+    var el = document.getElementById("note-list");
+    if (!list.length){
+      el.innerHTML = '<div class="note-empty">Nenhuma sugestão ainda para “'+doc.title+'”.</div>';
+      return;
+    }
+    el.innerHTML = list.slice().reverse().map(function(n){
+      return '<div class="note-card"><div class="meta">' +
+        '<span><span class="tag tag-'+(n.tipo||"ajuste")+'">'+(NOTE_TYPE[n.tipo]||"Ajuste")+'</span> ' +
+        '<span class="tag tag-'+n.status+'">'+NOTE_STATUS[n.status]+'</span></span>' +
+        '<button data-del="'+n.id+'">remover</button></div>' +
+        '<div>'+esc(n.text).replace(/\n/g,"<br>")+'</div>' +
+        '<time>'+new Date(n.at).toLocaleString("pt-BR")+'</time></div>';
+    }).join("");
+    Array.prototype.forEach.call(el.querySelectorAll("button[data-del]"), function(b){
+      b.addEventListener("click", function(){
+        state.notes = state.notes.filter(function(n){ return String(n.id) !== b.getAttribute("data-del"); });
+        save(K.notes, state.notes); renderNotesRail();
+      });
+    });
+  }
+
+  document.getElementById("note-add").addEventListener("click", function(){
+    var ta = document.getElementById("note-input");
+    var text = ta.value.trim();
+    if (!text) return;
+    state.notes.push({ id:Date.now(), doc:state.currentDoc, text:text, at:Date.now(), status:"aberta", tipo:state.noteType });
+    save(K.notes, state.notes);
+    ta.value = "";
+    renderNotesRail();
+  });
+  document.getElementById("note-input").addEventListener("keydown", function(e){
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) document.getElementById("note-add").click();
+  });
+  document.getElementById("note-export").addEventListener("click", exportReport);
+
+  // ---------- busca global ----------
+  var searchIndex = DOCS.map(function(d){ return { id:d.id, title:d.title, text:docSrc(d.id) }; });
+  function runSearch(q){
+    var out = document.getElementById("sp-results");
+    if (!q || q.length < 2){ out.innerHTML = '<div class="sp-empty">Digite ao menos 2 letras.</div>'; return; }
+    var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig");
+    var results = [];
+    searchIndex.forEach(function(doc){
+      var m, count = 0;
+      while ((m = re.exec(doc.text)) && count < 4){
+        count++;
+        var s = Math.max(0, m.index - 55), e = Math.min(doc.text.length, m.index + q.length + 55);
+        results.push({ docId:doc.id, docTitle:doc.title,
+          snippet:(s>0?"…":"") + doc.text.slice(s,e).replace(/\s+/g," ").trim() + (e<doc.text.length?"…":"") });
+      }
+    });
+    if (!results.length){ out.innerHTML = '<div class="sp-empty">Nada encontrado para “'+esc(q)+'”.</div>'; return; }
+    out.innerHTML = results.map(function(r, idx){
+      return '<div class="sp-result'+(idx===0?" sel":"")+'" data-doc="'+r.docId+'">' +
+        '<div class="doc-name">'+r.docTitle+'</div>' +
+        '<div class="snippet">'+esc(r.snippet).replace(re, function(mm){ return "<mark>"+mm+"</mark>"; })+'</div></div>';
+    }).join("");
+    Array.prototype.forEach.call(out.querySelectorAll(".sp-result"), function(el){
+      el.addEventListener("click", function(){
+        closeSearch();
+        state.currentDoc = el.getAttribute("data-doc");
+        setView("docs");
+      });
+    });
+  }
+  function openSearch(){
+    document.getElementById("search-overlay").classList.add("open");
+    var input = document.getElementById("search-input");
+    input.value = ""; runSearch("");
+    setTimeout(function(){ input.focus(); }, 10);
+  }
+  function closeSearch(){ document.getElementById("search-overlay").classList.remove("open"); }
+  document.getElementById("search-trigger").addEventListener("click", openSearch);
+  document.getElementById("search-overlay").addEventListener("click", function(e){
+    if (e.target.id === "search-overlay") closeSearch();
+  });
+  document.getElementById("search-input").addEventListener("input", function(e){ runSearch(e.target.value); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA"){
+      e.preventDefault(); openSearch();
+    }
+    if (e.key === "Escape") closeSearch();
+  });
+
+  setView("panel");
+})();
+</script>
+
+</body>
+</html>
