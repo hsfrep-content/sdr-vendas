@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encontre seu imóvel com IA · A&L Negócios Imobiliários</title>
+<link rel="stylesheet" href="chat.css">
+</head>
+<body>
+<div class="page" id="page">
+  <header class="hero" id="hero">
+    <h1>Encontre seu imóvel conversando 💬</h1>
+    <p>Descreva o que você procura com suas palavras — bairro, preço, quartos, "perto de..." — e a nossa IA busca no estoque real da imobiliária.</p>
+  </header>
+
+  <main class="chat-shell">
+    <div class="chat-head">
+      <div class="avatar">A&L</div>
+      <div>
+        <div class="chat-title" id="chat-title">Assistente A&L Imóveis</div>
+        <div class="chat-status"><span class="dot"></span> Online agora</div>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-typing hidden" id="typing"><span></span><span></span><span></span></div>
+
+    <div class="chat-sugestoes" id="sugestoes">
+      <button>Quero comprar um apartamento</button>
+      <button>Procuro casa para alugar</button>
+      <button>Imóvel para sair do aluguel usando FGTS</button>
+    </div>
+
+    <form class="chat-input" id="chat-form">
+      <input id="chat-text" type="text" maxlength="600" placeholder="Ex.: apartamento 2 quartos até R$ 450 mil no Centro" autocomplete="off">
+      <button type="submit" id="chat-send" aria-label="Enviar">➤</button>
+    </form>
+  </main>
+
+  <section class="vitrine" id="vitrine" hidden>
+    <h2>Destaques do momento</h2>
+    <div class="cards" id="vitrine-cards"></div>
+  </section>
+
+  <footer class="foot" id="foot">Atendimento inteligente · seus dados são usados apenas para o contato da nossa equipe.</footer>
+</div>
+<script src="chat.js"></script>
+</body>
+</html>
