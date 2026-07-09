@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Carga xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Imoveis>
+    <Imovel>
+      <CodigoImovel>AP101</CodigoImovel>
+      <TipoImovel>Apartamento</TipoImovel>
+      <SubTipoImovel>Apartamento Padrão</SubTipoImovel>
+      <TituloImovel>Apartamento 3 dormitórios no Jardim das Flores</TituloImovel>
+      <Observacao>Apartamento com sacada e churrasqueira, condomínio com piscina. Aceita financiamento.</Observacao>
+      <PrecoVenda>440000</PrecoVenda>
+      <PrecoCondominio>350</PrecoCondominio>
+      <Bairro>Jardim das Flores</Bairro>
+      <Cidade>Itajaí</Cidade>
+      <UF>SC</UF>
+      <QtdDormitorios>3</QtdDormitorios>
+      <QtdSuites>0</QtdSuites>
+      <QtdBanheiros>2</QtdBanheiros>
+      <QtdVagas>1</QtdVagas>
+      <AreaUtil>68</AreaUtil>
+      <URLImovel>https://imoveis.exemplo.com.br/imovel/AP101</URLImovel>
+      <Fotos>
+        <Foto>
+          <NomeArquivo>foto1.jpg</NomeArquivo>
+          <URLArquivo>https://cdn.exemplo.com.br/fotos/AP101-1.jpg</URLArquivo>
+          <Principal>1</Principal>
+        </Foto>
+        <Foto>
+          <NomeArquivo>foto2.jpg</NomeArquivo>
+          <URLArquivo>https://cdn.exemplo.com.br/fotos/AP101-2.jpg</URLArquivo>
+        </Foto>
+      </Fotos>
+    </Imovel>
+    <Imovel>
+      <CodigoImovel>CA200</CodigoImovel>
+      <TipoImovel>Casa</TipoImovel>
+      <TituloImovel>Casa para alugar no Centro</TituloImovel>
+      <Observacao>Casa ampla com quintal, aceita pet.</Observacao>
+      <PrecoLocacao>2.500,00</PrecoLocacao>
+      <Bairro>Centro</Bairro>
+      <Cidade>Itajaí</Cidade>
+      <UF>SC</UF>
+      <QtdDormitorios>3</QtdDormitorios>
+      <QtdSuites>1</QtdSuites>
+      <QtdBanheiros>2</QtdBanheiros>
+      <QtdVagas>2</QtdVagas>
+      <AreaUtil>160</AreaUtil>
+      <Fotos>
+        <Foto>
+          <URLArquivo>https://cdn.exemplo.com.br/fotos/CA200-1.jpg</URLArquivo>
+        </Foto>
+      </Fotos>
+    </Imovel>
+  </Imoveis>
+</Carga>

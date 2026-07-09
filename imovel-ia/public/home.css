@@ -1,0 +1,79 @@
+/* Home — hero editorial, busca central, vitrine, diferenciais, como funciona.
+   Depende de design-system.css (tokens, header, footer, cards, botões). */
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative; padding: clamp(64px, 11vw, 120px) 0 clamp(56px, 8vw, 96px);
+  background:
+    radial-gradient(1200px 480px at 85% -10%, var(--navy-tint) 0%, transparent 60%),
+    radial-gradient(900px 420px at -10% 110%, var(--gold-soft) 0%, transparent 55%),
+    var(--paper);
+  overflow: hidden;
+}
+.hero-inner { max-width: 760px; }
+.hero h1 { margin-bottom: 22px; }
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero p.lead { font-size: clamp(1rem, .5vw + .95rem, 1.2rem); max-width: 540px; margin-bottom: 34px; }
+
+/* Busca central — o "hero search" que substitui o campo escondido */
+.hero-search {
+  background: #fff; border: 1.5px solid var(--border-strong); border-radius: 999px;
+  padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--shadow-card); max-width: 560px;
+}
+.hero-search input {
+  flex: 1; border: 0; outline: none; font: inherit; font-size: 15.5px; background: transparent; color: var(--ink);
+}
+.hero-search button {
+  border: 0; background: var(--navy); color: #fff; width: 46px; height: 46px; border-radius: 50%;
+  font-size: 17px; cursor: pointer; flex-shrink: 0; transition: transform .15s;
+}
+.hero-search button:hover { transform: scale(1.06); }
+
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.hero-chips button {
+  border: 1px solid var(--border-strong); background: rgba(255,255,255,.7); border-radius: 999px;
+  padding: 8px 15px; font-size: 12.5px; font-weight: 600; color: var(--navy-2); cursor: pointer;
+}
+.hero-chips button:hover { background: var(--navy-tint); border-color: var(--navy); }
+
+.hero-stats { display: flex; gap: clamp(20px, 4vw, 48px); margin-top: 48px; flex-wrap: wrap; }
+.hero-stats .stat b { font-family: var(--font-display); font-size: 28px; color: var(--navy-2); display: block; }
+.hero-stats .stat span { font-size: 12.5px; color: var(--ink-faint); font-weight: 600; }
+
+/* ---------- Como funciona ---------- */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); counter-reset: step; }
+.step { position: relative; padding: 28px 24px; background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius); }
+.step::before {
+  counter-increment: step; content: counter(step);
+  font-family: var(--font-display); font-size: 15px; font-weight: 600; color: #fff;
+  background: var(--navy); width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  margin-bottom: 16px;
+}
+.step h3 { font-size: 17px; margin-bottom: 8px; }
+.step p { font-size: 14px; }
+
+/* ---------- Diferenciais ---------- */
+.diferenciais { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap); }
+.diferencial { text-align: left; }
+.diferencial .ico { font-size: 26px; margin-bottom: 14px; display: block; }
+.diferencial h3 { font-size: 15.5px; margin-bottom: 6px; }
+.diferencial p { font-size: 13.5px; }
+
+/* ---------- CTA final ---------- */
+.cta-final {
+  background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; text-align: center;
+  border-radius: 28px; padding: clamp(48px, 8vw, 84px) 24px; margin: 0 24px;
+}
+.cta-final h2 { color: #fff; margin-bottom: 16px; }
+.cta-final p { color: rgba(255,255,255,.78); max-width: 480px; margin: 0 auto 30px; }
+.cta-final .btn-gold { padding: 15px 32px; font-size: 15px; }
+
+@media (max-width: 860px) {
+  .diferenciais { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .diferenciais { grid-template-columns: 1fr; }
+  .hero-search { flex-wrap: nowrap; padding-left: 18px; }
+}

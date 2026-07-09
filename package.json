@@ -10,13 +10,18 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "ads": "node ads-studio/server.js",
+    "imoveis": "node imovel-ia/server.js",
+    "importar-imoveis": "node imovel-ia/importer.js",
     "test": "node --test test/*.test.js"
   },
   "license": "UNLICENSED",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
     "csv-parse": "^7.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "fast-xml-parser": "^5.9.3",
     "multer": "^2.2.0",
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",

@@ -1,0 +1,47 @@
+/* Página de detalhe do imóvel — galeria grande estilo Hubtown + ficha técnica. */
+
+.imv-back {
+  display: inline-flex; align-items: center; gap: 6px; color: var(--ink-soft); text-decoration: none;
+  font-size: 13.5px; font-weight: 600; margin-bottom: 22px;
+}
+.imv-back:hover { color: var(--navy); }
+
+#imv-loading { padding: 80px 0; text-align: center; color: var(--ink-faint); }
+
+/* Galeria: imagem principal grande + trilha de miniaturas */
+.imv-gallery { margin-bottom: 32px; }
+.imv-gallery-main {
+  width: 100%; aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden;
+  background: linear-gradient(135deg, var(--navy-tint), var(--gold-soft));
+  display: grid; place-items: center; margin-bottom: 10px;
+}
+.imv-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+.imv-gallery-main .fallback { font-size: 48px; color: var(--ink-faint); }
+.imv-gallery-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.imv-gallery-thumbs img {
+  width: 92px; height: 68px; object-fit: cover; border-radius: 8px; cursor: pointer; flex-shrink: 0;
+  border: 2px solid transparent; opacity: .75; transition: opacity .15s, border-color .15s;
+}
+.imv-gallery-thumbs img:hover, .imv-gallery-thumbs img.active { opacity: 1; border-color: var(--navy); }
+
+/* Layout: conteúdo principal + coluna lateral fixa com preço/CTA */
+.imv-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
+.imv-main .eyebrow { margin-bottom: 10px; }
+.imv-main h1 { font-size: var(--fs-h1); margin-bottom: 10px; }
+.imv-local { font-size: 14.5px; color: var(--ink-faint); margin-bottom: 18px; }
+.imv-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.imv-tags span { font-size: 12.5px; background: var(--paper-warm); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; color: var(--ink-soft); font-weight: 600; }
+.imv-main p#imv-descricao { font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
+
+.imv-side {
+  position: sticky; top: 90px; background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 12px;
+}
+.imv-preco { font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--navy); }
+.imv-preco small { display: block; font-family: var(--font-body); font-size: 12.5px; font-weight: 600; color: var(--ink-faint); margin-top: 2px; }
+.imv-side .btn { width: 100%; }
+
+@media (max-width: 860px) {
+  .imv-layout { grid-template-columns: 1fr; }
+  .imv-side { position: static; }
+}

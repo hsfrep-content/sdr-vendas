@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ads Studio · A&L Tráfego Imobiliário</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">A&L</div>
+      <div>
+        <div class="brand-name">Ads Studio</div>
+        <div class="brand-sub">Tráfego Imobiliário</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="overview"><span class="nav-ico">◫</span> Visão Geral</button>
+      <button class="nav-item" data-view="agents"><span class="nav-ico">✦</span> Agentes de IA</button>
+      <button class="nav-item" data-view="products"><span class="nav-ico">⌂</span> Empreendimentos</button>
+      <button class="nav-item" data-view="creatives"><span class="nav-ico">▷</span> Criativos</button>
+      <button class="nav-item" data-view="campaigns"><span class="nav-ico">◎</span> Campanhas</button>
+      <button class="nav-item" data-view="knowledge"><span class="nav-ico">✎</span> Playbooks</button>
+      <button class="nav-item" data-view="settings"><span class="nav-ico">⚙</span> Contexto do Negócio</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div id="ia-status" class="ia-status"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1 id="view-title">Visão Geral</h1>
+      <div class="topbar-right" id="topbar-actions"></div>
+    </header>
+    <div id="view" class="view"></div>
+  </main>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>
