@@ -3,47 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Encontre seu imóvel com IA · A&L Negócios Imobiliários</title>
+<title>A&L Negócios Imobiliários · Encontre seu imóvel conversando com IA</title>
+<meta name="description" content="Busque imóveis para comprar ou alugar conversando com nossa IA — resultados reais do nosso estoque, na hora.">
+<link rel="stylesheet" href="design-system.css">
+<link rel="stylesheet" href="home.css">
 <link rel="stylesheet" href="chat.css">
+<script>
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.documentElement.classList.add('embed-mode');
+  }
+</script>
 </head>
 <body>
-<div class="page" id="page">
-  <header class="hero" id="hero">
-    <h1>Encontre seu imóvel conversando 💬</h1>
-    <p>Descreva o que você procura com suas palavras — bairro, preço, quartos, "perto de..." — e a nossa IA busca no estoque real da imobiliária.</p>
-  </header>
 
-  <main class="chat-shell">
-    <div class="chat-head">
-      <div class="avatar">A&L</div>
-      <div>
-        <div class="chat-title" id="chat-title">Assistente A&L Imóveis</div>
-        <div class="chat-status"><span class="dot"></span> Online agora</div>
+<!-- ======================= MODO SITE COMPLETO ======================= -->
+<header class="site-header">
+  <div class="container row">
+    <a href="/" class="logo">A&amp;L</a>
+    <nav class="site-nav">
+      <a href="/#destaques">Comprar</a>
+      <a href="/#destaques">Alugar</a>
+      <a href="/#como-funciona">Como funciona</a>
+      <a href="#" data-wa-link class="hidden">Anuncie seu imóvel</a>
+    </nav>
+    <button class="btn btn-primary" data-open-chat>💬 Falar com IA</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="eyebrow">Busca inteligente de imóveis</span>
+      <h1>Encontre o imóvel <em>certo</em>,<br>conversando.</h1>
+      <p class="lead">Descreva o que você procura com suas palavras — bairro, preço, quartos, "perto de..." — e nossa IA busca no estoque real da imobiliária, na hora.</p>
+
+      <form class="hero-search" id="hero-search-form">
+        <input id="hero-search-input" type="text" placeholder="Ex.: apartamento 2 quartos até R$ 450 mil no Centro" autocomplete="off">
+        <button type="submit" aria-label="Buscar">➤</button>
+      </form>
+      <div class="hero-chips">
+        <button data-chip="Quero comprar um apartamento">Comprar apartamento</button>
+        <button data-chip="Procuro casa para alugar">Alugar casa</button>
+        <button data-chip="Imóvel para sair do aluguel usando FGTS">Usar FGTS</button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><b id="stat-total">—</b><span>imóveis no estoque</span></div>
+        <div class="stat"><b>24h</b><span>atendimento por IA</span></div>
       </div>
     </div>
-
-    <div class="chat-body" id="chat-body"></div>
-    <div class="chat-typing hidden" id="typing"><span></span><span></span><span></span></div>
-
-    <div class="chat-sugestoes" id="sugestoes">
-      <button>Quero comprar um apartamento</button>
-      <button>Procuro casa para alugar</button>
-      <button>Imóvel para sair do aluguel usando FGTS</button>
-    </div>
-
-    <form class="chat-input" id="chat-form">
-      <input id="chat-text" type="text" maxlength="600" placeholder="Ex.: apartamento 2 quartos até R$ 450 mil no Centro" autocomplete="off">
-      <button type="submit" id="chat-send" aria-label="Enviar">➤</button>
-    </form>
-  </main>
-
-  <section class="vitrine" id="vitrine" hidden>
-    <h2>Destaques do momento</h2>
-    <div class="cards" id="vitrine-cards"></div>
   </section>
 
-  <footer class="foot" id="foot">Atendimento inteligente · seus dados são usados apenas para o contato da nossa equipe.</footer>
+  <section class="section" id="destaques">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Selecionados para você</span>
+        <h2>Destaques do momento</h2>
+      </div>
+      <div class="grid-cards reveal" id="destaques-cards"></div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="como-funciona">
+    <div class="container">
+      <div class="section-head center reveal" style="margin-left:auto;margin-right:auto">
+        <span class="eyebrow">Simples assim</span>
+        <h2>Como funciona</h2>
+      </div>
+      <div class="steps reveal">
+        <div class="step"><h3>Conte o que você procura</h3><p>Do seu jeito, como se estivesse falando com um corretor: bairro, preço, quartos, referências de localização.</p></div>
+        <div class="step"><h3>A IA busca no estoque real</h3><p>Sem invenção: só imóveis que realmente estão à venda ou para alugar na nossa carteira.</p></div>
+        <div class="step"><h3>Fale com a equipe no WhatsApp</h3><p>Gostou de uma opção? Em um clique você já está conversando com um corretor de verdade.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Por que a A&amp;L</span>
+        <h2>Feito para facilitar sua decisão</h2>
+      </div>
+      <div class="diferenciais reveal">
+        <div class="diferencial"><span class="ico">🤖</span><h3>Atendimento por IA 24h</h3><p>Pergunte a qualquer hora — o assistente busca no estoque real e responde na hora.</p></div>
+        <div class="diferencial"><span class="ico">📍</span><h3>Curadoria local</h3><p>Conhecemos os bairros e as regiões — as sugestões consideram o que está perto de você.</p></div>
+        <div class="diferencial"><span class="ico">💬</span><h3>Resposta rápida no WhatsApp</h3><p>Quando você demonstra interesse, um corretor humano assume a conversa rapidamente.</p></div>
+        <div class="diferencial"><span class="ico">🏷️</span><h3>Avaliação gratuita</h3><p>Pensando em vender ou alugar? Avaliamos seu imóvel sem custo e sem compromisso.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-final reveal">
+        <h2>Pronto para encontrar seu imóvel?</h2>
+        <p>Comece uma conversa agora — leva menos de um minuto para ver as primeiras opções.</p>
+        <button class="btn btn-gold" data-open-chat>Iniciar busca com IA</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="logo">A&amp;L Negócios Imobiliários</div>
+    <div class="bottom">
+      <span>© <span id="ano"></span> A&amp;L Negócios Imobiliários</span>
+      <a href="#" data-wa-link class="hidden">Falar no WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-bar">
+  <a href="#" data-wa-link class="btn btn-ghost hidden">WhatsApp</a>
+  <button class="btn btn-primary" data-open-chat>💬 Falar com IA</button>
 </div>
+
+<!-- ======================= DRAWER / CHAT (também usado no modo embed) ======================= -->
+<div class="chat-backdrop" id="chat-backdrop"></div>
+<div class="chat-shell" id="chat-drawer">
+  <div class="chat-head">
+    <div class="avatar">A&amp;L</div>
+    <div style="flex:1">
+      <div class="chat-title" id="chat-title">Assistente A&amp;L Imóveis</div>
+      <div class="chat-status"><span class="dot"></span> Online agora</div>
+    </div>
+    <button class="chat-close" id="chat-close" aria-label="Fechar">✕</button>
+  </div>
+
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chat-typing hidden" id="typing"><span></span><span></span><span></span></div>
+
+  <div class="chat-sugestoes" id="sugestoes">
+    <button>Quero comprar um apartamento</button>
+    <button>Procuro casa para alugar</button>
+    <button>Imóvel para sair do aluguel usando FGTS</button>
+  </div>
+
+  <form class="chat-input" id="chat-form">
+    <input id="chat-text" type="text" maxlength="600" placeholder="Ex.: apartamento 2 quartos até R$ 450 mil no Centro" autocomplete="off">
+    <button type="submit" id="chat-send" aria-label="Enviar">➤</button>
+  </form>
+</div>
+
+<script src="cards.js"></script>
+<script src="site.js"></script>
 <script src="chat.js"></script>
+<script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
 </body>
 </html>

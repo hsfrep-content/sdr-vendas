@@ -137,6 +137,23 @@ test('GET /widget.js entrega o script de embed', async () => {
   assert.match(js, /embed=1/);
 });
 
+test('GET /api/imovel/:id devolve o imóvel e semelhantes da mesma finalidade/cidade', async () => {
+  store.saveInventory(EXEMPLO, 'teste');
+  const r = await fetch(`${base}/api/imovel/AP101`);
+  const data = await r.json();
+  assert.equal(r.status, 200);
+  assert.equal(data.imovel.id, 'AP101');
+  assert.ok(Array.isArray(data.semelhantes));
+  assert.ok(data.semelhantes.every((i) => i.id !== 'AP101'));
+  assert.ok(data.semelhantes.every((i) => i.finalidade === 'venda'));
+});
+
+test('GET /api/imovel/:id devolve 404 para imóvel fora do estoque', async () => {
+  store.saveInventory(EXEMPLO, 'teste');
+  const r = await fetch(`${base}/api/imovel/NAO-EXISTE`);
+  assert.equal(r.status, 404);
+});
+
 test('GET /admin exige token quando configurado', async () => {
   process.env.IMOVEL_IA_ADMIN_TOKEN_TEST = 'x'; // sem efeito: token lido no load; validamos rota aberta
   const r = await fetch(`${base}/admin`);

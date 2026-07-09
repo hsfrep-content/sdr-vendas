@@ -8,6 +8,7 @@ const express = require('express');
 
 const store = require('./store');
 const ia = require('./claude');
+const { buscarImoveis } = require('./search');
 const { appendToQueue } = require('../src/handoff/humanHandoff');
 
 const HOST = process.env.IMOVEL_IA_HOST || '127.0.0.1';
@@ -67,6 +68,22 @@ app.get('/api/destaques', (req, res) => {
   const venda = comFoto(imoveis.filter((i) => i.finalidade === 'venda')).slice(0, 6);
   const aluguel = comFoto(imoveis.filter((i) => i.finalidade === 'aluguel')).slice(0, 3);
   res.json({ venda, aluguel });
+});
+
+// Página de detalhe do imóvel: ficha completa + imóveis semelhantes (mesma
+// finalidade/tipo/cidade, excluindo o próprio), sem passar pela IA.
+app.get('/api/imovel/:id', (req, res) => {
+  const inventario = store.loadInventory();
+  const imovel = inventario.imoveis.find((i) => i.id === req.params.id);
+  if (!imovel) return res.status(404).json({ error: 'Imóvel não encontrado ou fora do estoque atual.' });
+
+  const { imoveis: semelhantesBrutos } = buscarImoveis(
+    { finalidade: imovel.finalidade, tipo: imovel.tipo, cidade: imovel.cidade, limite: 5 },
+    inventario
+  );
+  const semelhantes = semelhantesBrutos.filter((i) => i.id !== imovel.id).slice(0, 4);
+
+  res.json({ imovel, semelhantes, whatsapp: WHATSAPP ? `55${WHATSAPP.replace(/^55/, '')}` : null });
 });
 
 app.post('/api/chat', async (req, res) => {

@@ -14,17 +14,35 @@ Tecimob (catálogo · fonte da verdade — nada muda lá)
 importer.js  →  data/imovel-ia/imoveis.json   (inventário normalizado, atualizado por agendamento)
    ▼
 server.js (Node/Express)
-   ├─ /api/chat      → Claude com tool use (buscar_imoveis · registrar_lead)
-   ├─ /api/destaques → vitrine da home (sem custo de IA)
-   ├─ /              → página moderna de busca conversacional (candidata a novo site)
-   ├─ /widget.js     → botão flutuante embutível (Lovable e/ou Tecimob)
-   └─ /admin         → leads, uso e status da importação
+   ├─ /api/chat        → Claude com tool use (buscar_imoveis · registrar_lead)
+   ├─ /api/destaques   → vitrine da home (sem custo de IA)
+   ├─ /api/imovel/:id  → ficha do imóvel + semelhantes (para a página de detalhe)
+   ├─ /                → home (hero editorial + busca central + vitrine + diferenciais)
+   ├─ /imovel.html     → página de detalhe do imóvel (galeria, ficha, CTA)
+   ├─ /widget.js       → botão flutuante embutível (Lovable e/ou Tecimob)
+   └─ /admin           → leads, uso e status da importação
    ▼
 Lead → data/imovel-ia/leads.json + fila data/handoff-queue.json (mesma do agente SDR) + botão wa.me
 ```
 
 A IA **nunca inventa imóvel**: ela é obrigada a chamar a ferramenta
 `buscar_imoveis` e só apresenta o que a busca local retornar.
+
+## Design (referências Clay.global + Hubtown.co.in)
+
+Sistema visual editorial/startup, mantendo a paleta da marca (navy `#16436e` +
+dourado `#b98a2f` sobre branco/off-white), tudo centralizado em
+`public/design-system.css` (tokens de cor/tipografia/espaçamento, header
+sticky, cards de imóvel, footer, barra fixa mobile) e reaproveitado por
+`home.css` (hero, vitrine, "como funciona", diferenciais) e `imovel.css`
+(galeria, ficha técnica). O chat vira um **drawer** deslizante acionável de
+qualquer página (`site.js` + `chat.js`) — no modo embed (`?embed=1`, usado
+pelo `widget.js`) ele ocupa a tela inteira, sem o restante do site.
+
+Revelação de seções ao rolar (`reveal` + `IntersectionObserver`) segue
+progressive enhancement: **conteúdo fica visível por padrão** e só entra
+animado quando o JavaScript confirma execução (`html.js-ready`) — importante
+para não esconder conteúdo de robôs de busca ou em caso de falha de script.
 
 ## Início rápido
 

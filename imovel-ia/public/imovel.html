@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imóvel · A&L Negócios Imobiliários</title>
+<link rel="stylesheet" href="design-system.css">
+<link rel="stylesheet" href="imovel.css">
+<link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container row">
+    <a href="/" class="logo">A&amp;L</a>
+    <nav class="site-nav">
+      <a href="/#destaques">Comprar</a>
+      <a href="/#destaques">Alugar</a>
+      <a href="/#como-funciona">Como funciona</a>
+    </nav>
+    <button class="btn btn-primary" data-open-chat>💬 Falar com IA</button>
+  </div>
+</header>
+
+<main>
+  <section class="container" style="padding-top:32px">
+    <a href="/" class="imv-back">← Voltar para a busca</a>
+    <div id="imv-loading">Carregando imóvel…</div>
+
+    <div id="imv-content" class="hidden">
+      <div class="imv-gallery">
+        <div class="imv-gallery-main" id="imv-gallery-main"></div>
+        <div class="imv-gallery-thumbs" id="imv-gallery-thumbs"></div>
+      </div>
+
+      <div class="imv-layout">
+        <div class="imv-main">
+          <span class="eyebrow" id="imv-tipo"></span>
+          <h1 id="imv-titulo"></h1>
+          <p class="imv-local" id="imv-local"></p>
+          <div class="imv-tags" id="imv-tags"></div>
+          <p id="imv-descricao"></p>
+        </div>
+        <aside class="imv-side">
+          <div class="imv-preco" id="imv-preco"></div>
+          <button class="btn btn-primary" id="cta-ia" data-open-chat>💬 Falar com a IA sobre este imóvel</button>
+          <a class="btn btn-wa hidden" id="cta-wa" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="semelhantes-section" hidden>
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Você também pode gostar</span>
+        <h2>Imóveis semelhantes</h2>
+      </div>
+      <div class="grid-cards reveal" id="semelhantes-cards"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="logo">A&amp;L Negócios Imobiliários</div>
+    <div class="bottom">
+      <span>© <span id="ano"></span> A&amp;L Negócios Imobiliários</span>
+      <a href="#" data-wa-link class="hidden">Falar no WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-bar">
+  <a href="#" data-wa-link class="btn btn-ghost hidden">WhatsApp</a>
+  <button class="btn btn-primary" data-open-chat>💬 Falar com IA</button>
+</div>
+
+<!-- Drawer do chat (mesmo componente da home) -->
+<div class="chat-backdrop" id="chat-backdrop"></div>
+<div class="chat-shell" id="chat-drawer">
+  <div class="chat-head">
+    <div class="avatar">A&amp;L</div>
+    <div style="flex:1">
+      <div class="chat-title" id="chat-title">Assistente A&amp;L Imóveis</div>
+      <div class="chat-status"><span class="dot"></span> Online agora</div>
+    </div>
+    <button class="chat-close" id="chat-close" aria-label="Fechar">✕</button>
+  </div>
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chat-typing hidden" id="typing"><span></span><span></span><span></span></div>
+  <div class="chat-sugestoes" id="sugestoes">
+    <button>Tem outras opções parecidas?</button>
+    <button>Quero agendar uma visita</button>
+  </div>
+  <form class="chat-input" id="chat-form">
+    <input id="chat-text" type="text" maxlength="600" placeholder="Pergunte sobre este imóvel..." autocomplete="off">
+    <button type="submit" id="chat-send" aria-label="Enviar">➤</button>
+  </form>
+</div>
+
+<script src="cards.js"></script>
+<script src="site.js"></script>
+<script src="chat.js"></script>
+<script src="imovel-detail.js"></script>
+<script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+</body>
+</html>
