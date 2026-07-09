@@ -1,0 +1,723 @@
+<title>A&L Match Imobiliário</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#F7F5F1; --surface:#FFFFFF; --ink:#1C2536; --muted:#5C6675; --line:#E4E0D8;
+  --navy:#1E3A5F; --navy-deep:#14293F; --red:#A93F35; --gold:#8A7B5C;
+  --ok:#2E6B4F; --warn:#8A6A1F; --bad:#A93F35; --chip:#EFECE5;
+  --shadow:0 1px 2px rgba(28,37,54,.06),0 8px 24px rgba(28,37,54,.07);
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#141922; --surface:#1C2330; --ink:#E9E6DF; --muted:#9AA3B2; --line:#2B3444;
+  --navy:#7FA6D0; --navy-deep:#0F1621; --red:#D4796F; --gold:#B3A47F;
+  --ok:#6FBF97; --warn:#D3B25E; --bad:#D4796F; --chip:#232C3B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); --btn-ink:#10202F;
+}}
+:root[data-theme="light"]{
+  --btn-ink:#fff; --bg:#F7F5F1; --surface:#FFFFFF; --ink:#1C2536; --muted:#5C6675; --line:#E4E0D8;
+  --navy:#1E3A5F; --navy-deep:#14293F; --red:#A93F35; --gold:#8A7B5C;
+  --ok:#2E6B4F; --warn:#8A6A1F; --bad:#A93F35; --chip:#EFECE5;
+  --shadow:0 1px 2px rgba(28,37,54,.06),0 8px 24px rgba(28,37,54,.07);
+}
+:root[data-theme="dark"]{
+  --bg:#141922; --surface:#1C2330; --ink:#E9E6DF; --muted:#9AA3B2; --line:#2B3444;
+  --navy:#7FA6D0; --navy-deep:#0F1621; --red:#D4796F; --gold:#B3A47F;
+  --ok:#6FBF97; --warn:#D3B25E; --bad:#D4796F; --chip:#232C3B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); --btn-ink:#10202F;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{line-height:1.2;text-wrap:balance;margin:0 0 .5rem;letter-spacing:-.015em}
+h1{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:650}
+h2{font-size:1.35rem;font-weight:640}
+h3{font-size:1.05rem;font-weight:620}
+p{margin:.35rem 0}
+.muted{color:var(--muted)} .small{font-size:.85rem}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:640}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+a{color:var(--navy)}
+button{font:inherit;cursor:pointer;border:none;border-radius:8px;transition:filter .15s, transform .1s}
+button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.btn{background:var(--navy);color:var(--btn-ink,#fff);padding:.65rem 1.25rem;font-weight:600}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.btn.subtle{background:var(--chip);color:var(--ink)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn.ok{background:var(--ok);color:#fff}
+:root[data-theme="dark"] .btn.ok{color:#0e1a14}
+.btn.sm{padding:.4rem .8rem;font-size:.85rem}
+.topbar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.brand{font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.brand b{color:var(--red)}
+.brand span{color:var(--muted);font-weight:500}
+.topnav{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.rolebadge{font-size:.75rem;background:var(--chip);padding:.25rem .6rem;border-radius:99px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.chip{display:inline-block;font-size:.74rem;font-weight:620;padding:.18rem .6rem;border-radius:99px;background:var(--chip);color:var(--muted);letter-spacing:.02em}
+.chip.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.chip.warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.chip.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.chip.navy{color:var(--navy);background:color-mix(in srgb,var(--navy) 12%,transparent)}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin:.7rem 0 .2rem}
+input,select,textarea{width:100%;padding:.55rem .7rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:70px;resize:vertical}
+.frow{display:grid;gap:0 14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.hero{padding:72px 0 56px;background:linear-gradient(180deg,color-mix(in srgb,var(--navy) 6%,var(--bg)),var(--bg))}
+.hero .wrap{max-width:820px}
+section.land{padding:44px 0;border-top:1px solid var(--line)}
+.steps{counter-reset:s}
+.steps .card{position:relative;padding-top:26px}
+.steps .card::before{counter-increment:s;content:counter(s);position:absolute;top:-14px;left:18px;width:28px;height:28px;border-radius:99px;background:var(--navy);color:var(--bg);display:grid;place-items:center;font-size:.85rem;font-weight:700}
+.disclaimer{font-size:.8rem;color:var(--muted);border-left:3px solid var(--gold);padding:.4rem .9rem;background:var(--surface);border-radius:0 8px 8px 0}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:20px 0;flex-wrap:wrap}
+.tabs button{background:none;color:var(--muted);padding:.55rem .9rem;border-radius:8px 8px 0 0;font-weight:600;border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--red)}
+.oppcard{display:flex;flex-direction:column;gap:8px}
+.oppcard .loc{font-weight:700;font-size:1.05rem}
+.oppcard .facts{color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:2px}
+.score{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;font-size:.9rem;padding:.2rem .55rem;border-radius:8px}
+.score.hi{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.score.md{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.score.lo{color:var(--muted);background:var(--chip)}
+.progress{height:5px;background:var(--chip);border-radius:99px;margin:14px 0 22px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--navy);border-radius:99px;transition:width .3s}
+.modal-bg{position:fixed;inset:0;background:rgba(15,22,33,.55);display:grid;place-items:center;z-index:50;padding:16px}
+.modal{background:var(--surface);border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:24px;box-shadow:var(--shadow)}
+.list{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+td,th{padding:.45rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+.scrollx{overflow-x:auto}
+.private{border:1px dashed var(--gold);border-radius:10px;padding:12px 14px;margin-top:12px}
+.private .eyebrow{color:var(--gold)}
+.agent{border-left:3px solid var(--navy);padding:.5rem .9rem;background:var(--bg);border-radius:0 8px 8px 0;font-size:.85rem;margin:.4rem 0}
+.agent b{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+.thumb{width:74px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--line);background:var(--chip)}
+.photo-slot{display:grid;place-items:center;font-size:.7rem;color:var(--muted);text-align:center}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy-deep);color:#EDEAE3;padding:.7rem 1.2rem;border-radius:10px;box-shadow:var(--shadow);z-index:99;font-size:.9rem;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+.fade{animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+footer{padding:36px 0 48px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--line);margin-top:48px}
+.kpi{display:flex;flex-direction:column;gap:2px}
+.kpi b{font-size:1.6rem;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.gbtn{display:flex;align-items:center;gap:10px;justify-content:center;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:.65rem 1.2rem;font-weight:600;width:100%}
+.gbtn:hover{filter:none;background:var(--chip)}
+</style>
+<div id="app"></div>
+<script>
+"use strict";
+/* ============ dados & estado ============ */
+const CITIES = ["Recife","Jaboatão dos Guararapes","Olinda","Paulista","Camaragibe","São Lourenço da Mata","Cabo de Santo Agostinho","Igarassu","Abreu e Lima","Moreno"];
+const HOODS = ["Boa Viagem","Pina","Setúbal","Piedade","Candeias","Paiva","Barra de Jangada","Imbiribeira","Madalena","Graças","Casa Forte","Espinheiro","Outro"];
+const TYPES = ["Apartamento","Casa","Sala comercial","Loja","Terreno","Studio","Cobertura","Flat","Outro"];
+const REJECT_REASONS = ["CRECI não validado","Imóvel fora da área de atuação inicial","Fotos insuficientes","Informações comerciais incompletas","Valor desalinhado com mercado","Captação sem indício mínimo de autorização","Imóvel duplicado","Outro motivo"];
+const PSTATUS = {analise:"Imóvel em análise",aprovado:"Ativo para match",recusado:"Imóvel recusado",complemento:"Informações insuficientes",arquivado:"Arquivado"};
+const fmt = v => v? "R$ "+Number(v).toLocaleString("pt-BR") : "—";
+const band = v => { if(!v) return "—"; const lo=Math.floor(v*0.94/10000)*10000, hi=Math.ceil(v*1.06/10000)*10000; return `entre ${fmt(lo)} e ${fmt(hi)}`; };
+const bandArea = a => a? `${Math.floor(a*0.93/1)} a ${Math.ceil(a*1.07)} m²` : "—";
+const uid = () => Math.random().toString(36).slice(2,9);
+
+function seed(){
+  return {
+    v:3, session:null, view:"landing", wiz:null, obStep:0, tab:{}, modal:null,
+    users:[
+      {id:"u1",name:"Marina Albuquerque",email:"marina@corretor.com",phone:"(81) 99999-1010",role:"captador",creci:"CRECI-PE 18.234",city:"Recife",creciStatus:"aprovado",doc:"creci-marina.pdf",terms:true},
+      {id:"u2",name:"Rafael Lins",email:"rafael@corretor.com",phone:"(81) 98888-2020",role:"parceiro",creci:"CRECI-PE 21.877",city:"Jaboatão dos Guararapes",creciStatus:"aprovado",doc:"creci-rafael.pdf",terms:true},
+      {id:"u3",name:"Equipe A&L",email:"parceria@aelimoveis.com.br",phone:"—",role:"admin",creci:"—",city:"Recife",creciStatus:"aprovado",terms:true},
+      {id:"u4",name:"Carla Menezes",email:"carla@corretor.com",phone:"(81) 97777-3030",role:"captador",creci:"CRECI-PE 25.410",city:"Recife",creciStatus:"pendente",doc:"creci-carla.jpg",terms:true},
+      {id:"u5",name:"João Pedro Sales",email:"jp@corretor.com",phone:"(81) 96666-4040",role:"parceiro",creci:"CRECI-PE 30.002",city:"Recife",creciStatus:"pendente",doc:"creci-jp.pdf",terms:true},
+    ],
+    properties:[
+      prop({id:"p1",owner:"u1",purpose:"venda",type:"Apartamento",city:"Recife",hood:"Boa Viagem",area:62,bed:2,suite:1,bath:2,park:1,floor:"9º",sun:"Nascente",sale:405000,condo:780,iptu:120,status:"aprovado",vis:1,quality:86,commercial:82,addr:"Rua dos Navegantes, 1450, ap 902",bldg:"Ed. Porto das Dunas",ownerc:"Sr. Almeida · (81) 3333-0000",auth:"sim",excl:"não",listed:"sim",docsit:"Escritura registrada",occ:"Vazio",visit:"Livre com agendamento",furn:"não",comm:"50/50 sobre 5%",desc:"Apartamento reformado, quadra do mar, nascente, lazer completo."}),
+      prop({id:"p2",owner:"u1",purpose:"venda",type:"Apartamento",city:"Jaboatão dos Guararapes",hood:"Piedade",area:88,bed:3,suite:1,bath:2,park:2,floor:"5º",sun:"Sul",sale:520000,condo:950,iptu:160,status:"aprovado",vis:2,quality:78,commercial:74,addr:"Av. Bernardo Vieira de Melo, 2200",bldg:"Ed. Maré Alta",ownerc:"Sra. Regina · (81) 3344-1111",auth:"sim",excl:"sim",listed:"não",docsit:"Inventário concluído",occ:"Ocupado pelo proprietário",visit:"Fins de semana",furn:"parcial",comm:"50/50 sobre 5%",desc:"3 quartos beira-mar de Piedade, varanda ampla, 2 vagas soltas."}),
+      prop({id:"p3",owner:"u4",purpose:"aluguel",type:"Studio",city:"Recife",hood:"Pina",area:34,bed:1,suite:0,bath:1,park:1,floor:"14º",sun:"Poente",rent:2600,condo:620,iptu:80,status:"analise",vis:1,quality:64,commercial:70,addr:"Rua Capitão Rebelinho, 380",bldg:"Beach Class",ownerc:"—",auth:"sim",excl:"não",listed:"sim",docsit:"Declarada regular",occ:"Vazio",visit:"Livre",furn:"sim",comm:"Taxa de 1 aluguel, 50/50",desc:"Studio mobiliado no Pina, pronto para morar."}),
+      prop({id:"p4",owner:"u1",purpose:"venda",type:"Casa",city:"Cabo de Santo Agostinho",hood:"Paiva",area:210,bed:4,suite:3,bath:5,park:3,floor:"—",sun:"Nascente",sale:1850000,condo:1400,iptu:520,status:"aprovado",vis:1,quality:91,commercial:88,addr:"Cond. Morada da Península, lote 12",bldg:"Reserva do Paiva",ownerc:"Sr. Fábio · (81) 3355-2222",auth:"sim",excl:"sim",listed:"não",docsit:"Escritura registrada",occ:"Vazio",visit:"Com acompanhamento",furn:"não",comm:"40/60 sobre 5% (60 captador)",desc:"Casa em condomínio fechado no Paiva, 4 suítes possíveis, piscina."}),
+      prop({id:"p5",owner:"u4",purpose:"ambos",type:"Apartamento",city:"Recife",hood:"Setúbal",area:74,bed:3,suite:1,bath:2,park:1,floor:"3º",sun:"Sul",sale:460000,rent:3200,condo:850,iptu:130,status:"complemento",vis:1,quality:52,commercial:66,addr:"Rua João Cardoso Aires, 90",bldg:"—",ownerc:"—",auth:"não informado",excl:"não",listed:"sim",docsit:"Não informada",occ:"Ocupado por inquilino",visit:"A combinar",furn:"não",comm:"A combinar",desc:"3 quartos em Setúbal.",pend:"Faltam fotos complementares e confirmação de autorização do proprietário."}),
+      prop({id:"p6",owner:"u1",purpose:"aluguel",type:"Sala comercial",city:"Recife",hood:"Boa Viagem",area:42,bed:0,suite:0,bath:1,park:1,floor:"7º",sun:"—",rent:2900,condo:700,iptu:110,status:"analise",vis:1,quality:71,commercial:60,addr:"Av. Domingos Ferreira, 800, sala 707",bldg:"Empresarial Blue Tower",ownerc:"—",auth:"sim",excl:"não",listed:"não",docsit:"Declarada regular",occ:"Vazio",visit:"Horário comercial",furn:"não",comm:"Taxa de 1 aluguel",desc:"Sala pronta com divisórias, ar e vaga."}),
+    ],
+    demands:[
+      {id:"d1",user:"u2",purpose:"venda",type:"Apartamento",city:"Recife",hoods:["Boa Viagem","Setúbal"],max:430000,min:350000,bed:2,park:1,minArea:55,profile:"Casal, primeiro imóvel, crédito pré-aprovado Caixa",urgency:"Alta — decide em até 30 dias",fin:"Financiamento aprovado",notes:"Cliente prioriza quadra do mar e nascente.",status:"ativa"},
+      {id:"d2",user:"u2",purpose:"venda",type:"Casa",city:"Cabo de Santo Agostinho",hoods:["Paiva"],max:2000000,min:1200000,bed:4,park:2,minArea:180,profile:"Família vinda de SP, mudança em 90 dias",urgency:"Média",fin:"À vista",notes:"Busca condomínio com segurança e lazer.",status:"ativa"},
+      {id:"d3",user:"u5",purpose:"aluguel",type:"Studio",city:"Recife",hoods:["Pina","Boa Viagem"],max:3000,min:1800,bed:1,park:0,minArea:28,profile:"Executivo em contrato de 12 meses",urgency:"Alta",fin:"Aluguel",notes:"Precisa mobiliado.",status:"ativa"},
+    ],
+    matches:[
+      {id:"m1",prop:"p1",demand:"d1",requester:"u2",captador:"u1",score:0,reason:"",status:"solicitado",form:{profile:"Casal, primeiro imóvel",range:"Até R$ 430 mil",deadline:"30 dias",credit:"Aprovado (Caixa)",mode:"Financiamento",notes:"Podem visitar no sábado."},adminNotes:""},
+    ],
+    logs:[
+      log("u3","Aprovou CRECI","user","u1","Documento validado manualmente"),
+      log("u3","Aprovou imóvel","property","p1","Nível de visibilidade 1 — blindado"),
+      log("u2","Solicitou match","match","m1","Demanda d1 × imóvel p1"),
+    ],
+  };
+}
+function prop(o){ return Object.assign({rent:null,sale:null,pend:"",photos:5,mainPhoto:true,photoFlag:o.quality<60,createdAt:"2026-07-01"},o); }
+function log(u,action,etype,eid,meta){ return {id:uid(),user:u,action,etype,eid,meta,at:new Date().toISOString().slice(0,16).replace("T"," ")}; }
+
+let S;
+try{ S = JSON.parse(localStorage.getItem("almatch")||"null"); }catch(e){ S=null; }
+if(!S || S.v!==3) S = seed();
+S.modal=null; S.wiz=S.wiz||null;
+const save = () => { try{ localStorage.setItem("almatch",JSON.stringify(S)); }catch(e){} };
+
+/* ============ motor de match ============ */
+function matchScore(p,d){
+  if(p.status!=="aprovado") return {score:0,reason:"Imóvel ainda não aprovado pela curadoria."};
+  let s=0; const why=[], nay=[];
+  const purposeOk = p.purpose===d.purpose || p.purpose==="ambos";
+  purposeOk ? (s+=15,why.push(`finalidade compatível (${d.purpose})`)) : nay.push(`a demanda é de ${d.purpose} e o imóvel é de ${p.purpose}`);
+  p.type===d.type ? (s+=20,why.push(`tipo ${p.type.toLowerCase()}`)) : nay.push(`a demanda pede ${d.type.toLowerCase()} e a captação é ${p.type.toLowerCase()}`);
+  p.city===d.city ? (s+=10,why.push(`mesma cidade (${p.city})`)) : nay.push("cidade diferente");
+  d.hoods.includes(p.hood) ? (s+=20,why.push(`bairro ${p.hood} dentro da busca`)) : nay.push(`bairro ${p.hood} fora dos bairros buscados`);
+  const price = d.purpose==="aluguel" ? p.rent : p.sale;
+  if(price && price<=d.max && (!d.min || price>=d.min)){ s+=20; why.push(`valor dentro da faixa (${band(price)})`); }
+  else nay.push("valor fora da faixa da demanda");
+  if(!d.minArea || p.area>=d.minArea){ s+=5; why.push("metragem compatível"); } else nay.push("metragem abaixo do mínimo");
+  p.bed>=d.bed ? (s+=5,why.push(`${p.bed} quarto(s)`)) : nay.push(`a demanda exige ${d.bed} quartos e o imóvel possui ${p.bed}`);
+  p.park>=(d.park||0) ? s+=3 : nay.push("vagas insuficientes");
+  if(p.quality>=75) s+=2;
+  s=Math.min(100,s);
+  const reason = s>=60
+    ? `Match de ${s}% porque ${why.slice(0,4).join(", ")}.${nay.length?` Ponto de atenção: ${nay[0]}.`:""}`
+    : `Não houve aderência suficiente (${s}%) porque ${nay.slice(0,3).join("; ")}.`;
+  return {score:s,reason};
+}
+S.matches.forEach(m=>{ const p=S.properties.find(x=>x.id===m.prop), d=S.demands.find(x=>x.id===m.demand); if(p&&d){const r=matchScore(p,d); m.score=r.score; m.reason=r.reason;} });
+
+/* agentes simulados */
+function agentReports(p){
+  const missing=[]; if(!p.photos||p.photos<5) missing.push("mínimo de 4 fotos complementares"); if(p.auth!=="sim") missing.push("autorização do proprietário"); if(p.docsit==="Não informada") missing.push("situação documental");
+  return [
+    {a:"Agente de Qualidade da Captação",t:`Nota ${p.quality}/100. Pontos fortes: localização em ${p.hood}, campos essenciais preenchidos.${missing.length?" Pendências: "+missing.join("; ")+".":" Sem pendências relevantes."} Recomendação: ${p.quality>=75?"aprovar":p.quality>=55?"pedir ajuste":"recusar"}.`},
+    {a:"Agente de Curadoria Comercial",t:`Nota ${p.commercial}/100. ${p.hood} está entre os bairros de atuação prioritária. Perfil provável: ${p.purpose==="aluguel"?"locatário de médio prazo":"comprador final ou investidor"}. Recomendação de exposição: nível ${p.vis} — ${p.vis===1?"blindado":p.vis===2?"parcial":"liberado"}.`},
+    {a:"Agente de Segurança e Blindagem",t:`Endereço completo, proprietário e comissão marcados como privados. Nome do empreendimento ${p.vis>=2?"exibido por decisão manual":"oculto por padrão"}. Nenhum dado sensível exposto ao perfil parceiro.`},
+    {a:"Agente de Comunicação",t:p.status==="complemento"?`Rascunho ao captador: "Sua captação em ${p.hood} está quase pronta. Para avançarmos na curadoria, precisamos de: ${p.pend||"complementos"}."`:`Resumo executivo: ${p.type} em ${p.hood}, ${p.purpose}, ${p.sale?band(p.sale):band(p.rent)}, qualidade ${p.quality}/100 — ${p.status==="aprovado"?"ativo para match":"em fila de curadoria"}.`},
+  ];
+}
+
+/* ============ helpers de UI ============ */
+const $ = s => document.querySelector(s);
+const me = () => S.users.find(u=>u.id===S.session);
+function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3200); }
+function go(view){ S.view=view; S.modal=null; render(); }
+function setTab(k,v){ S.tab[k]=v; render(); }
+window.A = {go,setTab};
+function chipFor(st){ const map={aprovado:["ok",PSTATUS.aprovado],analise:["warn",PSTATUS.analise],recusado:["bad",PSTATUS.recusado],complemento:["warn",PSTATUS.complemento],arquivado:["","Arquivado"]}; const [c,t]=map[st]||["",st]; return `<span class="chip ${c}">${t}</span>`; }
+function scoreBadge(s){ const c=s>=80?"hi":s>=60?"md":"lo"; return `<span class="score ${c}">${s}%</span>`; }
+function esc(x){ return String(x??"").replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c])); }
+function field(id,lab,inner){ return `<div><label for="${id}">${lab}</label>${inner}</div>`; }
+function inp(id,lab,val="",type="text",ph=""){ return field(id,lab,`<input id="${id}" type="${type}" value="${esc(val)}" placeholder="${ph}">`); }
+function sel(id,lab,opts,val){ return field(id,lab,`<select id="${id}">${opts.map(o=>`<option ${o===val?"selected":""}>${o}</option>`).join("")}</select>`); }
+function photoStrip(n,flag){ let h=""; for(let i=0;i<n;i++) h+=`<div class="thumb photo-slot">${i===0?"foto<br>principal":"foto "+i}</div>`; return `<div class="row">${h}${flag?'<span class="chip warn">qualidade visual baixa</span>':""}</div>`; }
+
+/* ============ views ============ */
+function render(){
+  const app=$("#app"); const u=me();
+  let body="";
+  if(S.view==="landing") body=vLanding();
+  else if(S.view==="onboarding") body=vOnboarding();
+  else if(!u) { S.view="landing"; body=vLanding(); }
+  else if(S.view==="captador") body=vCaptador(u);
+  else if(S.view==="wizard") body=vWizard(u);
+  else if(S.view==="parceiro") body=vParceiro(u);
+  else if(S.view==="admin") body=vAdmin(u);
+  app.innerHTML = vTop(u) + `<main class="fade">${body}</main>` + vFooter() + (S.modal?S.modal:"");
+  save();
+}
+function vTop(u){
+  const nav = u
+    ? `<span class="rolebadge">${esc(u.name)} · ${u.role==="admin"?"Admin A&L":u.role==="captador"?"Captador":"Parceiro"}</span>
+       ${u.role==="captador"?`<button class="btn sm subtle" onclick="A.go('captador')">Minhas captações</button>`:""}
+       ${u.role==="parceiro"?`<button class="btn sm subtle" onclick="A.go('parceiro')">Oportunidades</button>`:""}
+       ${u.role==="admin"?`<button class="btn sm subtle" onclick="A.go('admin')">Painel A&L</button>`:""}
+       <button class="btn sm ghost" onclick="logout()">Sair</button>`
+    : `<button class="btn sm" onclick="openLogin()">Entrar com Google</button>`;
+  return `<header class="topbar"><div class="wrap">
+    <div class="brand" style="cursor:pointer" onclick="A.go('landing')">A<b>&amp;</b>L <span>| Match Imobiliário</span></div>
+    <nav class="topnav">${nav}</nav></div></header>`;
+}
+function vFooter(){
+  return `<footer><div class="wrap">
+  <p><b>A&amp;L | Negócios Imobiliários</b> · parceria.aelimoveis.com.br · protótipo interativo</p>
+  <p>A plataforma A&amp;L Parcerias Inteligentes atua como ambiente privado de organização, curadoria e aproximação comercial entre profissionais do mercado imobiliário. O envio de informações não implica aprovação automática, divulgação pública ou garantia de negociação. A responsabilidade pela veracidade das informações da captação é do corretor que realizou o cadastro, sem prejuízo da curadoria e validação interna da A&amp;L.</p>
+  <p>O acesso à base de oportunidades é condicionado à validação profissional, análise documental e aprovação da A&amp;L. Informações sensíveis dos imóveis, proprietários e captadores não serão exibidas publicamente.</p>
+  </div></footer>`;
+}
+
+/* ---- landing ---- */
+function vLanding(){
+  return `
+  <div class="hero"><div class="wrap">
+    <p class="eyebrow">Rede privada de parcerias · Pernambuco</p>
+    <h1>Uma nova forma de conectar captações e demandas reais.</h1>
+    <p class="muted" style="max-width:60ch">Cadastre oportunidades, passe pela curadoria da A&amp;L e conecte sua captação a corretores parceiros com clientes compatíveis — sem expor dados sensíveis e sem abrir mão da segurança comercial.</p>
+    <div class="row" style="margin-top:22px">
+      <button class="btn" onclick="openLogin()">Cadastrar minha captação</button>
+      <button class="btn ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Entender como funciona</button>
+    </div>
+  </div></div>
+  <section class="land" id="how"><div class="wrap">
+    <p class="eyebrow">Como funciona</p><h2>Três passos, com a A&amp;L no meio de cada conexão.</h2>
+    <div class="grid g3 steps" style="margin-top:26px">
+      <div class="card"><h3>O captador cadastra</h3><p class="muted small">Login com Google, CRECI anexado e imóvel enviado em etapas curtas. Nada vai ao ar sem análise.</p></div>
+      <div class="card"><h3>A A&amp;L valida e blinda</h3><p class="muted small">Curadoria humana apoiada por agentes de IA revisa regularidade, preço, fotos e autorização — e publica apenas um resumo blindado.</p></div>
+      <div class="card"><h3>O parceiro demonstra demanda</h3><p class="muted small">Corretores validados veem sinais de oportunidade e sinalizam clientes reais. Quando há aderência, a A&amp;L conduz a ponte.</p></div>
+    </div>
+  </div></section>
+  <section class="land"><div class="wrap"><div class="grid g2">
+    <div class="card"><p class="eyebrow">Para captadores</p><h3>Proteja o que você captou</h3>
+      <p class="muted small">Endereço, proprietário e comissão nunca aparecem para terceiros. Mostramos a oportunidade certa sem expor dados sensíveis — e você só é conectado quando existe cliente compatível e validado.</p></div>
+    <div class="card"><p class="eyebrow">Para corretores parceiros</p><h3>Oportunidades curadas, não anúncios</h3>
+      <p class="muted small">Uma base blindada de captações já analisadas pela A&amp;L, com score de aderência à demanda do seu cliente. Antes de qualquer conexão, a A&amp;L valida as informações.</p></div>
+  </div></div></section>
+  <section class="land"><div class="wrap">
+    <p class="eyebrow">Segurança e curadoria</p><h2>A inteligência organiza. A A&amp;L decide.</h2>
+    <p class="muted" style="max-width:65ch">Agentes de IA classificam cadastros, avaliam qualidade e calculam aderência nos bastidores — mas nenhum dado sensível é liberado automaticamente. Toda conexão comercial passa por aprovação explícita da equipe A&amp;L, com registro em log de auditoria e consentimento LGPD.</p>
+    <div style="margin-top:18px" class="list">
+      <p class="disclaimer">A plataforma A&amp;L Parcerias Inteligentes atua como ambiente privado de organização, curadoria e aproximação comercial entre profissionais do mercado imobiliário. O envio de informações não implica aprovação automática, divulgação pública ou garantia de negociação.</p>
+      <p class="disclaimer">O acesso à base de oportunidades é condicionado à validação profissional, análise documental e aprovação da A&amp;L. Informações sensíveis dos imóveis, proprietários e captadores não serão exibidas publicamente.</p>
+    </div>
+    <div class="row" style="margin-top:22px"><button class="btn" onclick="openLogin()">Entrar com Google</button></div>
+  </div></section>`;
+}
+
+/* ---- login (simulado) ---- */
+window.openLogin = function(){
+  S.modal = `<div class="modal-bg" onclick="if(event.target===this){closeModal()}"><div class="modal">
+    <p class="eyebrow">Acesso · protótipo</p><h2>Entrar na plataforma</h2>
+    <p class="muted small">Na versão final, o acesso é feito com Google OAuth. Neste protótipo, escolha um perfil de demonstração:</p>
+    <div class="list" style="margin-top:14px">
+      <button class="gbtn" onclick="login('u1')">🔑 Marina Albuquerque — Captadora validada</button>
+      <button class="gbtn" onclick="login('u2')">🔑 Rafael Lins — Corretor parceiro validado</button>
+      <button class="gbtn" onclick="login('u3')">🔑 Equipe A&amp;L — Painel administrativo</button>
+      <button class="gbtn" onclick="loginNew()">＋ Sou novo aqui — fazer onboarding com Google</button>
+    </div></div></div>`;
+  render();
+};
+window.closeModal = function(){ S.modal=null; render(); };
+window.login = function(id){ S.session=id; const u=me(); S.view = u.role==="admin"?"admin":u.role; S.modal=null; render(); toast(`Sessão iniciada como ${u.name}.`); };
+window.loginNew = function(){ S.session=null; S.obStep=0; S.ob={}; S.view="onboarding"; S.modal=null; render(); };
+window.logout = function(){ S.session=null; S.view="landing"; render(); };
+
+/* ---- onboarding ---- */
+function vOnboarding(){
+  const st=S.obStep, ob=S.ob||{};
+  const bar=`<div class="progress"><i style="width:${(st+1)*25}%"></i></div>`;
+  let inner="";
+  if(st===0) inner=`
+    <h2>Dados pessoais e profissionais</h2><p class="muted small">Login com Google confirmado como <b>novo.corretor@gmail.com</b>.</p>
+    <div class="frow">${inp("ob_name","Nome completo",ob.name||"")}${inp("ob_phone","Telefone / WhatsApp",ob.phone||"","tel","(81) 9…")}</div>
+    <div class="frow">${inp("ob_creci","Número do CRECI",ob.creci||"","text","CRECI-PE 00.000")}${sel("ob_city","Cidade de atuação",CITIES,ob.city||"Recife")}</div>
+    ${sel("ob_role","Como você quer atuar?",["Captador — quero cadastrar imóveis","Parceiro — quero buscar oportunidades"],ob.roleLabel)}
+    <div class="row" style="margin-top:18px"><span class="spacer"></span><button class="btn" onclick="obNext()">Continuar</button></div>`;
+  if(st===1) inner=`
+    <h2>Documento do CRECI</h2>
+    <p class="muted small">Anexe PDF ou imagem legível da carteira, certidão ou documento atualizado de regularidade do CRECI. A validação é feita por análise humana da equipe A&amp;L.</p>
+    <label for="ob_doc">Arquivo (PDF, JPG ou PNG · até 10 MB)</label>
+    <input id="ob_doc" type="file" accept=".pdf,image/jpeg,image/png" onchange="S.ob.doc=this.files[0]?this.files[0].name:''">
+    ${ob.doc?`<p class="small chip ok" style="margin-top:8px">Anexado: ${esc(ob.doc)}</p>`:""}
+    <div class="row" style="margin-top:18px"><button class="btn subtle" onclick="S.obStep=0;render()">Voltar</button><span class="spacer"></span>
+    <button class="btn ghost" onclick="S.ob.doc='creci-simulado.pdf';obNext()">Usar documento de exemplo</button>
+    <button class="btn" onclick="obNext()">Continuar</button></div>`;
+  if(st===2) inner=`
+    <h2>Termos e responsabilidade</h2>
+    <div class="list small muted" style="margin:10px 0">
+      <p class="disclaimer">Declaro que as informações prestadas são verdadeiras e que possuo relação legítima com as captações que cadastrar. Autorizo o tratamento dos meus dados pessoais pela A&amp;L nos termos da LGPD (Lei 13.709/2018), exclusivamente para fins de validação profissional, curadoria e aproximação comercial.</p>
+      <p class="disclaimer">Estou ciente de que o envio de informações não implica aprovação automática e de que dados sensíveis não serão exibidos publicamente. Posso solicitar exclusão ou arquivamento dos meus dados a qualquer momento.</p>
+    </div>
+    <label class="row" style="font-size:.9rem"><input type="checkbox" id="ob_terms" style="width:auto" ${ob.terms?"checked":""}> Li e aceito os termos de uso, a política de privacidade e o termo de responsabilidade.</label>
+    <div class="row" style="margin-top:18px"><button class="btn subtle" onclick="S.obStep=1;render()">Voltar</button><span class="spacer"></span><button class="btn" onclick="obFinish()">Concluir cadastro</button></div>`;
+  if(st===3){ const u=me(); inner=`
+    <h2>Cadastro enviado para validação</h2>
+    <p class="muted">Recebemos seus dados profissionais e o documento do CRECI. A equipe A&amp;L fará a análise de regularidade antes de liberar o acesso completo.</p>
+    <p><span class="chip warn">CRECI pendente</span></p>
+    <div class="row" style="margin-top:18px"><button class="btn" onclick="A.go('${u&&u.role==="parceiro"?"parceiro":"captador"}')">Ir para o meu painel</button></div>`; }
+  return `<div class="wrap" style="max-width:640px;padding-top:40px">
+    <p class="eyebrow">Onboarding profissional · etapa ${Math.min(st+1,4)} de 4</p>${bar}
+    <div class="card">${inner}</div></div>`;
+}
+window.obNext = function(){
+  const st=S.obStep; S.ob=S.ob||{};
+  if(st===0){
+    ["name","phone","creci","city"].forEach(k=>{const el=$("#ob_"+k); if(el) S.ob[k]=el.value;});
+    S.ob.roleLabel=$("#ob_role").value;
+    if(!S.ob.name||!S.ob.phone||!S.ob.creci){ toast("Preencha nome, telefone e CRECI para continuar."); return; }
+  }
+  if(st===1 && !S.ob.doc){ toast("Anexe o documento do CRECI para continuar."); return; }
+  S.obStep=st+1; render();
+};
+window.obFinish = function(){
+  if(!$("#ob_terms").checked){ toast("É necessário aceitar os termos para concluir."); return; }
+  const role = (S.ob.roleLabel||"").startsWith("Parceiro")?"parceiro":"captador";
+  const nu={id:uid(),name:S.ob.name,email:"novo.corretor@gmail.com",phone:S.ob.phone,role,creci:S.ob.creci,city:S.ob.city,creciStatus:"pendente",doc:S.ob.doc,terms:true};
+  S.users.push(nu); S.session=nu.id; S.obStep=3;
+  S.logs.unshift(log(nu.id,"Novo corretor cadastrado","user",nu.id,"CRECI enviado — aguardando validação"));
+  render(); toast("Cadastro recebido. CRECI em análise pela A&L.");
+};
+
+/* ---- captador ---- */
+function vCaptador(u){
+  const mine=S.properties.filter(p=>p.owner===u.id);
+  const pend = u.creciStatus!=="aprovado" ? `<div class="card" style="border-color:var(--warn)"><span class="chip warn">CRECI pendente</span><p class="small muted" style="margin-top:8px">Seu documento está em análise pela equipe A&amp;L. Você já pode cadastrar captações; elas entram na curadoria após a validação do seu CRECI.</p></div>` : "";
+  const myMatches=S.matches.filter(m=>m.captador===u.id);
+  return `<div class="wrap" style="padding-top:32px">
+    <div class="row"><div><p class="eyebrow">Painel do captador</p><h1 style="font-size:1.7rem">Minhas captações</h1></div>
+    <span class="spacer"></span><button class="btn" onclick="startWizard()">Cadastrar nova captação</button></div>
+    <div class="grid g3" style="margin:20px 0">
+      <div class="card kpi"><b>${mine.length}</b><span>captações</span></div>
+      <div class="card kpi"><b>${mine.filter(p=>p.status==="aprovado").length}</b><span>ativas para match</span></div>
+      <div class="card kpi"><b>${myMatches.length}</b><span>matches em análise pela A&amp;L</span></div>
+    </div>
+    ${pend}
+    <div class="list" style="margin-top:16px">
+      ${mine.map(p=>`<div class="card"><div class="row">
+        <div><b>${p.type} · ${p.hood}, ${p.city}</b><div class="muted small">${p.bed?p.bed+" quartos · ":""}${p.area} m² · ${p.purpose}${p.sale?" · "+fmt(p.sale):""}${p.rent?" · "+fmt(p.rent)+"/mês":""}</div></div>
+        <span class="spacer"></span>${chipFor(p.status)}</div>
+        ${p.status==="complemento"?`<p class="small" style="color:var(--warn);margin-top:8px">Pendência apontada pela curadoria: ${esc(p.pend)}</p>`:""}
+        ${photoStrip(Math.min(p.photos,5),p.photoFlag)}
+      </div>`).join("") || `<div class="card muted">Você ainda não cadastrou captações.</div>`}
+    </div>
+    ${myMatches.length?`<h2 style="margin-top:32px">Interesse em análise</h2>
+    <div class="list">${myMatches.map(m=>{const p=S.properties.find(x=>x.id===m.prop);return `<div class="card row">
+      <div><b>${p.type} · ${p.hood}</b><div class="muted small">${m.status==="validado"?"Match validado — a A&L fará a ponte com o parceiro.":"Um corretor parceiro demonstrou interesse. A A&L está avaliando a aderência antes de qualquer liberação — a identidade do interessado permanece protegida."}</div></div>
+      <span class="spacer"></span><span class="chip ${m.status==="validado"?"ok":"navy"}">${m.status==="validado"?"Match validado":"Match solicitado"}</span></div>`;}).join("")}</div>`:""}
+  </div>`;
+}
+
+/* ---- wizard de imóvel ---- */
+const WSTEPS=["Localização","Características","Valores","Fotos","Documentação","Parceria","Revisão"];
+window.startWizard = function(){ S.wiz={step:0,d:{purpose:"venda",type:"Apartamento",city:"Recife",hood:"Boa Viagem",photos:0,mainPhoto:false}}; S.view="wizard"; render(); };
+function vWizard(u){
+  const w=S.wiz,d=w.d,st=w.step;
+  const bar=`<div class="progress"><i style="width:${(st+1)/7*100}%"></i></div>`;
+  let inner="";
+  if(st===0) inner=`
+    ${sel("w_purpose","Finalidade",["venda","aluguel","ambos"],d.purpose)}
+    ${sel("w_type","Tipo de imóvel",TYPES,d.type)}
+    <div class="frow">${sel("w_city","Cidade (Pernambuco — área inicial de operação)",[...CITIES,"Outra cidade (fora de PE)"],d.city)}
+    ${sel("w_hood","Bairro",HOODS,d.hood)}</div>
+    ${inp("w_region","Região complementar (opcional)",d.region||"","text","ex.: quadra do mar, próximo ao Shopping")}
+    <p class="small muted">A plataforma opera inicialmente apenas com imóveis em Pernambuco, com foco em Recife, Jaboatão dos Guararapes e Região Metropolitana. Imóveis fora de PE não seguem para curadoria nesta versão.</p>`;
+  if(st===1) inner=`
+    <div class="frow">${inp("w_area","Área privativa (m²)",d.area||"","number")}${inp("w_bed","Quartos",d.bed??"","number")}${inp("w_suite","Suítes",d.suite??"","number")}</div>
+    <div class="frow">${inp("w_bath","Banheiros",d.bath??"","number")}${inp("w_park","Vagas",d.park??"","number")}${inp("w_floor","Andar",d.floor||"")}</div>
+    <div class="frow">${sel("w_sun","Posição solar",["Nascente","Poente","Norte","Sul","—"],d.sun)}${sel("w_furn","Mobiliado",["não","sim","parcial"],d.furn)}${sel("w_occ","Status de ocupação",["Vazio","Ocupado pelo proprietário","Ocupado por inquilino"],d.occ)}</div>
+    ${sel("w_visit","Disponibilidade para visita",["Livre com agendamento","Fins de semana","Horário comercial","A combinar"],d.visit)}`;
+  if(st===2) inner=`
+    <div class="frow">${inp("w_sale","Valor de venda (R$)",d.sale||"","number")}${inp("w_rent","Valor de aluguel (R$/mês)",d.rent||"","number")}</div>
+    <div class="frow">${inp("w_condo","Condomínio (R$/mês)",d.condo||"","number")}${inp("w_iptu","IPTU (R$/mês)",d.iptu||"","number")}</div>`;
+  if(st===3) inner=`
+    <p class="small muted">Exigimos 1 foto principal e ao menos 4 complementares (JPG, PNG ou WEBP, até 8 MB cada, com compressão automática). Fotos escuras ou borradas são marcadas como “qualidade visual baixa” para a curadoria — sem bloquear o envio.</p>
+    <label for="w_photos">Adicionar fotos</label>
+    <input id="w_photos" type="file" accept="image/jpeg,image/png,image/webp" multiple onchange="wizPhotos(this)">
+    <div class="row" style="margin:10px 0"><button class="btn ghost sm" onclick="S.wiz.d.photos=5;S.wiz.d.mainPhoto=true;render()">Usar fotos de exemplo</button></div>
+    ${photoStrip(Math.min(d.photos,6),false)}
+    <p class="small ${d.photos>=5?"":"muted"}">${d.photos>=5?"✓ Requisito atendido: 1 principal + "+(d.photos-1)+" complementares.":"Fotos anexadas: "+d.photos+" de 5 mínimas."}</p>`;
+  if(st===4) inner=`
+    ${sel("w_docsit","Situação documental declarada",["Escritura registrada","Financiado — saldo devedor","Inventário concluído","Inventário em andamento","Declarada regular","Não informada"],d.docsit)}
+    <div class="frow">${sel("w_excl","Exclusividade",["não","sim"],d.excl)}${sel("w_listed","Já anunciado em outros portais?",["não","sim"],d.listed)}${sel("w_auth","Existe autorização do proprietário?",["sim","não","não informado"],d.auth)}</div>
+    <div class="private"><p class="eyebrow">Visível somente para a A&amp;L</p>
+      ${inp("w_addr","Endereço completo (obrigatório, nunca público)",d.addr||"")}
+      ${inp("w_bldg","Nome do edifício ou empreendimento (opcional)",d.bldg||"")}
+      ${inp("w_ownerc","Nome e contato do proprietário (opcional nesta versão)",d.ownerc||"")}
+      <label for="w_docs">Documentos do imóvel (opcional)</label><input id="w_docs" type="file" multiple>
+    </div>`;
+  if(st===5) inner=`
+    ${inp("w_comm","Comissão / parceria esperada",d.comm||"","text","ex.: 50/50 sobre 5%")}
+    ${field("w_rules","Regras de divisão de comissão (se houver)",`<textarea id="w_rules">${esc(d.rules||"")}</textarea>`)}
+    ${field("w_desc","Observações do captador",`<textarea id="w_desc">${esc(d.desc||"")}</textarea>`)}`;
+  if(st===6){
+    const outPE = d.city==="Outra cidade (fora de PE)";
+    inner=`
+    <div class="scrollx"><table>
+      <tr><th>Imóvel</th><td>${d.type} · ${d.purpose} · ${d.hood}, ${d.city} ${outPE?'<span class="chip bad">fora da área inicial de operação</span>':""}</td></tr>
+      <tr><th>Características</th><td>${d.area||"?"} m² · ${d.bed||0} quartos · ${d.suite||0} suítes · ${d.park||0} vagas · ${d.sun||"—"}</td></tr>
+      <tr><th>Valores</th><td>${d.sale?fmt(+d.sale):""} ${d.rent?fmt(+d.rent)+"/mês":""} · cond. ${fmt(+d.condo||0)} · IPTU ${fmt(+d.iptu||0)}</td></tr>
+      <tr><th>Fotos</th><td>${d.photos} anexadas ${d.photos>=5?"✓":"(mínimo 5)"}</td></tr>
+      <tr><th>Documentação</th><td>${d.docsit||"—"} · autorização: ${d.auth||"—"} · exclusividade: ${d.excl||"não"}</td></tr>
+      <tr><th>Privado (só A&amp;L)</th><td>${esc(d.addr||"—")} · ${esc(d.bldg||"—")} · ${esc(d.ownerc||"—")}</td></tr>
+      <tr><th>Parceria</th><td>${esc(d.comm||"—")}</td></tr>
+    </table></div>
+    ${outPE?`<p class="small" style="color:var(--bad)">Este imóvel está fora de Pernambuco e não pode ser enviado para curadoria na versão atual.</p>`:""}`;
+  }
+  return `<div class="wrap" style="max-width:680px;padding-top:32px">
+    <p class="eyebrow">Nova captação · ${WSTEPS[st]} (${st+1}/7)</p>${bar}
+    <div class="card">${inner}
+    <div class="row" style="margin-top:20px">
+      ${st>0?`<button class="btn subtle" onclick="wizNav(-1)">Voltar</button>`:`<button class="btn subtle" onclick="A.go('captador')">Cancelar</button>`}
+      <span class="spacer"></span>
+      ${st===0?'<button class="btn ghost" onclick="wizDemo()">Preencher com exemplo</button>':""}
+      ${st<6?`<button class="btn" onclick="wizNav(1)">Continuar</button>`:`<button class="btn" onclick="wizSubmit()">Enviar para curadoria</button>`}
+    </div></div></div>`;
+}
+window.wizPhotos = function(el){ S.wiz.d.photos=(S.wiz.d.photos||0)+el.files.length; S.wiz.d.mainPhoto=true; render(); };
+function wizCollect(){
+  const d=S.wiz.d;
+  const ids={w_purpose:"purpose",w_type:"type",w_city:"city",w_hood:"hood",w_region:"region",w_area:"area",w_bed:"bed",w_suite:"suite",w_bath:"bath",w_park:"park",w_floor:"floor",w_sun:"sun",w_furn:"furn",w_occ:"occ",w_visit:"visit",w_sale:"sale",w_rent:"rent",w_condo:"condo",w_iptu:"iptu",w_docsit:"docsit",w_excl:"excl",w_listed:"listed",w_auth:"auth",w_addr:"addr",w_bldg:"bldg",w_ownerc:"ownerc",w_comm:"comm",w_rules:"rules",w_desc:"desc"};
+  Object.entries(ids).forEach(([i,k])=>{const el=$("#"+i); if(el) d[k]=el.value;});
+}
+window.wizNav = function(dir){
+  wizCollect(); const w=S.wiz,d=w.d;
+  if(dir>0){
+    if(w.step===0 && d.city==="Outra cidade (fora de PE)"){ toast("Área inicial de operação: apenas Pernambuco. Este imóvel não seguirá para curadoria."); }
+    if(w.step===2 && !+d.sale && !+d.rent){ toast("Informe ao menos um valor (venda ou aluguel)."); return; }
+    if(w.step===3 && d.photos<5){ toast("Anexe 1 foto principal e pelo menos 4 complementares."); return; }
+    if(w.step===4 && !d.addr){ toast("O endereço completo é obrigatório (visível somente para a A&L)."); return; }
+  }
+  w.step=Math.min(6,Math.max(0,w.step+dir)); render();
+};
+window.wizDemo = function(){
+  Object.assign(S.wiz.d,{purpose:"venda",type:"Apartamento",city:"Recife",hood:"Boa Viagem",region:"Quadra do mar",area:58,bed:2,suite:1,bath:2,park:1,floor:"6º",sun:"Nascente",furn:"não",occ:"Vazio",visit:"Livre com agendamento",sale:395000,condo:720,iptu:110,photos:5,mainPhoto:true,docsit:"Escritura registrada",excl:"não",listed:"sim",auth:"sim",addr:"Rua Setúbal, 300, ap 602",bldg:"Ed. Costa Azul",ownerc:"Sra. Lúcia · (81) 3222-9999",comm:"50/50 sobre 5%",desc:"2 quartos reformado, nascente, lazer completo."});
+  S.wiz.step=6; render(); toast("Formulário preenchido com dados de exemplo.");
+};
+window.wizSubmit = function(){
+  const d=S.wiz.d,u=me();
+  if(d.city==="Outra cidade (fora de PE)"){ toast("Imóvel fora da área inicial de operação — envio bloqueado."); return; }
+  const quality = Math.min(96, 40 + (d.photos>=5?20:0) + (d.auth==="sim"?15:0) + (d.docsit&&d.docsit!=="Não informada"?10:0) + (d.desc?6:0) + (d.addr?5:0));
+  const p=prop({id:uid(),owner:u.id,purpose:d.purpose,type:d.type,city:d.city,hood:d.hood,area:+d.area||0,bed:+d.bed||0,suite:+d.suite||0,bath:+d.bath||0,park:+d.park||0,floor:d.floor||"—",sun:d.sun,sale:+d.sale||null,rent:+d.rent||null,condo:+d.condo||0,iptu:+d.iptu||0,status:"analise",vis:1,quality,commercial:Math.max(50,quality-8),addr:d.addr,bldg:d.bldg||"—",ownerc:d.ownerc||"—",auth:d.auth,excl:d.excl,listed:d.listed,docsit:d.docsit,occ:d.occ,visit:d.visit,furn:d.furn,comm:d.comm||"A combinar",desc:d.desc||"",photos:d.photos});
+  S.properties.unshift(p);
+  S.logs.unshift(log(u.id,"Novo imóvel cadastrado","property",p.id,`${p.type} em ${p.hood} — orquestrador acionou Agentes de Qualidade e Curadoria`));
+  S.wiz=null; S.view="captador"; render();
+  toast("Recebemos sua captação. A equipe A&L fará a análise de regularidade, aderência comercial e qualidade das informações.");
+  S.modal=`<div class="modal-bg" onclick="if(event.target===this){closeModal()}"><div class="modal">
+    <p class="eyebrow">Captação enviada</p><h2>Recebemos sua captação.</h2>
+    <p class="muted">A equipe A&amp;L fará a análise de regularidade, aderência comercial e qualidade das informações. Se a oportunidade fizer sentido para nossa base de parceiros, entraremos em contato antes de qualquer avanço.</p>
+    <div class="row" style="margin-top:16px"><span class="spacer"></span><button class="btn" onclick="closeModal()">Entendi</button></div></div></div>`;
+  render();
+};
+
+/* ---- parceiro ---- */
+function vParceiro(u){
+  const tab=S.tab.parc||"buscar";
+  const myDemands=S.demands.filter(d=>d.user===u.id);
+  const myReqs=S.matches.filter(m=>m.requester===u.id);
+  const gate = u.creciStatus!=="aprovado";
+  let body="";
+  if(gate) body=`<div class="card" style="border-color:var(--warn)"><span class="chip warn">CRECI pendente</span>
+    <p class="muted small" style="margin-top:8px">O acesso à base de oportunidades é condicionado à validação profissional, análise documental e aprovação da A&amp;L. Assim que seu CRECI for validado, a busca blindada será liberada.</p></div>`;
+  else if(tab==="buscar"){
+    const dsel=S.tab.dsel && myDemands.find(x=>x.id===S.tab.dsel) ? S.tab.dsel : (myDemands[0]&&myDemands[0].id);
+    const d=myDemands.find(x=>x.id===dsel);
+    const approved=S.properties.filter(p=>p.status==="aprovado");
+    const cards=approved.map(p=>{
+      const r=d?matchScore(p,d):{score:0,reason:""};
+      return {p,r};
+    }).sort((a,b)=>b.r.score-a.r.score);
+    body=`
+    ${d?`<div class="row card" style="padding:12px 16px"><span class="small muted">Comparando com a demanda:</span>
+      <select style="width:auto" onchange="S.tab.dsel=this.value;render()">${myDemands.map(x=>`<option value="${x.id}" ${x.id===dsel?"selected":""}>${x.type} · ${x.hoods.join("/")} · até ${fmt(x.max)}</option>`).join("")}</select></div>`
+      :`<div class="card muted small">Cadastre uma demanda para ver o score de aderência de cada oportunidade.</div>`}
+    <div class="grid g2" style="margin-top:16px">
+      ${cards.map(({p,r})=>`<div class="card oppcard">
+        <div class="row"><span class="loc">${p.hood} · ${p.type}</span>${d?scoreBadge(r.score):""}</div>
+        <div class="facts">
+          <span>${p.bed?p.bed+" quarto"+(p.bed>1?"s":""):"—"} · ${bandArea(p.area)}</span>
+          <span>${p.purpose==="aluguel"?"Locação · faixa "+band(p.rent).replace("entre","entre"):p.purpose==="ambos"?"Venda ou locação · "+band(p.sale):"Venda · faixa "+band(p.sale)}</span>
+          <span>${p.park?p.park>1?"1 a "+p.park+" vagas":"1 vaga":"sem vaga"} · ${p.city}</span>
+          ${p.vis>=2?`<span>${esc(p.desc)}</span>`:""}
+        </div>
+        <div class="row"><span class="chip ok">Curadoria A&amp;L: oportunidade aprovada</span></div>
+        ${d&&r.score>0?`<p class="small muted" style="margin:0">${esc(r.reason)}</p>`:""}
+        <button class="btn sm" onclick="openInterest('${p.id}','${d?d.id:""}')">Tenho cliente para esse perfil</button>
+      </div>`).join("")}
+    </div>`;
+  }
+  else if(tab==="demandas") body=vDemands(u,myDemands);
+  else body=`<div class="list">
+    ${myReqs.length?myReqs.map(m=>{const p=S.properties.find(x=>x.id===m.prop);return `<div class="card row">
+      <div><b>${p.hood} · ${p.type}</b><div class="muted small">${m.status==="validado"?"Match validado pela A&L — nossa equipe fará a ponte e conduzirá a apresentação.":m.status==="recusado"?"A A&L avaliou e optou por não avançar neste momento."+(m.adminNotes?" Motivo: "+esc(m.adminNotes):""):"Solicitação em análise pela A&L. Antes de qualquer conexão, a A&L valida as informações."}</div></div>
+      <span class="spacer"></span><span class="chip ${m.status==="validado"?"ok":m.status==="recusado"?"bad":"navy"}">${m.status==="validado"?"Conexão liberada":m.status==="recusado"?"Não avançou":"Em análise"}</span></div>`;}).join(""):`<div class="card muted">Nenhuma solicitação enviada ainda.</div>`}</div>`;
+  return `<div class="wrap" style="padding-top:32px">
+    <p class="eyebrow">Painel do corretor parceiro</p><h1 style="font-size:1.7rem">Base blindada de oportunidades</h1>
+    <p class="muted small" style="max-width:65ch">Mostramos a oportunidade certa sem expor dados sensíveis. Quando houver aderência real, a A&amp;L conduz a ponte entre as partes.</p>
+    ${gate?"":`<div class="tabs">
+      <button class="${tab==="buscar"?"on":""}" onclick="A.setTab('parc','buscar')">Buscar oportunidades</button>
+      <button class="${tab==="demandas"?"on":""}" onclick="A.setTab('parc','demandas')">Minhas demandas (${myDemands.length})</button>
+      <button class="${tab==="reqs"?"on":""}" onclick="A.setTab('parc','reqs')">Solicitações (${myReqs.length})</button>
+    </div>`}
+    ${body}</div>`;
+}
+function vDemands(u,mine){
+  return `<div class="list">
+    <div class="card"><h3>Cadastrar nova demanda</h3>
+      <div class="frow">${sel("d_purpose","Finalidade do cliente",["venda","aluguel"],"venda")}${sel("d_type","Tipo de imóvel",TYPES,"Apartamento")}${sel("d_city","Cidade",CITIES,"Recife")}</div>
+      <div class="frow">${inp("d_hoods","Bairros (separe por vírgula)","Boa Viagem, Setúbal")}${inp("d_min","Valor mínimo (R$)","","number")}${inp("d_max","Valor máximo (R$)","430000","number")}</div>
+      <div class="frow">${inp("d_bed","Quartos (mín.)","2","number")}${inp("d_park","Vagas (mín.)","1","number")}${inp("d_area","Metragem mínima (m²)","55","number")}</div>
+      <div class="frow">${inp("d_profile","Perfil do cliente","")}${sel("d_urgency","Urgência",["Alta — decide em até 30 dias","Média","Baixa / exploratória"])}${sel("d_fin","Situação financeira",["Financiamento aprovado","Financiamento em análise","À vista","Aluguel"])}</div>
+      ${field("d_notes","Observação da demanda",`<textarea id="d_notes"></textarea>`)}
+      <div class="row" style="margin-top:14px"><span class="spacer"></span><button class="btn" onclick="addDemand()">Cadastrar demanda</button></div>
+    </div>
+    ${mine.map(d=>`<div class="card row"><div><b>${d.type} · ${d.hoods.join(", ")}</b>
+      <div class="muted small">${d.purpose} · até ${fmt(d.max)} · ${d.bed}+ quartos · ${d.urgency}</div></div>
+      <span class="spacer"></span><span class="chip navy">ativa</span></div>`).join("")}
+  </div>`;
+}
+window.addDemand = function(){
+  const u=me();
+  const d={id:uid(),user:u.id,purpose:$("#d_purpose").value,type:$("#d_type").value,city:$("#d_city").value,
+    hoods:$("#d_hoods").value.split(",").map(x=>x.trim()).filter(Boolean),max:+$("#d_max").value||0,min:+$("#d_min").value||0,
+    bed:+$("#d_bed").value||0,park:+$("#d_park").value||0,minArea:+$("#d_area").value||0,
+    profile:$("#d_profile").value,urgency:$("#d_urgency").value,fin:$("#d_fin").value,notes:$("#d_notes").value,status:"ativa"};
+  if(!d.max||!d.hoods.length){ toast("Informe ao menos bairros e valor máximo."); return; }
+  S.demands.push(d); S.logs.unshift(log(u.id,"Nova demanda cadastrada","demand",d.id,`${d.type} em ${d.hoods.join("/")} até ${fmt(d.max)} — Agente de Match acionado`));
+  S.tab.parc="buscar"; S.tab.dsel=d.id; render(); toast("Demanda cadastrada. O Agente de Match calculou a aderência com a base aprovada.");
+};
+window.openInterest = function(pid,did){
+  const p=S.properties.find(x=>x.id===pid);
+  S.modal=`<div class="modal-bg" onclick="if(event.target===this){closeModal()}"><div class="modal">
+    <p class="eyebrow">${p.hood} · ${p.type}</p><h2>Tenho cliente para esse perfil</h2>
+    <p class="muted small">Sua solicitação vai para a A&amp;L, que decide se libera conversa, intermediação ou visita. Nenhum contato é trocado sem aprovação.</p>
+    ${inp("i_profile","Perfil do cliente")}
+    <div class="frow">${inp("i_range","Faixa de valor do cliente")}${sel("i_deadline","Prazo de decisão",["Até 30 dias","30 a 90 dias","Acima de 90 dias"])}</div>
+    <div class="frow">${sel("i_credit","Possui aprovação de crédito?",["Sim","Em análise","Não se aplica"])}${sel("i_mode","Forma",["Financiamento","À vista","Aluguel"])}</div>
+    ${field("i_notes","Observações",`<textarea id="i_notes"></textarea>`)}
+    <div class="row" style="margin-top:16px"><button class="btn subtle" onclick="closeModal()">Cancelar</button><span class="spacer"></span>
+    <button class="btn" onclick="sendInterest('${pid}','${did}')">Enviar para a A&amp;L</button></div></div></div>`;
+  render();
+};
+window.sendInterest = function(pid,did){
+  const u=me(),p=S.properties.find(x=>x.id===pid),d=S.demands.find(x=>x.id===did);
+  const r=d?matchScore(p,d):{score:50,reason:"Solicitação avulsa, sem demanda estruturada vinculada."};
+  const m={id:uid(),prop:pid,demand:did||null,requester:u.id,captador:p.owner,score:r.score,reason:r.reason,status:"solicitado",
+    form:{profile:$("#i_profile").value,range:$("#i_range").value,deadline:$("#i_deadline").value,credit:$("#i_credit").value,mode:$("#i_mode").value,notes:$("#i_notes").value},adminNotes:""};
+  S.matches.unshift(m);
+  S.logs.unshift(log(u.id,"Match solicitado","match",m.id,`Score ${m.score}% — aguardando decisão da A&L`));
+  S.modal=null; S.tab.parc="reqs"; render();
+  toast("Solicitação enviada. A A&L avalia a aderência antes de qualquer conexão.");
+};
+
+/* ---- admin ---- */
+function vAdmin(u){
+  const tab=S.tab.adm||"corretores";
+  const pendingUsers=S.users.filter(x=>x.role!=="admin");
+  const T = {corretores:`Corretores (${pendingUsers.filter(x=>x.creciStatus==="pendente").length} pendentes)`,
+    imoveis:`Imóveis (${S.properties.filter(p=>p.status==="analise").length} em análise)`,
+    demandas:`Demandas (${S.demands.length})`,
+    matches:`Matches (${S.matches.filter(m=>m.status==="solicitado").length} aguardando)`,
+    logs:"Logs de auditoria"};
+  let body="";
+  if(tab==="corretores") body=`<div class="list">${pendingUsers.map(x=>`<div class="card"><div class="row">
+    <div><b>${esc(x.name)}</b> <span class="chip">${x.role}</span><div class="muted small">${x.creci} · ${esc(x.city)} · ${esc(x.phone)} · ${esc(x.email)}</div>
+    <div class="small">Documento: <a href="javascript:void(0)" onclick="toast('Visualização simulada do documento ${esc(x.doc||"")}')">${esc(x.doc||"—")}</a> · Termos aceitos: ${x.terms?"sim":"não"}</div></div>
+    <span class="spacer"></span>
+    <span class="chip ${x.creciStatus==="aprovado"?"ok":x.creciStatus==="recusado"?"bad":"warn"}">CRECI ${x.creciStatus}</span>
+    ${x.creciStatus==="pendente"?`<button class="btn ok sm" onclick="setCreci('${x.id}','aprovado')">Aprovar</button><button class="btn danger sm" onclick="setCreci('${x.id}','recusado')">Recusar</button>`:""}</div>
+    ${x.creciStatus==="pendente"?`<div class="agent"><b>Agente de Validação Profissional</b>Cadastro classificado como <b>pronto para curadoria humana</b>: campos obrigatórios preenchidos, documento anexado (${esc(x.doc||"—")}), aceite de termos registrado. A aprovação jurídica do CRECI é decisão humana.</div>`:""}
+    </div>`).join("")}</div>`;
+  if(tab==="imoveis") body=`<div class="list">${S.properties.map(p=>{
+    const owner=S.users.find(x=>x.id===p.owner);
+    return `<div class="card">
+      <div class="row"><div><b>${p.type} · ${p.hood}, ${p.city}</b>
+        <div class="muted small">${p.bed} quartos · ${p.area} m² · ${p.purpose} · ${p.sale?fmt(p.sale):""} ${p.rent?fmt(p.rent)+"/mês":""} · captador: ${esc(owner?owner.name:"—")} (${owner?owner.creci:""})</div></div>
+      <span class="spacer"></span>${chipFor(p.status)}</div>
+      ${photoStrip(Math.min(p.photos,5),p.photoFlag)}
+      <div class="private"><p class="eyebrow">Dados privados — somente admin</p>
+        <p class="small">Endereço: ${esc(p.addr)} · Empreendimento: ${esc(p.bldg)} · Proprietário: ${esc(p.ownerc)}<br>
+        Autorização: ${p.auth} · Exclusividade: ${p.excl} · Outros portais: ${p.listed} · Documental: ${p.docsit}<br>
+        Comissão: ${esc(p.comm)} · Obs. captador: ${esc(p.desc)}</p></div>
+      ${agentReports(p).map(r=>`<div class="agent"><b>${r.a}</b>${esc(r.t)}</div>`).join("")}
+      <div class="row" style="margin-top:12px">
+        <label style="margin:0" for="vis_${p.id}">Nível de visibilidade</label>
+        <select id="vis_${p.id}" style="width:auto" onchange="setVis('${p.id}',this.value)">
+          <option value="1" ${p.vis===1?"selected":""}>1 — Blindado</option>
+          <option value="2" ${p.vis===2?"selected":""}>2 — Parcial</option>
+          <option value="3" ${p.vis===3?"selected":""}>3 — Liberado (pós-match)</option></select>
+        <span class="spacer"></span>
+        ${p.status!=="aprovado"?`<button class="btn ok sm" onclick="setProp('${p.id}','aprovado')">Aprovar</button>`:""}
+        ${p.status!=="complemento"?`<button class="btn subtle sm" onclick="askComplement('${p.id}')">Pedir complementação</button>`:""}
+        ${p.status!=="recusado"?`<button class="btn danger sm" onclick="openReject('${p.id}')">Recusar</button>`:""}
+        ${p.status!=="arquivado"?`<button class="btn subtle sm" onclick="setProp('${p.id}','arquivado')">Arquivar</button>`:""}
+      </div></div>`;}).join("")}</div>`;
+  if(tab==="demandas") body=`<div class="scrollx card" style="padding:8px 12px"><table>
+    <tr><th>Parceiro</th><th>Busca</th><th>Faixa</th><th>Perfil / urgência</th><th>Financeiro</th></tr>
+    ${S.demands.map(d=>{const r=S.users.find(x=>x.id===d.user);return `<tr>
+      <td>${esc(r?r.name:"—")}</td><td>${d.type} · ${d.hoods.join(", ")} (${d.city}) · ${d.bed}+ quartos</td>
+      <td>${d.min?fmt(d.min)+" – ":""}${fmt(d.max)}</td><td>${esc(d.profile)} · ${esc(d.urgency)}</td><td>${esc(d.fin)}</td></tr>`;}).join("")}</table></div>`;
+  if(tab==="matches"){
+    const potential=[];
+    S.properties.filter(p=>p.status==="aprovado").forEach(p=>S.demands.forEach(d=>{
+      if(S.matches.some(m=>m.prop===p.id&&m.demand===d.id)) return;
+      const r=matchScore(p,d); if(r.score>=60) potential.push({p,d,r});
+    }));
+    body=`
+    <h3>Solicitações de corretores parceiros</h3>
+    <div class="list" style="margin-bottom:26px">${S.matches.map(m=>{
+      const p=S.properties.find(x=>x.id===m.prop),req=S.users.find(x=>x.id===m.requester),cap=S.users.find(x=>x.id===m.captador);
+      return `<div class="card"><div class="row">
+        <div><b>${p.hood} · ${p.type}</b> ${scoreBadge(m.score)}<div class="muted small">Parceiro: ${esc(req?req.name:"—")} → Captador: ${esc(cap?cap.name:"—")}</div></div>
+        <span class="spacer"></span><span class="chip ${m.status==="validado"?"ok":m.status==="recusado"?"bad":"navy"}">${m.status==="validado"?"Match validado":m.status==="recusado"?"Recusado":"Match solicitado"}</span></div>
+        <p class="small muted">${esc(m.reason)}</p>
+        <div class="agent"><b>Agente de Match</b>${esc(m.reason)} Cliente: ${esc(m.form.profile||"—")} · ${esc(m.form.range||"—")} · decisão em ${esc(m.form.deadline||"—")} · crédito: ${esc(m.form.credit||"—")} · ${esc(m.form.mode||"—")}.${m.form.notes?" Obs.: "+esc(m.form.notes):""}</div>
+        ${m.status==="solicitado"?`<div class="row" style="margin-top:10px">
+          <button class="btn ok sm" onclick="decideMatch('${m.id}','validado')">Aprovar conexão</button>
+          <button class="btn danger sm" onclick="decideMatch('${m.id}','recusado')">Recusar</button></div>`
+        :m.status==="validado"?`<p class="small" style="color:var(--ok)">Conexão liberada — contato registrado pela A&amp;L. Nível de visibilidade do imóvel pode ser elevado para 3 (liberado) manualmente.</p>`:""}
+      </div>`;}).join("")||'<div class="card muted">Nenhuma solicitação.</div>'}</div>
+    <h3>Matches potenciais detectados pelo Agente de Match</h3>
+    <p class="muted small">O score é apoio decisório — nenhuma conexão acontece automaticamente.</p>
+    <div class="list">${potential.map(({p,d,r})=>{const req=S.users.find(x=>x.id===d.user);return `<div class="card row">
+      <div><b>${p.hood} · ${p.type}</b> ${scoreBadge(r.score)}<div class="muted small">Demanda de ${esc(req?req.name:"—")}: ${d.type} em ${d.hoods.join("/")} até ${fmt(d.max)}</div>
+      <p class="small muted" style="margin:4px 0 0">${esc(r.reason)}</p></div></div>`;}).join("")||'<div class="card muted">Nenhum match potencial no momento.</div>'}</div>`;
+  }
+  if(tab==="logs") body=`<div class="scrollx card" style="padding:8px 12px"><table>
+    <tr><th>Quando</th><th>Quem</th><th>Ação</th><th>Entidade</th><th>Detalhe</th></tr>
+    ${S.logs.map(l=>{const x=S.users.find(y=>y.id===l.user);return `<tr><td style="white-space:nowrap">${l.at}</td><td>${esc(x?x.name:l.user)}</td><td>${esc(l.action)}</td><td>${l.etype} ${l.eid}</td><td>${esc(l.meta)}</td></tr>`;}).join("")}</table></div>`;
+  return `<div class="wrap" style="padding-top:32px">
+    <p class="eyebrow">Painel administrativo A&amp;L · orquestrador ativo</p><h1 style="font-size:1.7rem">Curadoria e conexões</h1>
+    <div class="tabs">${Object.entries(T).map(([k,t])=>`<button class="${tab===k?"on":""}" onclick="A.setTab('adm','${k}')">${t}</button>`).join("")}</div>
+    ${body}
+    <div class="row" style="margin-top:28px"><button class="btn subtle sm" onclick="localStorage.removeItem('almatch');location.reload()">Restaurar dados de demonstração</button></div>
+  </div>`;
+}
+window.setCreci = function(id,st){
+  const x=S.users.find(y=>y.id===id); x.creciStatus=st;
+  S.logs.unshift(log("u3",st==="aprovado"?"Aprovou CRECI":"Recusou CRECI","user",id,`Agente de Comunicação preparou aviso de ${st==="aprovado"?"aprovação":"recusa educada"} para ${x.name}`));
+  render(); toast(`CRECI de ${x.name} ${st}.`);
+};
+window.setProp = function(id,st){
+  const p=S.properties.find(x=>x.id===id); p.status=st;
+  S.logs.unshift(log("u3",st==="aprovado"?"Aprovou imóvel":st==="arquivado"?"Arquivou imóvel":"Atualizou imóvel","property",id,`${p.type} em ${p.hood} — status: ${PSTATUS[st]||st}`));
+  render(); toast(`Imóvel em ${p.hood}: ${PSTATUS[st]||st}.`);
+};
+window.setVis = function(id,v){
+  const p=S.properties.find(x=>x.id===id); p.vis=+v;
+  S.logs.unshift(log("u3","Alterou visibilidade","property",id,`Nível ${v} — ${v==1?"blindado":v==2?"parcial":"liberado"}`));
+  render(); toast(`Visibilidade nível ${v} aplicada.`);
+};
+window.askComplement = function(id){
+  const p=S.properties.find(x=>x.id===id); p.status="complemento"; p.pend=p.pend||"Complementar fotos e confirmar autorização do proprietário.";
+  S.logs.unshift(log("u3","Pediu complementação","property",id,"Agente de Comunicação notificou o captador"));
+  render(); toast("Pedido de complementação enviado ao captador.");
+};
+window.openReject = function(id){
+  S.modal=`<div class="modal-bg" onclick="if(event.target===this){closeModal()}"><div class="modal">
+    <h2>Recusar imóvel</h2>${sel("rej_reason","Motivo padronizado",REJECT_REASONS)}
+    ${field("rej_notes","Observação interna (opcional)",`<textarea id="rej_notes"></textarea>`)}
+    <div class="row" style="margin-top:16px"><button class="btn subtle" onclick="closeModal()">Cancelar</button><span class="spacer"></span>
+    <button class="btn danger" onclick="confirmReject('${id}')">Confirmar recusa</button></div></div></div>`;
+  render();
+};
+window.confirmReject = function(id){
+  const p=S.properties.find(x=>x.id===id); p.status="recusado"; p.pend=$("#rej_reason").value;
+  S.logs.unshift(log("u3","Recusou imóvel","property",id,`Motivo: ${p.pend}. Agente de Comunicação preparou recusa educada ao captador.`));
+  S.modal=null; render(); toast("Imóvel recusado com motivo registrado.");
+};
+window.decideMatch = function(id,st){
+  const m=S.matches.find(x=>x.id===id); m.status=st;
+  if(st==="recusado") m.adminNotes="Aderência insuficiente no momento.";
+  S.logs.unshift(log("u3",st==="validado"?"Aprovou conexão (match validado)":"Recusou conexão","match",id,st==="validado"?"A&L conduzirá a ponte entre captador e parceiro":"Partes não conectadas — dados permanecem blindados"));
+  render(); toast(st==="validado"?"Match validado. A A&L conduz a ponte entre as partes.":"Solicitação recusada.");
+};
+window.toast = toast;
+
+render();
+</script>
