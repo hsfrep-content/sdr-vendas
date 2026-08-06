@@ -52,25 +52,30 @@ p{margin:.35rem 0}
 .eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:640}
 .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
 a{color:var(--navy)}
-button{font:inherit;cursor:pointer;border:none;border-radius:8px;transition:filter .15s, transform .1s}
-button:active{transform:translateY(1px)}
+button{font:inherit;cursor:pointer;border:none;border-radius:10px;transition:filter .15s ease, transform .15s cubic-bezier(.2,.8,.3,1.4), box-shadow .15s ease}
+button:active{transform:translateY(1px) scale(.98)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
-.btn{background:var(--navy);color:var(--btn-ink,#fff);padding:.65rem 1.25rem;font-weight:600}
-.btn:hover{filter:brightness(1.1)}
+.btn{background:var(--navy);color:var(--btn-ink,#fff);padding:.65rem 1.25rem;font-weight:700;display:inline-flex;align-items:center;gap:.4rem}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 6px 16px rgba(16,24,40,.14)}
+.btn svg{width:14px;height:14px;transition:transform .18s ease;flex:none}
+.btn:hover svg{transform:translateX(2px)}
 .btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.btn.ghost:hover{background:color-mix(in srgb,var(--navy) 7%,transparent);transform:translateY(-1px);box-shadow:none}
 .btn.subtle{background:var(--chip);color:var(--ink)}
+.btn.subtle:hover{transform:translateY(-1px)}
 .btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
 .btn.ok{background:var(--ok);color:#fff}
 :root[data-theme="dark"] .btn.ok{color:#0e1a14}
 .btn.sm{padding:.4rem .8rem;font-size:.85rem}
 .topbar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
 .topbar .wrap{display:flex;align-items:center;gap:14px;height:60px}
-.brand{font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.brand{font-weight:800;letter-spacing:-.01em;white-space:nowrap;display:inline-flex;align-items:center;gap:.4rem}
 .brand b{color:var(--red)}
 .brand span{color:var(--muted);font-weight:500}
 .topnav{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.rolebadge{font-size:.75rem;background:var(--chip);padding:.25rem .6rem;border-radius:99px;color:var(--muted)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.rolebadge{font-size:.75rem;background:var(--chip);padding:.25rem .6rem;border-radius:99px;color:var(--muted);display:inline-flex;align-items:center;gap:.35rem}
+.rolebadge::before{content:"";width:6px;height:6px;border-radius:99px;background:var(--ok)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);transition:transform .18s cubic-bezier(.2,.8,.3,1.2), box-shadow .18s ease}
 .grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -94,6 +99,7 @@ section.land{padding:44px 0;border-top:1px solid var(--line)}
 .tabs button{background:none;color:var(--muted);padding:.55rem .9rem;border-radius:8px 8px 0 0;font-weight:600;border-bottom:2px solid transparent}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--red)}
 .oppcard{display:flex;flex-direction:column;gap:8px}
+.oppcard:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(16,24,40,.1)}
 .oppcard .loc{font-weight:700;font-size:1.05rem}
 .oppcard .facts{color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:2px}
 .score{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;font-size:.9rem;padding:.2rem .55rem;border-radius:8px}
@@ -138,6 +144,7 @@ const HOODS = ["Boa Viagem","Pina","Setúbal","Piedade","Candeias","Paiva","Barr
 const TYPES = ["Apartamento","Casa","Sala comercial","Loja","Terreno","Studio","Cobertura","Flat","Outro"];
 const REJECT_REASONS = ["CRECI não validado","Imóvel fora da área de atuação inicial","Fotos insuficientes","Informações comerciais incompletas","Valor desalinhado com mercado","Captação sem indício mínimo de autorização","Imóvel duplicado","Outro motivo"];
 const PSTATUS = {analise:"Imóvel em análise",aprovado:"Ativo para match",recusado:"Imóvel recusado",complemento:"Informações insuficientes",arquivado:"Arquivado"};
+const ARROW = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
 const fmt = v => v? "R$ "+Number(v).toLocaleString("pt-BR") : "—";
 const band = v => { if(!v) return "—"; const lo=Math.floor(v*0.94/10000)*10000, hi=Math.ceil(v*1.06/10000)*10000; return `entre ${fmt(lo)} e ${fmt(hi)}`; };
 const bandArea = a => a? `${Math.floor(a*0.93/1)} a ${Math.ceil(a*1.07)} m²` : "—";
@@ -277,7 +284,7 @@ function vLanding(){
     <h1>Uma nova forma de conectar captações e demandas reais.</h1>
     <p class="muted" style="max-width:60ch">Cadastre oportunidades, passe pela curadoria da A&amp;L e conecte sua captação a corretores parceiros com clientes compatíveis — sem expor dados sensíveis e sem abrir mão da segurança comercial.</p>
     <div class="row" style="margin-top:22px">
-      <button class="btn" onclick="openLogin()">Cadastrar minha captação</button>
+      <button class="btn" onclick="openLogin()">Cadastrar minha captação ${ARROW}</button>
       <button class="btn ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Entender como funciona</button>
     </div>
   </div></div>
@@ -387,7 +394,7 @@ function vCaptador(u){
   const myMatches=S.matches.filter(m=>m.captador===u.id);
   return `<div class="wrap" style="padding-top:32px">
     <div class="row"><div><p class="eyebrow">Painel do captador</p><h1 style="font-size:1.7rem">Minhas captações</h1></div>
-    <span class="spacer"></span><button class="btn" onclick="startWizard()">Cadastrar nova captação</button></div>
+    <span class="spacer"></span><button class="btn" onclick="startWizard()">Cadastrar nova captação ${ARROW}</button></div>
     <div class="grid g3" style="margin:20px 0">
       <div class="card kpi"><b>${mine.length}</b><span>captações</span></div>
       <div class="card kpi"><b>${mine.filter(p=>p.status==="aprovado").length}</b><span>ativas para match</span></div>
@@ -543,7 +550,7 @@ function vParceiro(u){
         </div>
         <div class="row"><span class="chip ok">Curadoria A&amp;L: oportunidade aprovada</span></div>
         ${d&&r.score>0?`<p class="small muted" style="margin:0">${esc(r.reason)}</p>`:""}
-        <button class="btn sm" onclick="openInterest('${p.id}','${d?d.id:""}')">Tenho cliente para esse perfil</button>
+        <button class="btn sm" onclick="openInterest('${p.id}','${d?d.id:""}')">Tenho cliente para esse perfil ${ARROW}</button>
       </div>`).join("")}
     </div>`;
   }
