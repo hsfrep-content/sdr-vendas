@@ -639,6 +639,13 @@ footer.rodape{background:var(--areia);padding:72px 0 52px;border-top:1px solid v
     <div class="metrica"><div class="metrica-n num" id="mt-matches">0</div><div class="metrica-l">Matches encontrados</div></div>
   </div>
 
+  <div id="bloco-termos" class="hidden">
+    <div class="eyebrow">Termos de Parceria</div>
+    <p class="legal" style="margin-bottom:14px">O contato do outro corretor é liberado depois que as duas partes assinam.</p>
+    <div class="lista" id="lista-termos"></div>
+    <hr class="regua">
+  </div>
+
   <div class="eyebrow">Meus imóveis</div>
   <div class="lista" id="lista-imoveis"></div>
 
@@ -854,6 +861,14 @@ footer.rodape{background:var(--areia);padding:72px 0 52px;border-top:1px solid v
 </div>
 </section>
 
+<!-- ============ TERMO DE PARCERIA ============ -->
+<section class="tela hidden" id="tela-termo">
+<div class="wrap" style="max-width:860px">
+  <button class="btn btn-txt" id="tm-voltar" style="margin-bottom:14px;padding-left:0">← Voltar ao painel</button>
+  <div id="tm-conteudo"></div>
+</div>
+</section>
+
 <!-- ============ PERFIL ============ -->
 <section class="tela hidden" id="tela-perfil">
 <div class="wrap">
@@ -897,6 +912,12 @@ footer.rodape{background:var(--areia);padding:72px 0 52px;border-top:1px solid v
 
   <div class="eyebrow">Verificação de CRECI</div>
   <div class="lista" id="ad-lista-corretores"></div>
+
+  <hr class="regua">
+
+  <div class="eyebrow">Termos de Parceria</div>
+  <p class="legal" style="margin-bottom:14px">Termos gerados na aprovação do match. A conexão só acontece quando as duas partes assinam.</p>
+  <div class="lista" id="ad-lista-termos"></div>
 
   <hr class="regua">
 
@@ -969,6 +990,7 @@ const STATUS_FLUXO = [
   {id:'verificado',tit:'Verificado',       txt:'Dados conferidos. O registro entrou na base ativa.'},
   {id:'cruzamento',tit:'Em cruzamento',    txt:'Nosso time está buscando o outro lado da operação.'},
   {id:'match',    tit:'Match encontrado',  txt:'Achamos um par. Vamos falar com você para liberar o contato.'},
+  {id:'termo_pendente', tit:'Termo de parceria', txt:'Match confirmado. O contato é liberado assim que os dois corretores assinarem o Termo de Parceria.'},
   {id:'conectado',tit:'Conexão realizada', txt:'Corretores apresentados. A parceria segue entre vocês.'}
 ];
 
@@ -1205,7 +1227,7 @@ function ligaScrollTopo(){
 }
 
 // ---------- roteador ----------
-const TELAS = ['landing','onboarding','painel','imovel','demanda','detalhe','perfil','admin'];
+const TELAS = ['landing','onboarding','painel','imovel','demanda','detalhe','termo','perfil','admin'];
 function mostra(tela){
   TELAS.forEach(t => $('#tela-'+t).classList.toggle('hidden', t!==tela));
   const topo = $('#topo'), naLanding = tela === 'landing';
@@ -1237,6 +1259,7 @@ async function rota(){
   if(h.startsWith('/perfil'))   { preenchePerfil(); mostra('perfil');  return; }
   if(h.startsWith('/admin'))    { if(!ehAdmin) return vaiPara('#/painel'); carregaAdmin(); mostra('admin'); return; }
   if(h.startsWith('/ver/'))     { const [,,tipo,id] = h.split('/'); carregaDetalhe(tipo,id); mostra('detalhe'); return; }
+  if(h.startsWith('/termo/'))   { const [,,id] = h.split('/'); carregaTermo(id); mostra('termo'); return; }
   carregaPainel(); mostra('painel');
 }
 
@@ -1320,7 +1343,7 @@ function seloStatus(s){
 }
 function seloFluxo(s){
   const i = STATUS_FLUXO.findIndex(x=>x.id===s);
-  const cls = s==='match' ? 'selo-pendente' : (s==='conectado' ? 'selo-ok' : 'selo-neutro');
+  const cls = (s==='match'||s==='termo_pendente') ? 'selo-pendente' : (s==='conectado' ? 'selo-ok' : 'selo-neutro');
   return `<span class="selo ${cls}">${esc(STATUS_FLUXO[i>=0?i:0].tit)}</span>`;
 }
 
@@ -1333,15 +1356,37 @@ async function carregaPainel(){
   $('#lista-imoveis').innerHTML = '<div class="sk"></div>';
   $('#lista-demandas').innerHTML = '<div class="sk"></div>';
 
-  const [ri, rd] = await Promise.all([
+  const [ri, rd, rm] = await Promise.all([
     sb.from('imoveis').select('*, imovel_fotos(thumb_url, ordem)').eq('corretor_id', perfil.id).order('criado_em',{ascending:false}),
-    sb.from('demandas').select('*').eq('corretor_id', perfil.id).order('criado_em',{ascending:false})
+    sb.from('demandas').select('*').eq('corretor_id', perfil.id).order('criado_em',{ascending:false}),
+    sb.from('matches').select('id, status, imovel_id, demanda_id, termos(id, status, termo_assinaturas(corretor_id))')
   ]);
 
   const imoveis = ri.data || [], demandas = rd.data || [];
   $('#mt-imoveis').textContent = imoveis.length;
   $('#mt-demandas').textContent = demandas.filter(d=>d.status!=='encerrada').length;
-  $('#mt-matches').textContent = [...imoveis, ...demandas].filter(x=>x.status==='match'||x.status==='conectado').length;
+  $('#mt-matches').textContent = [...imoveis, ...demandas].filter(x=>['match','termo_pendente','conectado'].includes(x.status)).length;
+
+  // termos de parceria dos meus matches
+  const meusTermos = (rm.data||[]).flatMap(m=>(m.termos||[]).map(t=>({m, t})));
+  $('#bloco-termos').classList.toggle('hidden', !meusTermos.length);
+  $('#lista-termos').innerHTML = meusTermos.map(({m, t})=>{
+    const im = imoveis.find(i=>i.id===m.imovel_id);
+    const dm = demandas.find(d=>d.id===m.demanda_id);
+    const rot = im ? `Seu imóvel: ${TIPOS[im.tipo]||im.tipo} em ${im.bairro}` : `Sua demanda: ${dm?dm.codigo||'demanda':'—'}`;
+    const jaAssinei = (t.termo_assinaturas||[]).some(a=>a.corretor_id===perfil.id);
+    let selo, cta;
+    if(t.status==='assinado'){ selo='<span class="selo selo-ok">Contato liberado</span>'; cta='Ver termo e contato'; }
+    else if(jaAssinei){ selo='<span class="selo selo-pendente">Aguardando o outro corretor</span>'; cta='Ver termo'; }
+    else { selo='<span class="selo selo-alerta">Aguardando sua assinatura</span>'; cta='Ler e assinar'; }
+    return `<a class="item" href="#/termo/${esc(t.id)}" style="text-decoration:none">
+      <div class="item-corpo">
+        <div class="item-tit">Termo de Parceria</div>
+        <div class="item-meta">${esc(rot)}</div>
+      </div>
+      <div class="item-fim">${selo}<span class="btn btn-linha" style="padding:8px 14px;font-size:13px">${cta}</span></div>
+    </a>`;
+  }).join('');
 
   $('#lista-imoveis').innerHTML = imoveis.length ? imoveis.map(im=>{
     const capa = (im.imovel_fotos||[]).sort((a,b)=>a.ordem-b.ordem)[0];
@@ -1687,6 +1732,113 @@ async function removeRegistro(tipo, id){
   vaiPara('#/painel'); rota();
 }
 
+// ---------- termo de parceria ----------
+async function hashTexto(txt){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function textoCanonicoTermo(t){
+  // Base determinística do hash: identidades, objeto e cláusula de remuneração.
+  // Não inclui campos voláteis (status, assinaturas) — o hash precisa ser o
+  // mesmo para as duas partes, em momentos diferentes.
+  return JSON.stringify({
+    versao: t.versao_modelo, termo: t.termo_id, match: t.match_id,
+    captador:   [t.captador.id, t.captador.nome, t.captador.creci, t.captador.creci_uf],
+    demandante: [t.demandante.id, t.demandante.nome, t.demandante.creci, t.demandante.creci_uf],
+    imovel:  [t.imovel.id, t.imovel.tipo, t.imovel.bairro, t.imovel.cidade, t.imovel.uf],
+    demanda: [t.demanda.id, t.demanda.codigo, t.demanda.cidade, t.demanda.uf],
+    remuneracao: '20% sobre o valor total da comissão da operação para a A&L Negócios Imobiliários'
+  });
+}
+async function carregaTermo(id){
+  const box = $('#tm-conteudo');
+  box.innerHTML = '<div class="sk" style="height:320px"></div>';
+  const { data: t, error } = await sb.rpc('dados_do_termo', { p_termo_id: id });
+  if(error || !t){ box.innerHTML = '<div class="vazio"><h3>Termo não encontrado</h3><p>Verifique o link ou volte ao painel.</p></div>'; return; }
+
+  const souCaptador = t.meu_corretor_id === t.captador.id;
+  const jaAssinei = (t.assinaturas||[]).some(a=>a.corretor_id === t.meu_corretor_id);
+  const dataFmt = d => new Date(d).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const parte = (c, rot, ass) => `
+    <div>
+      <div class="rotulo">${rot}</div>
+      <div style="font-weight:600">${esc(c.nome)}</div>
+      <div class="legal">CRECI/${esc(c.creci_uf)} ${esc(c.creci)}</div>
+      <div style="margin-top:8px">${ass
+        ? `<span class="selo selo-ok"><span class="ponto"></span>Assinado em ${esc(dataFmt(ass.assinado_em))}</span>`
+        : '<span class="selo selo-pendente"><span class="ponto"></span>Aguardando assinatura</span>'}</div>
+    </div>`;
+  const assDe = cid => (t.assinaturas||[]).find(a=>a.corretor_id===cid);
+
+  box.innerHTML = `
+    <div class="eyebrow">Termo de Parceria · modelo ${esc(t.versao_modelo)}</div>
+    <h2>Termo de Parceria entre corretores</h2>
+    <div style="margin:12px 0 22px">${
+      t.status==='assinado' ? '<span class="selo selo-ok">Assinado pelas duas partes</span>'
+      : t.status==='parcial' ? '<span class="selo selo-pendente">Assinado por uma das partes</span>'
+      : '<span class="selo selo-neutro">Aguardando assinaturas</span>'}</div>
+
+    <div class="card">
+      <div class="grade">
+        ${parte(t.captador, 'Corretor captador', assDe(t.captador.id))}
+        ${parte(t.demandante, 'Corretor com a demanda', assDe(t.demandante.id))}
+      </div>
+      <hr class="regua">
+      <div class="rotulo">Objeto</div>
+      <p style="margin:6px 0 16px">Parceria para intermediação envolvendo o imóvel <strong>${esc(TIPOS[t.imovel.tipo]||t.imovel.tipo)}</strong> em ${esc(t.imovel.bairro)}, ${esc(t.imovel.cidade)}/${esc(t.imovel.uf)} (${t.imovel.metragem} m² · ${t.imovel.valor_sob_consulta?'valor sob consulta':brl(t.imovel.valor)}) e a demanda <strong>${esc(t.demanda.codigo||'registrada')}</strong> em ${esc(t.demanda.cidade)}/${esc(t.demanda.uf)}, cruzados pela A&amp;L Negócios Imobiliários (CRECI/PE 17.931-F).</p>
+
+      <div class="rotulo">Cláusulas</div>
+      <ol style="margin:8px 0 0 20px;display:grid;gap:10px;font-size:15px">
+        <li><strong>Remuneração.</strong> Concretizada a operação originada nesta plataforma, a A&amp;L Negócios Imobiliários faz jus a 20% (vinte por cento) sobre o valor total da comissão. Os 80% restantes permanecem com os corretores parceiros, na divisão que acordarem entre si.</li>
+        <li><strong>Responsabilidade.</strong> Cada corretor responde civil e eticamente pelas informações que cadastrou, pela autorização de venda do imóvel e pela condução da sua parte na operação, nos termos da legislação e das normas do COFECI/CRECI.</li>
+        <li><strong>Natureza.</strong> A A&amp;L atua exclusivamente na conexão entre profissionais registrados. Não realiza venda, locação, avaliação ou custódia de valores.</li>
+        <li><strong>Confidencialidade e dados.</strong> Os contatos trocados a partir desta parceria destinam-se apenas à operação aqui descrita, em conformidade com a LGPD.</li>
+        <li><strong>Assinatura eletrônica.</strong> As partes reconhecem a validade da assinatura eletrônica deste termo, com e-mail verificado, carimbo de tempo e hash do documento, na forma da MP 2.200-2/2001 e da Lei 14.063/2020.</li>
+      </ol>
+      <hr class="regua">
+      <p class="legal">Documento gerado em ${esc(dataFmt(t.gerado_em))} · Identificador ${esc(t.termo_id)}${t.hash_documento?`<br>Hash SHA-256: <span class="num" style="word-break:break-all">${esc(t.hash_documento)}</span>`:''}</p>
+    </div>
+
+    <div id="tm-acao" style="margin-top:16px"></div>
+    <div id="tm-contato" style="margin-top:16px"></div>`;
+
+  const acao = $('#tm-acao');
+  if(t.status !== 'assinado' && !jaAssinei){
+    acao.innerHTML = `
+      <div class="card card-plano">
+        <p class="legal" style="margin-bottom:14px">Ao assinar, você declara que leu o termo e concorda com as cláusulas acima. Sua assinatura fica registrada com e-mail verificado, data, hora e hash do documento.</p>
+        <button class="btn btn-primario" id="tm-assinar">Assinar o Termo de Parceria</button>
+      </div>`;
+    $('#tm-assinar').addEventListener('click', async ()=>{
+      const btn = $('#tm-assinar'); btn.disabled = true; btn.innerHTML = '<span class="carregando"></span> Assinando';
+      const hash = await hashTexto(textoCanonicoTermo(t));
+      const { error: e } = await sb.rpc('assinar_termo', { p_termo_id: t.termo_id, p_hash: hash, p_user_agent: navigator.userAgent });
+      if(e){ btn.disabled = false; btn.textContent = 'Assinar o Termo de Parceria'; return toast(e.message, true); }
+      toast('Termo assinado.');
+      carregaTermo(id);
+    });
+  } else if(t.status !== 'assinado' && jaAssinei){
+    acao.innerHTML = '<div class="card card-plano"><p class="legal">Você já assinou. Assim que o outro corretor assinar, o contato aparece aqui e vocês seguem direto.</p></div>';
+  }
+
+  if(t.status === 'assinado'){
+    const { data: c, error: e } = await sb.rpc('contato_do_parceiro', { p_match_id: t.match_id });
+    if(!e && c){
+      const tel = soDigitos(c.telefone);
+      $('#tm-contato').innerHTML = `
+        <div class="card" style="border-color:var(--gema);background:var(--gema-fundo)">
+          <div class="eyebrow">Contato liberado · ${souCaptador ? 'corretor com a demanda' : 'corretor captador'}</div>
+          <h3 style="margin-bottom:6px">${esc(c.nome)}</h3>
+          <p class="legal" style="margin-bottom:14px">CRECI/${esc(c.creci_uf)} ${esc(c.creci)}</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn btn-naval" href="https://wa.me/55${esc(tel)}" target="_blank" rel="noopener">WhatsApp ${esc(c.telefone)}</a>
+            <a class="btn btn-linha" href="mailto:${esc(c.email)}">${esc(c.email)}</a>
+          </div>
+        </div>`;
+    }
+  }
+}
+
 // ---------- perfil ----------
 function preenchePerfil(){
   $('#pf-nome').value = perfil.nome || '';
@@ -1729,12 +1881,15 @@ async function carregaAdmin(){
   $('#ad-lista-corretores').innerHTML = '<div class="sk"></div>';
   $('#ad-lista-matches').innerHTML = '<div class="sk"></div>';
 
-  const [rc, ri, rd] = await Promise.all([
+  const [rc, ri, rd, rm, rt] = await Promise.all([
     sb.from('corretores').select('*').order('criado_em',{ascending:false}),
     sb.from('imoveis').select('*'),
-    sb.from('demandas').select('*')
+    sb.from('demandas').select('*'),
+    sb.from('matches').select('id, imovel_id, demanda_id, status'),
+    sb.from('termos').select('id, status, gerado_em, match_id, termo_assinaturas(corretor_id, assinado_em)').order('gerado_em',{ascending:false})
   ]);
   const corretores = rc.data||[], imoveis = ri.data||[], demandas = rd.data||[];
+  const matches = rm.data||[], termos = rt.data||[];
 
   $('#ad-corretores').textContent = corretores.length;
   $('#ad-pendentes').textContent = corretores.filter(c=>c.status_verificacao==='pendente').length;
@@ -1759,10 +1914,34 @@ async function carregaAdmin(){
     carregaAdmin();
   }));
 
+  // fila de termos de parceria
+  $('#ad-lista-termos').innerHTML = termos.length ? termos.map(t=>{
+    const m = matches.find(x=>x.id===t.match_id);
+    const im = m && imoveis.find(i=>i.id===m.imovel_id);
+    const dm = m && demandas.find(d=>d.id===m.demanda_id);
+    const ci = im && corretores.find(c=>c.id===im.corretor_id);
+    const cd = dm && corretores.find(c=>c.id===dm.corretor_id);
+    const assinou = cid => (t.termo_assinaturas||[]).some(a=>a.corretor_id===cid);
+    const lado = c => c ? `${esc(c.nome.split(' ')[0])} ${assinou(c.id)?'✓ assinou':'· pendente'}` : '—';
+    const selo = t.status==='assinado' ? '<span class="selo selo-ok">Assinado</span>'
+      : t.status==='parcial' ? '<span class="selo selo-pendente">1 de 2 assinaturas</span>'
+      : '<span class="selo selo-neutro">Sem assinaturas</span>';
+    return `<div class="item">
+      <div class="item-corpo">
+        <div class="item-tit">${dm?esc(dm.codigo||'Demanda'):'—'} ↔ ${im?esc(TIPOS[im.tipo]||im.tipo)+' em '+esc(im.bairro):'—'}</div>
+        <div class="item-meta">Captador: ${lado(ci)} &nbsp;·&nbsp; Demanda: ${lado(cd)}</div>
+      </div>
+      <div class="item-fim">${selo}</div>
+    </div>`;
+  }).join('') : '<div class="vazio"><h3>Nenhum termo gerado</h3><p>Aprove um cruzamento abaixo para gerar o primeiro Termo de Parceria.</p></div>';
+
   // sugestões de cruzamento
+  const jaCruzados = new Set(matches.map(m=>m.imovel_id+'|'+m.demanda_id));
   const sugestoes = [];
   demandas.forEach(dm=>{
     imoveis.forEach(im=>{
+      if(jaCruzados.has(im.id+'|'+dm.id)) return;
+      if(['termo_pendente','conectado'].includes(im.status) || ['termo_pendente','conectado'].includes(dm.status)) return;
       if(im.corretor_id === dm.corretor_id) return;
       if(im.uf !== dm.uf || im.cidade !== dm.cidade) return;
       if(im.finalidade !== 'ambos' && im.finalidade !== dm.finalidade) return;
@@ -1800,10 +1979,15 @@ async function carregaAdmin(){
   $$('#ad-lista-matches [data-match-im]').forEach(b=>b.addEventListener('click', async ()=>{
     const im = b.dataset.matchIm, dm = b.dataset.matchDm;
     const alvo = sugestoes.find(x=>x.im.id===im && x.dm.id===dm);
-    await sb.from('matches').insert({imovel_id:im, demanda_id:dm, score:alvo?alvo.s:0, status:'aprovado', aprovado_por:perfil.id});
-    await sb.from('imoveis').update({status:'match'}).eq('id', im);
-    await sb.from('demandas').update({status:'match'}).eq('id', dm);
-    toast('Match aprovado. Próximo passo é o Termo de Parceria.');
+    const { data: novoMatch, error: eM } = await sb.from('matches')
+      .insert({imovel_id:im, demanda_id:dm, score:alvo?alvo.s:0, status:'termo_pendente', aprovado_por:perfil.id})
+      .select().single();
+    if(eM) return toast(eM.message, true);
+    const { error: eT } = await sb.from('termos').insert({ match_id: novoMatch.id, versao_modelo: 'v1' });
+    if(eT) return toast('Match criado, mas o termo falhou: ' + eT.message, true);
+    await sb.from('imoveis').update({status:'termo_pendente'}).eq('id', im);
+    await sb.from('demandas').update({status:'termo_pendente'}).eq('id', dm);
+    toast('Match aprovado. Termo de Parceria gerado — os corretores já podem assinar.');
     carregaAdmin();
   }));
 }
@@ -1820,6 +2004,7 @@ function liga(){
   $('#pn-novo-imovel').addEventListener('click', ()=>vaiPara('#/imovel'));
   $('#pn-nova-demanda').addEventListener('click', ()=>vaiPara('#/demanda'));
   $('#dt-voltar').addEventListener('click', ()=>vaiPara('#/painel'));
+  $('#tm-voltar').addEventListener('click', ()=>vaiPara('#/painel'));
   $('#im-cancelar').addEventListener('click', ()=>vaiPara('#/painel'));
   $('#dm-cancelar').addEventListener('click', ()=>vaiPara('#/painel'));
   $('#im-para2').addEventListener('click', ()=>{ if(validaPasso1()) vaiPasso(2); });
