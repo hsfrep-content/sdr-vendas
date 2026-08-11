@@ -1327,9 +1327,34 @@ async function salvaOnboarding(){
   vaiPara('#/painel'); rota();
 }
 
+// Chama uma Edge Function com a sessão do usuário. É por aqui que o IP
+// real entra em aceites e assinaturas (T3) — o navegador não o enxerga.
+async function chamaFuncao(nome, corpo){
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session) throw new Error('Sessão expirada. Entre novamente.');
+  const r = await fetch(`${SUPABASE_URL}/functions/v1/${nome}`, {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+session.access_token },
+    body: JSON.stringify(corpo)
+  });
+  const dados = await r.json().catch(()=>({}));
+  if(!r.ok){
+    const erro = new Error(dados.erro || dados.message || 'Falha na chamada da função.');
+    erro.status = r.status;
+    throw erro;
+  }
+  return dados;
+}
+
 async function registraAceite(tipo, versao){
-  try{ await sb.from('aceites').insert({ corretor_id: perfil.id, tipo_termo:tipo, versao_termo:versao }); }
-  catch(e){ console.warn('aceite não registrado', e); }
+  try{
+    await chamaFuncao('registra-aceite', { acao:'aceite', tipo_termo:tipo, versao_termo:versao });
+  } catch(e){
+    // função indisponível: registra sem IP para não travar o fluxo
+    console.warn('aceite sem IP (função indisponível):', e.message);
+    try{ await sb.from('aceites').insert({ corretor_id: perfil.id, tipo_termo:tipo, versao_termo:versao }); }
+    catch(e2){ console.warn('aceite não registrado', e2); }
+  }
 }
 
 // ---------- painel ----------
@@ -1812,8 +1837,20 @@ async function carregaTermo(id){
     $('#tm-assinar').addEventListener('click', async ()=>{
       const btn = $('#tm-assinar'); btn.disabled = true; btn.innerHTML = '<span class="carregando"></span> Assinando';
       const hash = await hashTexto(textoCanonicoTermo(t));
-      const { error: e } = await sb.rpc('assinar_termo', { p_termo_id: t.termo_id, p_hash: hash, p_user_agent: navigator.userAgent });
-      if(e){ btn.disabled = false; btn.textContent = 'Assinar o Termo de Parceria'; return toast(e.message, true); }
+      try{
+        // caminho com IP na trilha de auditoria (T3)
+        await chamaFuncao('registra-aceite', { acao:'assinatura', termo_id: t.termo_id, hash, user_agent: navigator.userAgent });
+      } catch(e1){
+        // regra de negócio recusou (já assinou, hash divergente...): mostra e para
+        if(e1.status && e1.status !== 404 && e1.status < 500){
+          btn.disabled = false; btn.textContent = 'Assinar o Termo de Parceria';
+          return toast(e1.message, true);
+        }
+        // função indisponível: assina direto, sem IP, para não travar o corretor
+        console.warn('assinatura sem IP (função indisponível):', e1.message);
+        const { error: e } = await sb.rpc('assinar_termo', { p_termo_id: t.termo_id, p_hash: hash, p_user_agent: navigator.userAgent });
+        if(e){ btn.disabled = false; btn.textContent = 'Assinar o Termo de Parceria'; return toast(e.message, true); }
+      }
       toast('Termo assinado.');
       carregaTermo(id);
     });
