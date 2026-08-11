@@ -170,10 +170,13 @@ returns uuid language sql security definer stable set search_path = public as $$
 $$;
 
 -- Impede que o próprio corretor se promova a admin ou se autoverifique.
+-- auth.uid() nulo = execução fora da API (SQL Editor / rotina interna):
+-- é o caminho documentado de promoção da equipe, e fica liberado.
+-- Toda chamada vinda da API tem auth.uid() preenchido e cai na trava.
 create or replace function trava_campos_privilegiados()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  if not eh_admin() then
+  if not (eh_admin() or auth.uid() is null) then
     new.is_admin := old.is_admin;
     new.status_verificacao := old.status_verificacao;
   end if;
