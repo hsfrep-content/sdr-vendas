@@ -1,28 +1,28 @@
 ROTEIRO DO REELS — Sábado, 21 de novembro de 2026
-Duração alvo: 85s
+Duração alvo: 82s
 
 [00:00–00:08] (8s · tela c1-1)
-Bom dia, aqui é o Linhares. O resumo da semana: crédito imobiliário caro por mais tempo.
+Bom dia, aqui é o Linhares com o panorama técnico da semana: juros estáveis e crédito em ajuste.
 
 [00:08–00:19] (11s · tela c1-2)
-O Copom parou de cortar e a Selic ficou em treze e setenta e cinco. O mercado agora só vê doze e setenta e cinco no fim de vinte e sete.
+O Copom manteve a Selic em treze e setenta e cinco, uma pausa para avaliar inflação e câmbio. O mercado segue prevendo queda gradual, para doze e setenta e cinco no fim de vinte e sete.
 
-[00:19–00:30] (11s · tela c1-3)
-O dólar fechou a quinta em cinco e noventa e três, o maior nível em dezenove meses. Isso encarece a obra e dificulta novos cortes de juros.
+[00:19–00:29] (10s · tela c1-3)
+O dólar fechou a quinta em cinco e noventa e três, reflexo do debate fiscal e dos juros nos Estados Unidos.
 
-[00:30–00:41] (11s · tela c1-4)
-A poupança perdeu mais sete bilhões e meio em outubro, o quinto mês seguido. A Caixa avalia subir os juros, mas ainda não decidiu.
+[00:29–00:41] (12s · tela c1-4)
+No crédito imobiliário, a poupança perdeu recursos em outubro, mas os financiamentos crescem trinta por cento no ano. A Caixa avalia suas taxas, sem decisão anunciada.
 
-[00:41–00:53] (12s · tela c1-5)
-Nos preços: o imóvel subiu cinco vírgula quatro por cento em doze meses, pouco acima da inflação. E construir subiu ainda mais, seis vírgula sete.
+[00:41–00:52] (11s · tela c1-5)
+Nos preços, o imóvel subiu cinco vírgula quatro por cento em doze meses, acima da inflação, preservando valor.
 
-[00:53–01:03] (10s · tela c1-6)
-Pontos de atenção: distratos altos por crédito negado, inflação de vinte e sete subindo e o pacote fiscal ainda incerto.
+[00:52–01:02] (10s · tela c1-6)
+Para acompanhar: o pacote fiscal na Câmara, as taxas dos bancos e a reunião do Copom em dezembro.
 
-[01:03–01:12] (9s · tela c1-7)
-E cuidado com manchete: a Caixa ainda não aumentou os juros, só avalia.
+[01:02–01:10] (8s · tela c1-7)
+E atenção às manchetes: a Caixa ainda não alterou os juros, apenas avalia.
 
-[01:12–01:25] (13s · tela c1-8)
-Minha leitura: planeje com juros altos até vinte e sete. Aprove o crédito antes, compare o custo total entre bancos e não conte com queda rápida da taxa.
+[01:10–01:22] (12s · tela c1-8)
+Minha leitura: planejamento é o melhor aliado. Com crédito pré-aprovado e comparação entre bancos, sua decisão fica mais segura. Até a próxima.
 
-Total: 85s
+Total: 82s

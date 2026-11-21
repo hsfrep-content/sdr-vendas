@@ -16,7 +16,7 @@
 8. **Risco:** a Plano&Plano teve distratos de 25,1% das vendas brutas no 3T, com dificuldade de comprovação de renda e de aprovação do financiamento.
 9. **Inflação:** o IPCA de outubro foi de 0,14% (IBGE), 4,63% em 12 meses. O Focus projeta 5,11% para 2026 e 5,00% para 2027, quinta alta seguida para 2027.
 
-**Leitura para o cliente:** o cenário é de crédito caro e seletivo até 2027, com risco de juros de financiamento ainda mais altos (Caixa) e poupança encolhendo. O preço do imóvel ganha da inflação por pouco (~0,8 p.p.), e o custo de obra sobe mais, o que limita descontos nos lançamentos. Recomendação: aprovar o crédito antes, comparar o CET e não contar com queda rápida da taxa. A queda de demanda pode abrir negociação pontual em imóveis prontos, mas não é tendência confirmada.
+**Leitura para o cliente:** a Selic está em pausa, e o mercado mantém a expectativa de queda gradual dos juros até 2027. O crédito imobiliário segue ativo (+30% no ano), embora a poupança perca recursos e os bancos revisem as taxas. O imóvel preserva valor acima da inflação, sustentado pelo custo de construção. Orientação: planejar com antecedência, buscar crédito pré-aprovado e comparar o custo efetivo total entre bancos. Assim a decisão fica segura em qualquer cenário de juros.
 
 ## 2. Confronto de fontes e checagem de vieses
 

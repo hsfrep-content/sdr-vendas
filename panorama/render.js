@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Gera os carrosséis (1080x1350) e o Reels (1080x1920, MP4) do Panorama do Dia @linharesm2
+// Gera os carrosséis (1080x1350) e o Reels (1080x1920, MP4) do Panorama do Dia @linhares.m2
 // Uso: node panorama/render.js panorama/edicoes/AAAA-MM-DD
 'use strict';
 
@@ -47,7 +47,7 @@ html,body{width:1080px;height:1350px;font-family:Inter,'Inter Display',Arial,san
 .brand svg{width:28px;height:28px}
 .brand b{color:${ACENTO}}
 .wrap{position:absolute;left:80px;right:80px;top:200px}
-.foto{position:absolute;left:80px;right:80px;top:140px;height:600px;border-radius:36px;background-size:cover;background-position:center}
+.foto{position:absolute;left:80px;right:80px;top:140px;height:540px;border-radius:36px;background-size:cover;background-position:center}
 .tag{font-size:22px;letter-spacing:.18em;font-weight:700;color:${ACENTO};text-transform:uppercase}
 .ico{position:absolute;right:0;top:-8px;width:56px;height:56px}
 .wrap.mid{top:50%;transform:translateY(-46%)}
@@ -113,7 +113,7 @@ function slideHTML(slide, idx, total) {
 
   if (slide.tipo === 'capa' || slide.tipo === 'cta') {
     corpo = `<div class="foto" style="background-image:url('${dataUri(fundo)}');background-position:${slide.fotoPos || 'center'}"></div>
-      <div class="wrap" style="top:800px"><div class="tag">${esc(slide.tag)}</div><h1>${esc(slide.titulo)}</h1><div class="sub">${esc(slide.subtitulo)}</div>
+      <div class="wrap" style="top:735px"><div class="tag">${esc(slide.tag)}</div><h1>${esc(slide.titulo)}</h1><div class="sub">${esc(slide.subtitulo)}</div>
       ${slide.tipo === 'cta' ? `<div class="pill">Simule comigo · ${esc(C.handle)}</div>` : ''}</div>`;
   } else if (slide.tipo === 'kpis') {
     corpo = `<div class="wrap mid">${cab}<div class="kpis">${slide.kpis.map((k) => `<div class="kpi"><span class="v">${esc(k.valor)}</span><span class="r">${esc(k.rotulo)}</span></div>`).join('')}</div>

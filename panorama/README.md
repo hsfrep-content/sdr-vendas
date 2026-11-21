@@ -1,4 +1,4 @@
-# Panorama do Dia — @linharesm2
+# Panorama do Dia — @linhares.m2
 
 Gerador diário de conteúdo sobre economia e mercado imobiliário: varredura de notícias, confronto de fontes, resumo, um carrossel objetivo de 7–8 slides para o Instagram e um Reels de até 90 s.
 
