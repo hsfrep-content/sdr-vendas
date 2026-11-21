@@ -3,280 +3,113 @@
   "dataExtenso": "Sábado, 21 de novembro de 2026",
   "handle": "@linharesm2",
   "assinatura": "LINHARES · m²",
-  "fundos": [
-    "orla.png",
-    "fachada.png",
-    "varanda.png"
-  ],
+  "fundos": ["sala.jpg", "living.jpg", "torre.jpg"],
   "carrosseis": [
     {
       "id": "c1",
-      "titulo": "Panorama do dia",
+      "titulo": "Panorama da semana",
       "slides": [
         {
           "tipo": "capa",
-          "fundo": "orla.png",
-          "tag": "PANORAMA DO DIA",
-          "titulo": "Juros parados, dólar em alta",
-          "subtitulo": "O que mudou na semana e o efeito no seu imóvel.",
-          "rodape": "Arraste para o lado →"
+          "fundo": "sala.jpg",
+          "fotoPos": "center 60%",
+          "tag": "Panorama da semana",
+          "titulo": "Crédito caro por mais tempo",
+          "subtitulo": "Juros, dólar, poupança e preços: o que os dados mostram.",
+          "rodape": "Arraste →"
         },
         {
           "tipo": "kpis",
-          "tag": "JUROS",
+          "tag": "Juros",
           "titulo": "Selic parada em 13,75%",
+          "icone": "termometro",
           "kpis": [
-            {
-              "valor": "13,75%",
-              "rotulo": "Selic mantida em 4/11"
-            },
-            {
-              "valor": "39 × 36",
-              "rotulo": "Mercado dividido entre corte e pausa"
-            }
+            {"valor": "13,75%", "rotulo": "Selic, cortes interrompidos (4/11)"},
+            {"valor": "12,75%", "rotulo": "Projeção para o fim de 2027 (antes 12,50%)"}
           ],
-          "texto": "O BC parou de cortar. Dólar e inflação pesaram mais.",
-          "icone": "termometro"
+          "texto": "O mercado empurrou a queda dos juros para mais longe. O financiamento deve seguir caro em 2027.",
+          "fonte": "Fontes: Copom/BC, Boletim Focus 16/11"
         },
         {
           "tipo": "kpis",
-          "tag": "DÓLAR E FISCAL",
+          "tag": "Dólar",
           "titulo": "Dólar no maior nível em 19 meses",
+          "icone": "moeda",
           "kpis": [
-            {
-              "valor": "R$ 5,93",
-              "rotulo": "Dólar em 19/11"
-            },
-            {
-              "valor": "−2,89%",
-              "rotulo": "Ibovespa na semana"
-            }
+            {"valor": "R$ 5,93", "rotulo": "Fechamento de 19/11"},
+            {"valor": "−2,89%", "rotulo": "Ibovespa na semana"}
           ],
-          "texto": "Pacote fiscal passou no Senado, mas não convenceu. Juros nos EUA também pesam.",
-          "icone": "moeda"
-        },
-        {
-          "tipo": "degraus",
-          "tag": "PROJEÇÕES (FOCUS 16/11)",
-          "titulo": "Juros caem, mas devagar",
-          "degraus": [
-            {
-              "ano": "fim 2026",
-              "valor": 13.75,
-              "rotulo": "13,75%"
-            },
-            {
-              "ano": "fim 2027",
-              "valor": 12.75,
-              "rotulo": "12,75%"
-            },
-            {
-              "ano": "fim 2028",
-              "valor": 11.0,
-              "rotulo": "11,00%"
-            }
-          ],
-          "texto": "Crédito barato só a partir de 2027.",
-          "fonte": "Fonte: Boletim Focus (BC), 16/11"
-        }
-      ]
-    },
-    {
-      "id": "c2",
-      "titulo": "Crédito imobiliário",
-      "slides": [
-        {
-          "tipo": "capa",
-          "fundo": "varanda.png",
-          "tag": "CRÉDITO IMOBILIÁRIO",
-          "titulo": "Financiar ficou mais difícil?",
-          "subtitulo": "Poupança, Caixa e onde ainda há oportunidade.",
-          "rodape": "Arraste para o lado →"
+          "texto": "O fiscal não convenceu e os juros nos EUA subiram. Dólar alto encarece a obra e trava cortes na Selic."
         },
         {
           "tipo": "kpis",
-          "tag": "FUNDING",
-          "titulo": "Poupança segue no vermelho",
+          "tag": "Crédito imobiliário",
+          "titulo": "A poupança segue encolhendo",
+          "icone": "cofre",
           "kpis": [
-            {
-              "valor": "−R$ 7,6 bi",
-              "rotulo": "Saída em outubro"
-            },
-            {
-              "valor": "5 meses",
-              "rotulo": "Seguidos de saída"
-            }
+            {"valor": "−R$ 7,6 bi", "rotulo": "Saída líquida em outubro"},
+            {"valor": "5º mês", "rotulo": "Seguido de saída"}
           ],
-          "texto": "Menos poupança, menos crédito barato. A Caixa estuda subir juros, sem decisão ainda.",
-          "icone": "cofre"
-        },
-        {
-          "tipo": "lista",
-          "tag": "OPORTUNIDADES",
-          "titulo": "Onde há oportunidade",
-          "itens": [
-            {
-              "t": "Itaú no Minha Casa Minha Vida",
-              "d": "Faixa 3, renda até R$ 9,6 mil."
-            },
-            {
-              "t": "Feirão Caixa · 23 a 27/11",
-              "d": "5 mil imóveis, FGTS conforme o caso."
-            },
-            {
-              "t": "Crédito imobiliário +30%",
-              "d": "R$ 146 bi no ano, até setembro."
-            }
-          ],
-          "icone": "casa"
-        },
-        {
-          "tipo": "lista",
-          "tag": "NA PRÁTICA",
-          "titulo": "Vai financiar? Faça isso",
-          "itens": [
-            {
-              "t": "Aprove o crédito agora",
-              "d": "Antes de um possível reajuste da Caixa."
-            },
-            {
-              "t": "Compare o CET",
-              "d": "Entre bancos, a diferença é grande."
-            },
-            {
-              "t": "Organize a renda",
-              "d": "Crédito negado é a maior causa de distrato."
-            }
-          ],
-          "icone": "check"
-        }
-      ]
-    },
-    {
-      "id": "c3",
-      "titulo": "Preço dos imóveis e checagem",
-      "slides": [
-        {
-          "tipo": "capa",
-          "fundo": "fachada.png",
-          "tag": "IMÓVEL × INFLAÇÃO",
-          "titulo": "Imóvel segue acima da inflação",
-          "subtitulo": "E o que é fato ou ruído nas manchetes.",
-          "rodape": "Arraste para o lado →"
+          "texto": "Há menos dinheiro barato para financiar. A Caixa avalia subir os juros, mas ainda não decidiu.",
+          "fonte": "Fontes: Banco Central, Caixa (13/11)"
         },
         {
           "tipo": "barras",
-          "tag": "12 MESES ATÉ OUTUBRO",
-          "titulo": "O que subiu mais em 12 meses",
+          "tag": "Preços · 12 meses",
+          "titulo": "Obra sobe mais que o imóvel",
+          "icone": "grafico",
           "barras": [
-            {
-              "rotulo": "Custo da construção",
-              "valor": 6.75,
-              "txt": "6,75%"
-            },
-            {
-              "rotulo": "Preço do imóvel",
-              "valor": 5.44,
-              "txt": "5,44%",
-              "destaque": true
-            },
-            {
-              "rotulo": "Inflação (IPCA)",
-              "valor": 4.63,
-              "txt": "4,63%"
-            }
+            {"rotulo": "Custo da construção (INCC-M)", "valor": 6.75, "txt": "6,75%"},
+            {"rotulo": "Preço do imóvel (FipeZap)", "valor": 5.44, "txt": "5,44%", "destaque": true},
+            {"rotulo": "Inflação (IPCA)", "valor": 4.63, "txt": "4,63%"}
           ],
-          "texto": "Imóvel ganhou da inflação. Construir ficou mais caro, o que sustenta os preços.",
-          "fonte": "Fontes: FipeZap, FGV/IBRE, IBGE · até outubro",
-          "icone": "grafico"
+          "texto": "O imóvel ganha da inflação por pouco (0,8 ponto). O custo de obra maior aperta as margens e limita os descontos nos lançamentos.",
+          "fonte": "Fontes: FGV/IBRE, FipeZap, IBGE · até outubro"
+        },
+        {
+          "tipo": "lista",
+          "tag": "Pontos de atenção",
+          "titulo": "O que pode piorar",
+          "icone": "lupa",
+          "itens": [
+            {"t": "Distratos em 25%", "d": "Numa grande incorporadora, muitos por crédito negado."},
+            {"t": "Inflação de 2027 em alta", "d": "Focus projeta 5,0%, quinta revisão para cima."},
+            {"t": "Pacote fiscal na Câmara", "d": "O efeito na dívida ainda é incerto."}
+          ]
         },
         {
           "tipo": "checagem",
-          "tag": "FATO × RUÍDO",
-          "titulo": "Fato ou ruído?",
+          "tag": "Fato × ruído",
+          "titulo": "O que é fato nas manchetes",
           "itens": [
-            {
-              "selo": "FATO",
-              "t": "Selic 13,75% e dólar R$ 5,93",
-              "d": "Confirmado em várias fontes."
-            },
-            {
-              "selo": "AINDA NÃO",
-              "t": "\"Caixa aumenta juros\"",
-              "d": "Por enquanto, só estuda."
-            },
-            {
-              "selo": "EXAGERO",
-              "t": "\"Dólar dispara\"",
-              "d": "A alta é real; o tom, não."
-            },
-            {
-              "selo": "DIVERGE",
-              "t": "Inflação 2026",
-              "d": "5,11% no Focus × 5,6% atribuído ao Copom (não confirmado)."
-            }
-          ],
-          "icone": "lupa"
+            {"selo": "FATO", "t": "Selic 13,75% e dólar R$ 5,93", "d": "Confirmado por várias fontes."},
+            {"selo": "AINDA NÃO", "t": "\"Caixa aumenta juros\"", "d": "A Caixa só avalia."},
+            {"selo": "EXAGERO", "t": "Feirão com \"até 90% off\"", "d": "Vale para poucos imóveis."}
+          ]
         },
         {
           "tipo": "cta",
-          "fundo": "varanda.png",
-          "tag": "LEITURA DO LINHARES",
-          "titulo": "Juros altos por mais tempo",
-          "subtitulo": "Com crédito aprovado, você negocia melhor. Vamos simular o seu caso?",
-          "rodape": "Fale comigo · @linharesm2"
+          "fundo": "torre.jpg",
+          "fotoPos": "center 30%",
+          "tag": "Leitura do Linhares",
+          "titulo": "Planeje com juros altos até 2027",
+          "subtitulo": "Aprove o crédito antes, compare o custo total entre os bancos e não conte com queda rápida da taxa.",
+          "rodape": "@linharesm2"
         }
       ]
     }
   ],
   "reels": {
-    "duracaoAlvo": 88,
+    "duracaoAlvo": 85,
     "cenas": [
-      {
-        "slide": "c1-1",
-        "seg": 7,
-        "fala": "Bom dia! Aqui é o Linhares com o panorama de hoje: o que mexeu com juros, dólar e com o seu imóvel."
-      },
-      {
-        "slide": "c1-2",
-        "seg": 10,
-        "fala": "Primeiro, os juros. O Copom parou de cortar: a Selic ficou em treze e setenta e cinco. Metade do mercado esperava corte, e não veio."
-      },
-      {
-        "slide": "c1-3",
-        "seg": 11,
-        "fala": "O dólar fechou a quinta em cinco e noventa e três, o maior nível em dezenove meses. O pacote fiscal passou no Senado, mas o mercado ainda não comprou a ideia."
-      },
-      {
-        "slide": "c1-4",
-        "seg": 9,
-        "fala": "As projeções do Banco Central mostram juros caindo, mas devagar: doze e setenta e cinco só no fim de vinte e sete."
-      },
-      {
-        "slide": "c2-2",
-        "seg": 11,
-        "fala": "No crédito imobiliário, a poupança perdeu mais sete bilhões e meio em outubro. É o quinto mês seguido. E a Caixa já fala em reajustar os juros do financiamento."
-      },
-      {
-        "slide": "c2-3",
-        "seg": 10,
-        "fala": "Mas tem oportunidade: o Itaú entrou no Minha Casa Minha Vida faixa três, e de vinte e três a vinte e sete tem feirão de imóveis da Caixa com FGTS."
-      },
-      {
-        "slide": "c3-2",
-        "seg": 11,
-        "fala": "E o preço? Em doze meses o imóvel subiu cinco vírgula quatro por cento, acima da inflação de quatro vírgula seis. Construir ficou ainda mais caro."
-      },
-      {
-        "slide": "c3-3",
-        "seg": 9,
-        "fala": "Cuidado com manchete: a Caixa ainda não aumentou os juros, só estuda. A gente separa o fato do barulho."
-      },
-      {
-        "slide": "c3-4",
-        "seg": 10,
-        "fala": "Minha leitura: juros altos por mais tempo, e para quem tem crédito aprovado o poder de negociação está do seu lado. Me chama que eu simulo o seu cenário."
-      }
+      {"slide": "c1-1", "seg": 8,  "fala": "Bom dia, aqui é o Linhares. O resumo da semana: crédito imobiliário caro por mais tempo."},
+      {"slide": "c1-2", "seg": 11, "fala": "O Copom parou de cortar e a Selic ficou em treze e setenta e cinco. O mercado agora só vê doze e setenta e cinco no fim de vinte e sete."},
+      {"slide": "c1-3", "seg": 11, "fala": "O dólar fechou a quinta em cinco e noventa e três, o maior nível em dezenove meses. Isso encarece a obra e dificulta novos cortes de juros."},
+      {"slide": "c1-4", "seg": 11, "fala": "A poupança perdeu mais sete bilhões e meio em outubro, o quinto mês seguido. A Caixa avalia subir os juros, mas ainda não decidiu."},
+      {"slide": "c1-5", "seg": 12, "fala": "Nos preços: o imóvel subiu cinco vírgula quatro por cento em doze meses, pouco acima da inflação. E construir subiu ainda mais, seis vírgula sete."},
+      {"slide": "c1-6", "seg": 10, "fala": "Pontos de atenção: distratos altos por crédito negado, inflação de vinte e sete subindo e o pacote fiscal ainda incerto."},
+      {"slide": "c1-7", "seg": 9,  "fala": "E cuidado com manchete: a Caixa ainda não aumentou os juros, só avalia."},
+      {"slide": "c1-8", "seg": 13, "fala": "Minha leitura: planeje com juros altos até vinte e sete. Aprove o crédito antes, compare o custo total entre bancos e não conte com queda rápida da taxa."}
     ]
   }
 }

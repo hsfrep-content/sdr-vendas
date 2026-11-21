@@ -1,31 +1,28 @@
 ROTEIRO DO REELS — Sábado, 21 de novembro de 2026
-Duração alvo: 88s
+Duração alvo: 85s
 
-[00:00–00:07] (7s · tela c1-1)
-Bom dia! Aqui é o Linhares com o panorama de hoje: o que mexeu com juros, dólar e com o seu imóvel.
+[00:00–00:08] (8s · tela c1-1)
+Bom dia, aqui é o Linhares. O resumo da semana: crédito imobiliário caro por mais tempo.
 
-[00:07–00:17] (10s · tela c1-2)
-Primeiro, os juros. O Copom parou de cortar: a Selic ficou em treze e setenta e cinco. Metade do mercado esperava corte, e não veio.
+[00:08–00:19] (11s · tela c1-2)
+O Copom parou de cortar e a Selic ficou em treze e setenta e cinco. O mercado agora só vê doze e setenta e cinco no fim de vinte e sete.
 
-[00:17–00:28] (11s · tela c1-3)
-O dólar fechou a quinta em cinco e noventa e três, o maior nível em dezenove meses. O pacote fiscal passou no Senado, mas o mercado ainda não comprou a ideia.
+[00:19–00:30] (11s · tela c1-3)
+O dólar fechou a quinta em cinco e noventa e três, o maior nível em dezenove meses. Isso encarece a obra e dificulta novos cortes de juros.
 
-[00:28–00:37] (9s · tela c1-4)
-As projeções do Banco Central mostram juros caindo, mas devagar: doze e setenta e cinco só no fim de vinte e sete.
+[00:30–00:41] (11s · tela c1-4)
+A poupança perdeu mais sete bilhões e meio em outubro, o quinto mês seguido. A Caixa avalia subir os juros, mas ainda não decidiu.
 
-[00:37–00:48] (11s · tela c2-2)
-No crédito imobiliário, a poupança perdeu mais sete bilhões e meio em outubro. É o quinto mês seguido. E a Caixa já fala em reajustar os juros do financiamento.
+[00:41–00:53] (12s · tela c1-5)
+Nos preços: o imóvel subiu cinco vírgula quatro por cento em doze meses, pouco acima da inflação. E construir subiu ainda mais, seis vírgula sete.
 
-[00:48–00:58] (10s · tela c2-3)
-Mas tem oportunidade: o Itaú entrou no Minha Casa Minha Vida faixa três, e de vinte e três a vinte e sete tem feirão de imóveis da Caixa com FGTS.
+[00:53–01:03] (10s · tela c1-6)
+Pontos de atenção: distratos altos por crédito negado, inflação de vinte e sete subindo e o pacote fiscal ainda incerto.
 
-[00:58–01:09] (11s · tela c3-2)
-E o preço? Em doze meses o imóvel subiu cinco vírgula quatro por cento, acima da inflação de quatro vírgula seis. Construir ficou ainda mais caro.
+[01:03–01:12] (9s · tela c1-7)
+E cuidado com manchete: a Caixa ainda não aumentou os juros, só avalia.
 
-[01:09–01:18] (9s · tela c3-3)
-Cuidado com manchete: a Caixa ainda não aumentou os juros, só estuda. A gente separa o fato do barulho.
+[01:12–01:25] (13s · tela c1-8)
+Minha leitura: planeje com juros altos até vinte e sete. Aprove o crédito antes, compare o custo total entre bancos e não conte com queda rápida da taxa.
 
-[01:18–01:28] (10s · tela c3-4)
-Minha leitura: juros altos por mais tempo, e para quem tem crédito aprovado o poder de negociação está do seu lado. Me chama que eu simulo o seu cenário.
-
-Total: 88s
+Total: 85s

@@ -24,10 +24,9 @@ Para cada notícia relevante:
 
 ## 3. Entregáveis em `panorama/edicoes/AAAA-MM-DD/`
 - `resumo.md` com quatro partes: resumo executivo focado no impacto imobiliário, tabela de confronto de fontes, limitações e fontes com links. Use a edição de 2026-11-21 como modelo.
-- `conteudo.json` com até 3 carrosséis de até 4 slides cada, no mesmo formato da edição modelo. Tipos de slide: `capa`, `kpis`, `lista`, `barras`, `degraus`, `checagem`, `cta`. Fundos disponíveis em `panorama/assets/`.
-  - Carrossel 1: panorama macro (juros, dólar, fiscal, projeções)
-  - Carrossel 2: crédito imobiliário (funding, bancos, programas, o que fazer)
-  - Carrossel 3: preços dos imóveis + Fato × Ruído + leitura do Linhares/CTA
+- `conteudo.json` com **um único carrossel de 7 a 8 slides**, no mesmo formato da edição modelo. Tipos de slide: `capa`, `kpis`, `lista`, `barras`, `degraus`, `checagem`, `cta`. Fotos em `panorama/assets/` (fotos reais dos imóveis do Linhares; use `fotoPos` para enquadrar).
+  - Sequência sugerida: capa → juros → dólar/fiscal → crédito/funding → preços → pontos de atenção → fato × ruído → leitura do Linhares.
+- **Tom neutro, sem otimismo de vendedor:** dê aos riscos e às más notícias o mesmo peso das oportunidades. Nada de "momento ideal para comprar". Oportunidade só entra se for dado confirmado.
 - Estilo: visual claro e limpo (o `render.js` já aplica). Textos **sem rodeios**: título de até 6 palavras, no máximo 2 números por slide de KPIs, descrições de 1 linha e texto de apoio de até 2 frases curtas.
 - `reels.cenas` no JSON com no máximo 90 s no total, narração em primeira pessoa no tom do Linhares, números por extenso.
 - Rode `node panorama/render.js panorama/edicoes/AAAA-MM-DD`. Ele gera `carrosseis/*.png` (1080×1350), `reels-panorama-AAAA-MM-DD.mp4` (1080×1920, trilha muda para a narração) e `roteiro-reels.txt`.

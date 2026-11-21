@@ -20,7 +20,8 @@ const ASSETS = path.join(__dirname, 'assets');
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const dataUri = (file) => {
   const p = path.join(ASSETS, file);
-  return `data:image/png;base64,${fs.readFileSync(p).toString('base64')}`;
+  const mime = p.endsWith('.png') ? 'image/png' : 'image/jpeg';
+  return `data:${mime};base64,${fs.readFileSync(p).toString('base64')}`;
 };
 
 // Identidade (tema claro): fundo off-white, muito respiro, foto só na capa, acento terracota.
@@ -111,7 +112,7 @@ function slideHTML(slide, idx, total) {
   const fonte = slide.fonte ? `<div class="fonte">${esc(slide.fonte)}</div>` : '';
 
   if (slide.tipo === 'capa' || slide.tipo === 'cta') {
-    corpo = `<div class="foto" style="background-image:url('${dataUri(fundo)}')"></div>
+    corpo = `<div class="foto" style="background-image:url('${dataUri(fundo)}');background-position:${slide.fotoPos || 'center'}"></div>
       <div class="wrap" style="top:800px"><div class="tag">${esc(slide.tag)}</div><h1>${esc(slide.titulo)}</h1><div class="sub">${esc(slide.subtitulo)}</div>
       ${slide.tipo === 'cta' ? `<div class="pill">Simule comigo · ${esc(C.handle)}</div>` : ''}</div>`;
   } else if (slide.tipo === 'kpis') {
