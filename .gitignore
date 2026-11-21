@@ -6,3 +6,4 @@ data/contacts.csv
 data/state.json
 data/handoff-queue.json
 *.log
+panorama/edicoes/*/reels/
