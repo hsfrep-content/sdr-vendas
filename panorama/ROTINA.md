@@ -28,6 +28,7 @@ Para cada notícia relevante:
   - Carrossel 1: panorama macro (juros, dólar, fiscal, projeções)
   - Carrossel 2: crédito imobiliário (funding, bancos, programas, o que fazer)
   - Carrossel 3: preços dos imóveis + Fato × Ruído + leitura do Linhares/CTA
+- Estilo: visual claro e limpo (o `render.js` já aplica). Textos **sem rodeios**: título de até 6 palavras, no máximo 2 números por slide de KPIs, descrições de 1 linha e texto de apoio de até 2 frases curtas.
 - `reels.cenas` no JSON com no máximo 90 s no total, narração em primeira pessoa no tom do Linhares, números por extenso.
 - Rode `node panorama/render.js panorama/edicoes/AAAA-MM-DD`. Ele gera `carrosseis/*.png` (1080×1350), `reels-panorama-AAAA-MM-DD.mp4` (1080×1920, trilha muda para a narração) e `roteiro-reels.txt`.
 - Confira visualmente pelo menos um slide de cada carrossel (texto estourando o card, sobreposição).
